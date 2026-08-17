@@ -1,0 +1,17 @@
+# A defect report is only actionable if it names the commit and, where a number is
+# involved, the machine that produced it. A proposal is only discussable if it states the
+# alternatives it rejects and the cost it carries. A blank issue collects none of that,
+# and those are the fields hardest to obtain after the fact — so the two forms are the
+# only routes in.
+#
+# Suspected vulnerabilities go through private vulnerability reporting instead; SECURITY.md
+# describes it.
+blank_issues_enabled: false
+
+contact_links:
+  - name: Report a suspected vulnerability
+    url: https://github.com/raheebwa/consylr/security/advisories/new
+    about: >-
+      Private vulnerability reporting. A public issue is a public disclosure. This
+      matters most for the offline property — a way to make the runtime reach the network
+      is a vulnerability, not a defect.

@@ -58,7 +58,18 @@ general ledger; unconstrained many-to-many optimisation at scale; fraud attribut
 unsourced causal claims; autonomous posting of adjustments; generation as the authority for
 arithmetic.
 
+## Contributing
+
+Conventions, the commit and sign-off rules, and how changes land are in
+[CONTRIBUTING.md](CONTRIBUTING.md). Conduct is covered by
+[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). For a suspected vulnerability, do not open an
+issue — follow [SECURITY.md](SECURITY.md).
+
 ## Licence
 
-Not yet chosen. The ADTC submission template is GPL-3.0; base-model and dataset licences are
-tracked separately in `DATA_PROVENANCE.md` (to be created before any training run).
+MIT — see [LICENSE](LICENSE) and
+[ADR-0001](docs/adrs/0001-mit-licence-and-public-repository.md).
+
+The ADTC submission template is GPL-3.0, which governs the fork made from it rather than
+this repository. Base-model and dataset licences are tracked separately in
+`DATA_PROVENANCE.md`, to be created before any training run.

@@ -1,0 +1,104 @@
+name: Defect
+description: Report something that is wrong — incorrect behaviour, a bad reconciliation, or a document that contradicts another.
+labels: ["defect"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For a suspected security vulnerability, **do not open an issue.** Use this
+        repository's private vulnerability reporting — the **Security** tab, then
+        **Report a vulnerability** — as described in `SECURITY.md`.
+
+        This repository is pre-code. Until there is a runtime, most defects are
+        documentary: two records that disagree, a figure with no run behind it, a scope
+        claim the PRD contradicts. Those are real defects and belong here.
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of defect
+      options:
+        - A document contradicts another document
+        - A published figure has no run behind it
+        - Model output is wrong — bad correspondence, missed exception, bad disposition
+        - The model answered where it should have abstained
+        - Tooling or command failure
+        - Something else — describe it below
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened
+      description: The behaviour or statement you found, and what you expected instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: How to reproduce it
+      description: >-
+        The exact command or the file and line. For anything involving model output, the
+        smallest evidence packet that shows the problem.
+
+        **Fixtures in this project are synthetic. Do not paste real records** — no real
+        people, businesses, account numbers or ledger entries.
+      render: shell
+    validations:
+      required: true
+
+  - type: input
+    id: commit
+    attributes:
+      label: Commit
+      description: The commit you are on. There are no releases yet.
+      placeholder: "31b372f"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: architecture
+    attributes:
+      label: Architecture
+      description: >-
+        Results are platform-specific. Leave as not-applicable for a documentary defect.
+      options:
+        - Not applicable — documentary defect
+        - arm64 (Apple Silicon)
+        - arm64 (Linux)
+        - x86-64
+        - Other — name it under "What happened"
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating system and version
+      description: Leave blank for a documentary defect.
+      placeholder: "macOS 15.5 · Ubuntu 24.04"
+    validations:
+      required: false
+
+  - type: textarea
+    id: output
+    attributes:
+      label: Output
+      description: Any traceback or output, pasted whole rather than summarised.
+      render: shell
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before you file
+      options:
+        - label: I searched the existing issues and this is not already reported.
+          required: true
+        - label: Nothing above contains real personal, business, or financial records.
+          required: true
+        - label: Nothing above contains a credential, key, or token.
+          required: true

@@ -1,0 +1,48 @@
+version: 2
+
+# Neither manifest exists yet: this repository is pre-code, so there are no workflows and
+# no package manifest to update. Both entries are declared ahead of the files they govern —
+# the same reason .editorconfig lands before the first source file — so that the update
+# policy is settled rather than improvised on the day a dependency first appears.
+updates:
+  # Actions get pinned to full commit SHAs, which are immutable and therefore never pick up
+  # a fix on their own. Dependabot rewrites the SHA and its version comment together.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    cooldown:
+      default-days: 7
+    groups:
+      actions:
+        patterns:
+          - "*"
+
+  # A single pyproject.toml at the root will be the one declaration of runtime and
+  # development dependencies, so the root is the only directory to watch. Runtime and
+  # development updates are grouped separately because they carry different risk: one
+  # reaches anyone who installs the project, the other only this repository.
+  #
+  # A cooldown, not a version pin: a release that is withdrawn hours after publication
+  # should never have been proposed, and seven days is long enough for that to surface.
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    cooldown:
+      default-days: 7
+    groups:
+      runtime:
+        dependency-type: "production"
+        patterns:
+          - "*"
+      development:
+        dependency-type: "development"
+        patterns:
+          - "*"
