@@ -36,9 +36,26 @@ artefact a decision may be taken on.
 converter pinned to the same `llama.cpp` tag as the binaries it feeds. No rented GPU, no upload,
 no cost.
 
-Both were decided by running the whole chain end to end, not by reading model cards. The pins
-that produced the result, and the full link-by-link record, are in the spike record held with
-the spike artefacts outside this repository.
+Both were decided by running the whole chain end to end, not by reading model cards.
+
+### The toolchain that produced these results
+
+Pinned rather than latest, because a spike verdict that cannot be attributed to a specific
+toolchain is not a verdict.
+
+| Component | Pin | Why it matters |
+|---|---|---|
+| `llama.cpp` binaries | **b10453**, commit `3cb7ffb1a` | The runtime under test |
+| `convert_hf_to_gguf.py` | **same tag, b10453** | Converter and binaries must not drift; a release tarball ships binaries only, so the converter comes from the source repo and is pinned to the tag it feeds |
+| `adtc-profiler` | **0.1.0** | Competition infrastructure, actively changing — re-check before submission |
+| `llama-cpp-python` | **0.3.35** | Not a preference: the harness's `accuracy.py` errors out demanding `0.3.x` |
+| `mlx-lm` | **0.31.3** | The training backend |
+| `torch` / `transformers` | **2.13.0** / **5.15.0** | Converter dependencies |
+| Python / `uv` | **3.13.11** / **0.12.5** | |
+
+The full link-by-link spike record — every command, timing, and intermediate artefact size —
+is kept with the spike artefacts outside this repository. It **extends** the table above rather
+than replacing it: nothing needed to interpret or reproduce a figure in this ADR is only there.
 
 ## Consequences
 
@@ -165,7 +182,6 @@ overhead cannot be treated as a fixed additive term.
 
 - The bake-off order, the timebox and the kill criterion as they stood before this ADR:
   [`docs/decisions.md`](../decisions.md), and the spike issue.
-- Every figure above traces to the spike record held with the spike artefacts, which names the
-  pinned `llama.cpp` build and converter tag, the profiler version, and the pinned
-  `llama-cpp-python` the harness requires. No figure here is estimated.
+- Every figure above was produced by the toolchain tabled under §Decision, and none is
+  estimated. The local spike record adds the per-command detail behind them.
 - The audit profile and the disqualification consequence: the official submission template.
