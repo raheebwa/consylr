@@ -28,18 +28,24 @@ Read it before changing any decision below.
 | App scope | **CLI only** before Gate 1. Round one tests the model | Research §Minimal CLI |
 | Language | **Swahili is off the critical path.** The African-use-case bonus does not require it | Research §Contradiction matrix |
 | Licence | **MIT**, `Copyright (c) 2026 Aheebwa Ramadhan`. The ADTC template's GPL-3.0 governs the submission fork, not this repo | [ADR-0001](adrs/0001-mit-licence-and-public-repository.md) |
-| Publication | **This repo is public.** The research document was redacted first. Does *not* resolve trademark or the Participation Agreement | [ADR-0001](adrs/0001-mit-licence-and-public-repository.md) |
+| Publication | **This repo is public.** The research document was redacted first. Does *not* resolve the Participation Agreement | [ADR-0001](adrs/0001-mit-licence-and-public-repository.md) |
+| Name | **Keep "Consylr".** Knock-out search only — no registry clearance, and the residual risk is recorded | [ADR-0002](adrs/0002-keep-the-name-consylr.md) |
 
 ## What is explicitly NOT decided
 
 - **Base model.** Bake-off order: Qwen3.5-4B (mandatory 2-hour conversion spike first) →
   Qwen3-4B → Gemma 3 4B → Phi-4-mini → 1–2B efficiency baseline.
-- **Trademark clearance for the name "Consylr".** No knock-out search has been run.
-  Publishing under a working name does not clear it — it raises the cost of changing it.
-- **The ADTC Participation Agreement** — its IP terms are unread. This is a
-  pre-submission blocker, not a formality. Do not tick the box before reading it.
-  **Going public did not resolve this.** Licensing this repository MIT waives nothing
-  under that agreement and pre-commits nothing to it.
+- **The ADTC Participation Agreement.** Still a pre-submission blocker, now with a partial
+  answer rather than none. A **preliminary working read on 2026-08-18** indicated that
+  participants retain ownership of IP created for the contest, and grant the organisers and
+  their partners a non-exclusive, royalty-free promotional and marketing licence over
+  submissions. It also indicated that **the terms themselves may change.**
+  That read is a working interpretation, not legal advice, and **not a substitute for the
+  owner reading the agreement in full** — which is still required before the box is ticked.
+  Because the agreement expressly permits changes and the competition infrastructure is
+  live, **all official sources are re-checked at submission time**, not once.
+  **Going public did not resolve this.** Licensing this repository MIT waives nothing under
+  that agreement and pre-commits nothing to it.
 
 ## Next actions, in order
 

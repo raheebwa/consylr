@@ -88,6 +88,12 @@ TODO — the research report deliberately stops at Gate 3. Anything past it is u
 ## Open questions
 
 1. Who is the buyer? (blocks any commercial claim)
-2. Repo licence.
-3. Trademark clearance for "Consylr".
-4. ADTC Participation Agreement IP terms — **blocks submission**, not just the roadmap.
+2. ~~Repo licence.~~ **Answered:** MIT, and this repository is public —
+   [ADR-0001](../adrs/0001-mit-licence-and-public-repository.md).
+3. ~~Trademark clearance for "Consylr".~~ **Answered at knock-out level only:** keep the name
+   — [ADR-0002](../adrs/0002-keep-the-name-consylr.md). No registry clearance was performed
+   and that residual risk is recorded there. Revisit before any commercial launch, which is
+   the same trigger question 1 carries.
+4. ADTC Participation Agreement IP terms — **blocks submission**, not just the roadmap. A
+   preliminary working read exists; the owner's full read is still required. See
+   [docs/HANDOFF.md](../HANDOFF.md).
