@@ -1,10 +1,24 @@
 # Consylr
 
-**A compact offline model that reconciles small packets of conflicting enterprise records,
-identifies supported exceptions and missing evidence, and produces traceable operational
-dispositions — without sending sensitive source data to a hosted model.**
+**Offline enterprise exception analyst.**
 
-Status: **pre-code.** Docs first, by design. Nothing here is built yet.
+*Evidence, reconciled.*
+
+> We don't use a language model where exact software is already perfect.
+> We use it where reconciliation turns into evidence judgement.
+
+A compact model that runs entirely on ordinary CPU hardware, offline, and does the judgement
+step in reconciliation: which records correspond, which exceptions the evidence actually
+supports, what is missing, and where the honest answer is that it cannot tell. Output is a
+traceable disposition a person authorises — not an adjustment it posts by itself.
+
+Two record streams that disagree, converging on the one piece of evidence that settles them.
+That is the shape of the product, and everything below is an elaboration of it.
+
+> [!NOTE]
+> **Status: pre-code.** Docs first, by design. Nothing here is built yet — what exists is the
+> product definition, the decisions, and the evidence underneath them. See
+> [Where this stands](#where-this-stands).
 
 ⚠️ The name is cleared at knock-out level only — no registry clearance has been run.
 See [ADR-0002](docs/adrs/0002-keep-the-name-consylr.md) for the residual risk.
@@ -19,6 +33,62 @@ See [ADR-0002](docs/adrs/0002-keep-the-name-consylr.md) for the residual risk.
 | How each piece works | [docs/rfcs/](docs/rfcs/) |
 | The evidence underneath all of it | [docs/research/](docs/research/) |
 | What a term means | [docs/glossary.md](docs/glossary.md) |
+| To contribute | [CONTRIBUTING.md](CONTRIBUTING.md) |
+
+## The problem
+
+Reconciliation is where money goes missing quietly.
+
+Two records describe what should be the same economic event and disagree — by a fee, by a day,
+by a mangled reference, by a reversal, by a partial payment. Somebody has to decide whether
+they are the same event, why they differ, and what to do about it.
+
+That work is **judgement, not arithmetic**. Today it is either done by hand, slowly, or handed
+to a hosted model along with the confidential ledger it concerns. Both routes are bad, and the
+second one is bad in a way that is easy to miss until it matters.
+
+Full statement, including who this is and is not for: [docs/prd/prd.md](docs/prd/prd.md). The
+README sells; the PRD specifies.
+
+## The boundary that defines it
+
+Parsing and verification are **deterministic**. Correspondence and interpretation inside a
+bounded evidence packet are **model-led**. Consequential actions are **authorised by a human**.
+
+Three consequences worth stating outright, because each is a place this kind of product usually
+overreaches:
+
+- **Generation is never the authority for a number.** Arithmetic is verified deterministically.
+  Where the model's figure and the computed figure disagree, the disagreement is reported — it
+  is the useful signal, not noise to be smoothed over.
+- **Abstention is a trained behaviour with a measured rate**, not a prompt asking nicely.
+  "The evidence does not support a conclusion" is a first-class output, and refusing when the
+  answer *is* supported is measured and penalised too.
+- **Every conclusion names its source.** A disposition can be reconstructed from the packet it
+  came from, or it does not ship.
+
+## Scope discipline
+
+**In scope:** 2–20 records across two sides; one-to-one, one-to-many and many-to-one
+correspondence; misspelled names; mangled references; timing/cut-off drift; fees and
+withholding described in evidence; reversals; duplicates; partial payments; batched vs
+itemised transactions; missing records; cause classification from supplied policy; explicit
+ambiguous / no-match conclusions.
+
+**Out of scope, and never claimed:** brute-force search over millions of rows; maintaining a
+general ledger; unconstrained many-to-many optimisation at scale; fraud attribution; unsourced
+causal claims; autonomous posting of adjustments; generation as the authority for arithmetic.
+
+The out-of-scope list is the more load-bearing half. It is what makes the in-scope claims
+checkable.
+
+### One claim this project does not make
+
+Offline inference removes a major disclosure and external-processing dependency for workflows
+over sensitive records. It **does not** remove access-control, retention, audit or
+data-protection obligations, and **offline operation alone does not make a workflow compliant
+or lawful.** "Offline" is a data-disclosure property, not a legal one — see
+[docs/glossary.md](docs/glossary.md).
 
 ## The immediate vehicle
 
@@ -33,44 +103,72 @@ Gate 2 runs 2026-09-08 → 09-29 (reproducibility + technical defence).
 Gate 3 final live defence 2026-10-17.
 
 > [!IMPORTANT]
-> **This is not the submission repo.** ADTC Gate 1 requires a public repository generated
-> from the *official ADTC template*, with an idempotent `download_model.sh` and no weights
-> committed. This repo is where the product and its reasoning live; the submission repo is
-> a separate artefact produced from it. See [docs/HANDOFF.md](docs/HANDOFF.md).
+> **This is not the submission repo.** ADTC Gate 1 is entered from a public **fork of the
+> official ADTC template**, carrying an idempotent `download_model.sh` and no committed
+> weights. This repo is where the product and its reasoning live; the submission repo is a
+> separate artefact produced from it. See [docs/HANDOFF.md](docs/HANDOFF.md).
 
-## The one-line boundary
+## Licensing
 
-> We don't use a language model where exact software is already perfect.
-> We use it where reconciliation turns into evidence judgement.
+Three different things are licensed three different ways here, and collapsing them is the
+mistake worth avoiding.
 
-Parsing and verification are deterministic. Correspondence and interpretation inside a
-bounded evidence packet are model-led. Humans authorise consequential actions.
+| What | Licence |
+|---|---|
+| **This repository** — docs, decisions, and the tooling that lands here | **MIT** ([LICENSE](LICENSE), [ADR-0001](docs/adrs/0001-mit-licence-and-public-repository.md)) |
+| **The submission repository** — a separate public fork of the official ADTC template | **GPL-3.0-only**, inherited from the template, with every upstream notice retained |
+| **Model weights** | The licence of the **exact base checkpoint used**, recorded when the base model is frozen |
+| **Datasets and the generator** | Recorded per source in `DATA_PROVENANCE.md`, which exists before the first training run |
+| **Brand artwork** | Not published yet, and not published until the mark is redrawn as vector geometry |
 
-## Scope discipline
+Two things that follow, and one that does not:
 
-**In scope:** 2–20 records across two sides; one-to-one, one-to-many and many-to-one
-correspondence; misspelled names; mangled references; timing/cut-off drift; fees and
-withholding described in evidence; reversals; duplicates; partial payments; batched vs
-itemised transactions; missing records; cause classification from supplied policy; explicit
-ambiguous / no-match conclusions.
+- **MIT code from here may flow into the GPL-3.0 fork. The reverse is never true.** The
+  compatibility runs one way only, and treating the boundary as symmetric is an easy mistake
+  to make close to a deadline.
+- **Base-model licences matter per checkpoint, not per family.** The Qwen model cards state
+  Apache-2.0; Gemma 3 carries the Gemma licensing regime instead, with its own notice and
+  redistribution requirements. Whichever wins the bake-off, its terms are recorded from the
+  artefact actually downloaded.
+- **The template's GPL-3.0 does not make the weights or the training corpus GPL.** Code, model
+  and data licences are documented separately and upstream notices are preserved.
 
-**Out of scope, and never claimed:** brute-force search over millions of rows; maintaining a
-general ledger; unconstrained many-to-many optimisation at scale; fraud attribution;
-unsourced causal claims; autonomous posting of adjustments; generation as the authority for
-arithmetic.
+## Where this stands
+
+Pre-code, deliberately: the reasoning was written before the build so that the build has
+something to be checked against, and so that a decision can be found later instead of guessed
+at.
+
+**Decided** — the positioning; that the model itself decides correspondence, with no external
+deterministic matcher in the runtime; deterministic arithmetic; trained abstention; the 3.8–4B
+band, frozen on the quantised artefact rather than the checkpoint; Q4_K_M as the baseline;
+a ≤5 GB peak-memory target against a 7 GB ceiling; CLI only before Gate 1; and that this
+repository is MIT and public.
+
+**Open** — the base model, pending a bake-off that starts with a hard-timeboxed conversion
+spike; and the ADTC Participation Agreement's IP terms, which remain a pre-submission blocker
+that going public did not resolve.
+
+Both lists, with the reasoning and the traps already identified, are in
+[docs/HANDOFF.md](docs/HANDOFF.md). Work in progress is tracked in
+[issues](https://github.com/raheebwa/consylr/issues), grouped under epics.
 
 ## Contributing
 
-Conventions, the commit and sign-off rules, and how changes land are in
-[CONTRIBUTING.md](CONTRIBUTING.md). Conduct is covered by
-[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). For a suspected vulnerability, do not open an
-issue — follow [SECURITY.md](SECURITY.md).
+Read [CONTRIBUTING.md](CONTRIBUTING.md) first. The short version:
 
-## Licence
+- **GitHub Flow.** Short-lived branch off `main`, pull request in, branch deleted on merge.
+  `main` is rebase-only and force-pushing it is refused by the host, not by a policy.
+- **Conventional Commits**, lowercase, subject under 50 characters.
+- **Sign off every commit** (`git commit -s`). There is no CLA — the
+  [DCO](https://developercertificate.org/) is the whole of it, and `Signed-off-by:` is the only
+  trailer this project uses.
+- **Every pull request names the ADR or RFC it implements or amends.** If the answer is "none",
+  the RFC probably comes first.
+- **Fixtures are synthetic.** No real people, businesses, ledgers, or locale-plausible phone
+  and ID numbers — ever.
+- **Test-driven development is the policy**, and the commit sequence is the evidence for it.
+  There is no test command yet; `CONTRIBUTING.md` says so plainly rather than implying one.
 
-MIT — see [LICENSE](LICENSE) and
-[ADR-0001](docs/adrs/0001-mit-licence-and-public-repository.md).
-
-The ADTC submission template is GPL-3.0, which governs the fork made from it rather than
-this repository. Base-model and dataset licences are tracked separately in
-`DATA_PROVENANCE.md`, to be created before any training run.
+Conduct: [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). For a suspected vulnerability, do not open
+an issue — follow [SECURITY.md](SECURITY.md).
