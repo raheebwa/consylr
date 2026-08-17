@@ -49,7 +49,7 @@ is nothing for the model to get wrong arithmetically. It cites; the validator ca
     {"on": ["A-017", "B-004"], "kind": "fee_at_source", "c": "supported", "why": ["P-02:L7"]}
   ],
   "open": [
-    {"on": ["A-019"], "need": "settlement breakdown", "why": []}
+    {"on": ["A-019"], "need": "settlement breakdown", "why": ["P-02:L11"]}
   ],
   "residue": {"l": [], "r": ["B-011"]},
   "do": [
@@ -64,7 +64,7 @@ Field by field. Every one has to justify its tokens; the rationale column is why
 | Field | Type | Required | Why it exists |
 |---|---|---|---|
 | `matches[].l` / `.r` | array of record IDs | yes | The correspondence claim. Two sides, so one-to-many and many-to-one are the same shape as one-to-one — no separate field, no separate code path. |
-| `matches[].c` | `supported` \| `ambiguous` \| `unsupported` | yes | Certainty, categorical. See §What it must refuse. |
+| `matches[].c` | `supported` \| `ambiguous` \| `unsupported` | yes | Certainty, categorical. See §What it must refuse, and §Residue for what `unsupported` means for a record's status. |
 | `matches[].why` | array of evidence IDs | yes | The citation. Empty is invalid on a `supported` claim. |
 | `exceptions[].on` | array of record IDs | yes | Which records the difference is between. |
 | `exceptions[].kind` | family identifier | yes | From the frozen family list below. |
@@ -72,7 +72,8 @@ Field by field. Every one has to justify its tokens; the rationale column is why
 | `exceptions[].why` | array of evidence IDs | yes | Usually a policy line. Empty forces `kind: cause_not_established`. |
 | `open[].on` | array of record IDs | yes | What could not be concluded. |
 | `open[].need` | short string | yes | The evidence that would close it. The one free-text field, and §Verification prices it. |
-| `residue.l` / `.r` | array of record IDs | yes | Records matched to nothing. **Required even when empty**, so "everything matched" is always an assertion and never a silence. |
+| `open[].why` | array of evidence IDs | **omitted when empty** | The citation establishing that the evidence is *required* — typically the policy line demanding it. This is the control on `need`: with a citation, the requirement comes from the packet; without one, `need` is the model's own reading. Omitted rather than sent empty, so it costs nothing on the entries that have no grounding. |
+| `residue.l` / `.r` | array of record IDs | yes | Records matched to nothing, by the rule in §Residue. **Required even when empty**, so "everything matched" is always an assertion and never a silence. |
 | `do[].act` | `accept` \| `hold` \| `escalate` \| `request` | yes | The disposition a human authorises. |
 | `do[].on` | array of record IDs | yes | What the act applies to. |
 
@@ -85,6 +86,28 @@ out. The rule: abbreviate structure, spell out meaning.
 side, `D-nn` for documents, `P-nn` for policy, with an optional `:Lnn` or `:Lnn-Lnn` line span on
 policy. A reference that does not resolve in the supplied packet is a validation failure, not a
 stylistic problem.
+
+### Residue, and what an `unsupported` match means
+
+`c: unsupported` is not a wasted entry. It is how the model says **"I considered these and the
+evidence does not support the correspondence"** — a decoy rejected on the record, which is a
+different and more useful statement than never mentioning the pair. Two records of identical
+amount that are *not* the same event is exactly the case a reconciliation product must get right,
+and silence cannot distinguish "considered and rejected" from "never noticed".
+
+Keeping it forces the residue rule to be exact, because the no-silent-residue invariant is
+otherwise uncheckable:
+
+> **A record is residue if and only if it appears in no `matches` entry whose `c` is `supported`
+> or `ambiguous`.**
+>
+> **An `unsupported` match does not count as matched.** A record named only in unsupported
+> matches is residue, and must appear in `residue`.
+
+So a record can be both cited in a `matches` entry and listed in `residue`, and that is not a
+contradiction — it is the schema saying "this was looked at, the match was rejected, and the
+record is still unaccounted for". The validator enforces it as a computable rule rather than a
+judgement.
 
 ### Exception families
 
@@ -216,14 +239,15 @@ it will produce a model that abstains on everything and scores well on the row a
 Measured with the **frozen model's own tokeniser**, on the compact JSON each example below
 serialises to. Not estimated, and not counted in characters.
 
-| Example | Tokens | Chars |
-|---|---|---|
-| 1 — clean one-to-one | **75** | 182 |
-| 2 — split payment | **130** | 295 |
-| 3 — abstention with reason | **121** | 327 |
-| 4 — residue declared | **130** | 323 |
+| Example | Tokens |
+|---|---|
+| 1 — clean one-to-one | **75** |
+| 2 — split payment | **130** |
+| 3 — abstention with reason | **141** |
+| 4 — residue declared | **127** |
+| 5 — decoy rejected | **93** |
 
-**Worst case 130 tokens against the harness's 256-token default reservation — 49% spare.** That
+**Worst case 141 tokens against the harness's 256-token default reservation — 45% spare.** That
 margin is the room a 10-record packet needs, and it is the reason single-letter keys were not
 necessary: the schema is already comfortably inside the budget at readable key names, so the
 tokens saved by making `kind` into `k` would buy nothing and cost a judge's patience.
@@ -256,30 +280,61 @@ Each is valid against the schema and its cost is in the table above.
 ```json
 {"matches":[{"l":["A-019"],"r":["B-012"],"c":"ambiguous","why":["A-019","B-012"]}],
  "exceptions":[{"on":["A-019","B-012"],"kind":"cause_not_established","c":"unsupported","why":[]}],
- "open":[{"on":["A-019"],"need":"processor settlement breakdown","why":[]}],
+ "open":[{"on":["A-019"],"need":"processor settlement breakdown","why":["P-02:L11"]}],
  "residue":{"l":[],"r":[]},
- "do":[{"act":"hold","on":["A-019","B-012"]}]}
+ "do":[{"act":"hold","on":["A-019","B-012"]},{"act":"request","on":["A-019"]}]}
 ```
 
-Note `exceptions[].why` is empty here and that is **valid**, because the family is
-`cause_not_established` — the absence of support is the claim.
+Two things to read here. `exceptions[].why` is empty and that is **valid**, because the family is
+`cause_not_established` — the absence of support is the claim. And `open[].why` cites `P-02:L11`,
+the policy line that makes the settlement breakdown *required*: the need comes from the packet
+rather than from the model's imagination. The `request` disposition is what the new invariant
+demands — an `open` entry and a request for it are the same statement made twice, to a validator
+and to a human.
 
 **4 — residue declared.**
 
 ```json
 {"matches":[{"l":["A-031"],"r":["B-020"],"c":"supported","why":["A-031","B-020"]}],
- "exceptions":[],"open":[{"on":["B-021"],"need":"counterparty ledger entry","why":[]}],
+ "exceptions":[],"open":[{"on":["B-021"],"need":"counterparty ledger entry"}],
  "residue":{"l":["A-032"],"r":["B-021"]},
  "do":[{"act":"accept","on":["A-031","B-020"]},{"act":"request","on":["B-021"]},
        {"act":"escalate","on":["A-032"]}]}
 ```
 
+**5 — decoy rejected, and the record still counted as residue.**
+
+Two records of identical amount that are not the same event. The pair is named and rejected, and
+`A-044` appears in **both** `matches` and `residue` — which the rule in §Residue makes correct
+rather than contradictory.
+
+```json
+{"matches":[{"l":["A-044"],"r":["B-030"],"c":"unsupported","why":["A-044","B-030","P-05:L3"]}],
+ "exceptions":[],"open":[],
+ "residue":{"l":["A-044"],"r":["B-030"]},
+ "do":[{"act":"escalate","on":["A-044","B-030"]}]}
+```
+
+Without this example the residue rule reads as a technicality. With it, the reason for keeping
+`unsupported` in the enum is visible: silence here would have been indistinguishable from not
+having looked.
+
 ### How the schema itself is tested
 
 - A JSON Schema document, and **the same validator ships in the product and validates the
   training corpus**. A second validator written for the corpus tests the second validator.
-- Property tests over the invariants: no `supported` claim without a citation; no record in two
-  `supported` matches; `residue` present on every output; every referenced ID resolvable.
+- Property tests over the invariants:
+  - no `supported` claim without a citation;
+  - no record in two `supported` matches;
+  - `residue` present on every output, and **exactly** the records satisfying the rule in
+    §Residue — neither more nor fewer;
+  - every referenced ID resolvable in the supplied packet;
+  - **every `do[].act: "request"` is covered by an `open[]` entry naming the same records.** A
+    request for evidence with nothing recorded as needed is a dangling disposition: it asks a
+    human for something the output never said was missing;
+  - **every ID in `do[].on` appears somewhere in `matches`, `exceptions`, `open` or `residue`.**
+    Resolvability against the packet is a different check from internal coherence, and an output
+    can pass the first while disposing of a record it never reasoned about.
 - Round-trip on all four examples, in all four testing modes, since the profiler applies no chat
   template and a schema that only survives inside one is not frozen.
 
