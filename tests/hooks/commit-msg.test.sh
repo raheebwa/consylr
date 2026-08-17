@@ -59,6 +59,19 @@ expect reject "a trailer with no sign-off at all" \
 expect accept "prose containing a colon is not a trailer" \
   "docs(cli): add a thing" "" "The reason: it was missing." "" "$SIGN"
 
+# Git treats only the LAST paragraph as trailers, and so must this hook. A body
+# line that happens to begin with one word and a colon is prose. The test above
+# passed for the wrong reason — "The reason:" has a space before the colon and so
+# never matched the pattern at all; a single word does match.
+expect accept "single-word colon mid-body is prose" \
+  "docs(cli): add a thing" "" "measured: 130 tokens against 256 reserved." "" "$SIGN"
+expect accept "several such lines across paragraphs" \
+  "docs(cli): add a thing" "" "estimated: no." "" "decided: yes." "" "$SIGN"
+expect reject "real trailer in the final paragraph still caught" \
+  "docs(cli): add a thing" "" "prose here." "" "$SIGN" "Reviewed-by: X <x@y.z>"
+expect accept "trailer-shaped prose, sign-off in a later paragraph" \
+  "docs(cli): add a thing" "" "Fixes: nothing in particular." "" "$SIGN"
+
 # --- generated subjects git writes itself ---
 expect accept "merge subject is exempt" "Merge pull request #12 from raheebwa/docs/thing"
 expect accept "revert subject is exempt" 'Revert "docs(cli): add a thing"'
