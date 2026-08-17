@@ -7,7 +7,7 @@
 ## Context
 
 "Consylr" had been carried as a *working* name since the project started, with no clearance
-behind it. [`README.md`](../../README.md) and [`docs/HANDOFF.md`](../HANDOFF.md) both said so
+behind it. [`README.md`](../../README.md) and this project's decision index both said so
 in as many words, and [ADR-0001](0001-mit-licence-and-public-repository.md) recorded the
 unresolved name as an accepted cost of publishing the repository.
 
@@ -67,7 +67,7 @@ usable now; visual identity is not, and the two were deliberately decided separa
 ## Evidence
 
 - The name's prior unclear status: [`README.md`](../../README.md) and
-  [`docs/HANDOFF.md`](../HANDOFF.md), before this ADR.
+  [`docs/decisions.md`](../decisions.md), as they stood before this ADR.
 - The rename-cost argument as an accepted consequence of publishing:
   [ADR-0001](0001-mit-licence-and-public-repository.md) §Consequences.
 - The search itself was run outside this repository and is not reproducible from it. That is

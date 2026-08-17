@@ -6,8 +6,9 @@ about it has to trace to a run someone else can reproduce.
 
 **Read [`docs/prd/prd.md`](docs/prd/prd.md) and [`README.md`](README.md) §Scope discipline
 first.** The out-of-scope list there is load-bearing, not a disclaimer — it is the fastest
-way to tell whether an idea belongs here. Then read [`docs/HANDOFF.md`](docs/HANDOFF.md),
-which is the current state of play and says what is decided, what is not, and what is
+way to tell whether an idea belongs here. Then read
+[`docs/decisions.md`](docs/decisions.md) for what is decided and what is not, and the
+[issues](https://github.com/raheebwa/consylr/issues) for what is being worked on and what is
 blocked.
 
 ---
@@ -78,6 +79,17 @@ keep out. The same reasoning applies to ignoring a private path: those entries g
 path it ignores and so announces that the path exists.**
 
 If a hook is wrong, fix the hook. `--no-verify` leaves the defect in the history.
+
+## Working material
+
+`scratchpad/` is ignored by git, and that is where working material belongs — session notes,
+handoff documents, scratch analysis, anything that records *how* the work is being done rather
+than what the work is. Those are not repository artefacts, and `check_no_working_docs` refuses to
+let one be committed.
+
+Nothing regenerable is tracked either: no model weights or adapters, no generated or sealed
+corpora, no run output. `.gitignore` refuses them and `check_no_artifacts` covers the case
+`.gitignore` cannot, which is a deliberate `git add -f`.
 
 ## How the documents fit together
 

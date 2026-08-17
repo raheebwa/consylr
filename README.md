@@ -28,7 +28,8 @@ See [ADR-0002](docs/adrs/0002-keep-the-name-consylr.md) for the residual risk.
 
 | If you want… | Read |
 |---|---|
-| To start working | **[docs/HANDOFF.md](docs/HANDOFF.md)** |
+| To start working | **[Issues](https://github.com/raheebwa/consylr/issues)**, grouped under epics |
+| What is decided, and what is not | **[docs/decisions.md](docs/decisions.md)** |
 | What we're building and why | [docs/prd/prd.md](docs/prd/prd.md) |
 | Why it's built this way | [docs/adrs/](docs/adrs/) |
 | How each piece works | [docs/rfcs/](docs/rfcs/) |
@@ -110,8 +111,8 @@ public.
 **Open** — the base model, pending a bake-off that starts with a hard-timeboxed conversion
 spike.
 
-Both lists, with the reasoning and the traps already identified, are in
-[docs/HANDOFF.md](docs/HANDOFF.md) — the canonical version. What is above is a summary and will
+Both lists, with the reasoning behind each and where it was argued, are in
+[docs/decisions.md](docs/decisions.md) — the canonical index. What is above is a summary and will
 lag it. Work in progress is tracked in
 [issues](https://github.com/raheebwa/consylr/issues), grouped under epics.
 
@@ -138,7 +139,8 @@ capped below the range the PRD specifies, for instance, and that cap expires wit
 
 **An unresolved dependency.** The ADTC Participation Agreement's IP terms have not been read in
 full. That is a pre-submission blocker in its own right, and publishing this repository under
-MIT resolved none of it — see [docs/HANDOFF.md](docs/HANDOFF.md).
+MIT resolved none of it — see [docs/decisions.md](docs/decisions.md) and
+[issue #37](https://github.com/raheebwa/consylr/issues/37), where it is tracked as blocked.
 
 > [!IMPORTANT]
 > **This is not the submission repo.** ADTC Gate 1 is entered from a public **fork of the

@@ -96,6 +96,26 @@ check_no_artifacts() {
   return $rc
 }
 
+# Internal working and handoff documents are session material, not repository
+# artefacts. They belong in scratchpad/, which is ignored.
+#
+# This rule lives in the committed layer, unlike the private vocabulary sweep:
+# "do not commit internal working documents" is not itself a secret, so
+# publishing it costs nothing — and publishing it is what lets a contributor
+# obey it. Matched on the file name, not the contents, so a document that merely
+# discusses handoffs is unaffected.
+check_no_working_docs() {
+  local rc=0 f base
+  for f in "$@"; do
+    base="$(basename "$f")"
+    case "$(printf '%s' "$base" | tr '[:upper:]' '[:lower:]')" in
+      *handoff*)
+        note "$f: internal working documents live in scratchpad/, which is not tracked"; rc=1 ;;
+    esac
+  done
+  return $rc
+}
+
 # Many countries reserve no range for fictional use, so a locale-plausible
 # number can route to a real person. The documented placeholder forms are
 # '+<country-code> 000 000 000' and an all-zero number.
@@ -113,7 +133,7 @@ check_pii() {
   return $rc
 }
 
-ALL='check_spdx check_license_classifier check_workflow check_changelog check_no_artifacts check_pii'
+ALL='check_spdx check_license_classifier check_workflow check_changelog check_no_artifacts check_no_working_docs check_pii'
 
 cmd="${1:-}"; shift || true
 case "$cmd" in
