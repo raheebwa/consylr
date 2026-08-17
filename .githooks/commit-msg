@@ -35,9 +35,16 @@ grep -qE '^Signed-off-by: .+ <.+@.+>' "$msg_file" \
 # it is meant to keep out. Anything trailer-shaped that is not a sign-off is a
 # defect here, whoever or whatever added it.
 #
-# Only trailing lines are considered, so prose containing a colon mid-message
-# is not mistaken for a trailer.
-stray="$(printf '%s\n' "$body" | tail -n +2 | grep -E '^[A-Za-z][A-Za-z-]*: ' \
+# Only the LAST paragraph is examined, which is where git itself looks for
+# trailers. A body line that merely begins with a word and a colon is prose:
+# "measured: 130 tokens" is a sentence, not a trailer, and rejecting it would
+# make the hook something people route around with --no-verify.
+#
+# The subject is dropped first, so a subject like "docs: add a thing" is not
+# mistaken for a trailer by the same pattern.
+rest="$(printf '%s\n' "$body" | tail -n +2)"
+last_block="$(printf '%s\n' "$rest" | awk -v RS='' 'END{print}')"
+stray="$(printf '%s\n' "$last_block" | grep -E '^[A-Za-z][A-Za-z-]*: ' \
          | grep -vE '^Signed-off-by: ' || true)"
 [ -z "$stray" ] || die "only Signed-off-by is permitted as a trailer; found: ${stray}"
 
