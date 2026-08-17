@@ -116,12 +116,18 @@ definition and per-family quotas; this list is the identifiers themselves.**
 
 ```
 fee_at_source · withholding · timing_cutoff · reference_mangled · name_variant
-partial_payment · duplicate · reversal · batched_vs_itemised · missing_record
-cause_not_established
+partial_payment · duplicate · reversal · batched_vs_itemised · cause_not_established
 ```
 
 `cause_not_established` is a first-class member, not a fallback. It is what the model emits when
 a difference is real but the packet does not explain it.
+
+**There is deliberately no `missing_record` kind.** A record with no counterpart is already said
+twice — by `residue`, which is required on every output, and by an `open` entry naming what would
+close it. A third way to say it would let the same fact be labelled two ways in the training
+corpus, and inconsistent ground truth is worse than a missing convenience. An exception describes
+a difference *between corresponding records*; where nothing corresponds, there is no exception to
+describe.
 
 ### Report additions
 
