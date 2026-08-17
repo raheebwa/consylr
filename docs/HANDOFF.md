@@ -27,19 +27,19 @@ Read it before changing any decision below.
 | Throughput | Optimise past 15 TPS — the profiler cap is an implementation detail, not the goal | Research §Contradiction matrix |
 | App scope | **CLI only** before Gate 1. Round one tests the model | Research §Minimal CLI |
 | Language | **Swahili is off the critical path.** The African-use-case bonus does not require it | Research §Contradiction matrix |
+| Licence | **MIT**, `Copyright (c) 2026 Aheebwa Ramadhan`. The ADTC template's GPL-3.0 governs the submission fork, not this repo | [ADR-0001](adrs/0001-mit-licence-and-public-repository.md) |
+| Publication | **This repo is public.** The research document was redacted first. Does *not* resolve trademark or the Participation Agreement | [ADR-0001](adrs/0001-mit-licence-and-public-repository.md) |
 
 ## What is explicitly NOT decided
 
 - **Base model.** Bake-off order: Qwen3.5-4B (mandatory 2-hour conversion spike first) →
   Qwen3-4B → Gemma 3 4B → Phi-4-mini → 1–2B efficiency baseline.
-- **Licence for this repo.**
-- **Trademark clearance for the name "Consylr".**
+- **Trademark clearance for the name "Consylr".** No knock-out search has been run.
+  Publishing under a working name does not clear it — it raises the cost of changing it.
 - **The ADTC Participation Agreement** — its IP terms are unread. This is a
   pre-submission blocker, not a formality. Do not tick the box before reading it.
-- **Whether this repo goes public, and in what state.** Before it does, redact the
-  captured research document: it names a current employer in a data-handling warning
-  (§Training-data provenance policy), which reads badly out of context. The submission
-  repo generated from the ADTC template should not inherit that text unedited.
+  **Going public did not resolve this.** Licensing this repository MIT waives nothing
+  under that agreement and pre-commits nothing to it.
 
 ## Next actions, in order
 
