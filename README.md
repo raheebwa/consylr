@@ -25,6 +25,7 @@ See [ADR-0002](docs/adrs/0002-keep-the-name-consylr.md) for the residual risk.
 
 ## Start here
 
+
 | If you want… | Read |
 |---|---|
 | To start working | **[docs/HANDOFF.md](docs/HANDOFF.md)** |
@@ -36,6 +37,7 @@ See [ADR-0002](docs/adrs/0002-keep-the-name-consylr.md) for the residual risk.
 | To contribute | [CONTRIBUTING.md](CONTRIBUTING.md) |
 
 ## The problem
+
 
 Reconciliation is where money goes missing quietly.
 
@@ -51,6 +53,7 @@ Full statement, including who this is and is not for: [docs/prd/prd.md](docs/prd
 README sells; the PRD specifies.
 
 ## The boundary that defines it
+
 
 Parsing and verification are **deterministic**. Correspondence and interpretation inside a
 bounded evidence packet are **model-led**. Consequential actions are **authorised by a human**.
@@ -68,6 +71,7 @@ overreaches:
   came from, or it does not ship.
 
 ## Scope discipline
+
 
 **In scope:** 2–20 records across two sides; one-to-one, one-to-many and many-to-one
 correspondence; misspelled names; mangled references; timing/cut-off drift; fees and
@@ -90,25 +94,60 @@ data-protection obligations, and **offline operation alone does not make a workf
 or lawful.** "Offline" is a data-disclosure property, not a legal one — see
 [docs/glossary.md](docs/glossary.md).
 
+## Where this stands
+
+
+Pre-code, deliberately: the reasoning was written before the build so that the build has
+something to be checked against, and so that a decision can be found later instead of guessed
+at.
+
+**Decided** — the positioning; that the model itself decides correspondence, with no external
+deterministic matcher in the runtime; deterministic arithmetic; trained abstention; the 3.8–4B
+band, frozen on the quantised artefact rather than the checkpoint; Q4_K_M as the baseline; a
+≤5 GB peak-memory target; CLI as the only surface for now; and that this repository is MIT and
+public.
+
+**Open** — the base model, pending a bake-off that starts with a hard-timeboxed conversion
+spike.
+
+Both lists, with the reasoning and the traps already identified, are in
+[docs/HANDOFF.md](docs/HANDOFF.md) — the canonical version. What is above is a summary and will
+lag it. Work in progress is tracked in
+[issues](https://github.com/raheebwa/consylr/issues), grouped under epics.
+
 ## The immediate vehicle
+
+
+Everything above is the product. This section is the one place the competition appears, and it
+is deliberately contained: Consylr is being built on its own terms, and a challenge is the
+first place it gets tested by people who did not build it.
 
 **Africa Deep Tech Challenge 2026 — "The Laptop LLM Challenge."**
 Gate 1 submission closes **2026-08-24 23:45 PDT** (≈ **2026-08-25 09:45 EAT**).
-Grand prize USD 8,000 (UGX 29,600,000) + 6-month residency; USD 4,000 second;
-USD 3,000 third; USD 1,500 Best African Use Case.
-Scoring: **50% accuracy/quality · 30% throughput · 20% memory efficiency**, thermal penalty,
-hard 7 GB peak-RSS ceiling.
-
 Gate 2 runs 2026-09-08 → 09-29 (reproducibility + technical defence).
 Gate 3 final live defence 2026-10-17.
+Grand prize USD 8,000 (UGX 29,600,000) + 6-month residency; USD 4,000 second; USD 3,000 third;
+USD 1,500 Best African Use Case.
+
+**What the competition imposes that the product would not choose for itself:** a fixed
+2,048-token context in the official profiler, a hard 7 GB peak-resident-memory ceiling, and a
+scoring split of 50% accuracy and quality · 30% throughput · 20% memory efficiency, with a
+thermal penalty. These are real constraints and they are honoured, but they belong to the
+harness rather than to the product — the profiler's context limit is why Gate 1 packets are
+capped below the range the PRD specifies, for instance, and that cap expires with the gate.
+
+**An unresolved dependency.** The ADTC Participation Agreement's IP terms have not been read in
+full. That is a pre-submission blocker in its own right, and publishing this repository under
+MIT resolved none of it — see [docs/HANDOFF.md](docs/HANDOFF.md).
 
 > [!IMPORTANT]
 > **This is not the submission repo.** ADTC Gate 1 is entered from a public **fork of the
 > official ADTC template**, carrying an idempotent `download_model.sh` and no committed
 > weights. This repo is where the product and its reasoning live; the submission repo is a
-> separate artefact produced from it. See [docs/HANDOFF.md](docs/HANDOFF.md).
+> separate artefact produced from it.
 
 ## Licensing
+
 
 Three different things are licensed three different ways here, and collapsing them is the
 mistake worth avoiding.
@@ -133,27 +172,8 @@ Two things that follow, and one that does not:
 - **The template's GPL-3.0 does not make the weights or the training corpus GPL.** Code, model
   and data licences are documented separately and upstream notices are preserved.
 
-## Where this stands
-
-Pre-code, deliberately: the reasoning was written before the build so that the build has
-something to be checked against, and so that a decision can be found later instead of guessed
-at.
-
-**Decided** — the positioning; that the model itself decides correspondence, with no external
-deterministic matcher in the runtime; deterministic arithmetic; trained abstention; the 3.8–4B
-band, frozen on the quantised artefact rather than the checkpoint; Q4_K_M as the baseline;
-a ≤5 GB peak-memory target against a 7 GB ceiling; CLI only before Gate 1; and that this
-repository is MIT and public.
-
-**Open** — the base model, pending a bake-off that starts with a hard-timeboxed conversion
-spike; and the ADTC Participation Agreement's IP terms, which remain a pre-submission blocker
-that going public did not resolve.
-
-Both lists, with the reasoning and the traps already identified, are in
-[docs/HANDOFF.md](docs/HANDOFF.md). Work in progress is tracked in
-[issues](https://github.com/raheebwa/consylr/issues), grouped under epics.
-
 ## Contributing
+
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) first. The short version:
 

@@ -4,9 +4,14 @@ Last updated: 2026-08-18
 
 ## Where this stands
 
-**Pre-code.** The entry thesis is decided and evidenced; nothing is built. The binding
-constraint is that **Gate 1 closes 2026-08-24 23:45 PDT (≈ 2026-08-25 09:45 EAT)** and the
-research plan budgets ~55–70 focused engineering hours to reach it.
+**Pre-code.** Consylr's positioning is decided and evidenced; nothing is built yet.
+
+Its next milestone is **ADTC Gate 1, which closes 2026-08-24 23:45 PDT (≈ 2026-08-25 09:45
+EAT)** — the current binding constraint on sequencing, and the research plan budgets ~55–70
+focused engineering hours to reach it. The milestone is a checkpoint on the product's own path,
+not the reason the product exists: what gets built for it is what the product needs anyway,
+and the handful of things that are genuinely the harness's requirements are labelled as such
+below.
 
 The full reasoning is in
 [docs/research/2026-08-18-entry-decision-research.md](research/2026-08-18-entry-decision-research.md).
@@ -24,8 +29,8 @@ Read it before changing any decision below.
 | Model band | **3.8–4B**, chosen by bake-off, frozen on the *quantised GGUF* never the BF16 checkpoint | Research §Bake-off sequence |
 | Quantisation | **Q4_K_M baseline.** Q5 only if sealed evaluation pays for its RAM/TPS cost | Research §Size and quantisation |
 | Memory | **≤5 GB peak RSS hard internal, ≤4 GB preferred** (ceiling is 7 GB; each extra GB costs ~2.86 total points) | Research §Hard memory target |
-| Throughput | Optimise past 15 TPS — the profiler cap is an implementation detail, not the goal | Research §Contradiction matrix |
-| App scope | **CLI only** before Gate 1. Round one tests the model | Research §Minimal CLI |
+| Throughput | Fast enough that a local session feels responsive, and optimised past that. The harness's 15 TPS cap is an implementation detail, not the goal | Research §Contradiction matrix |
+| App scope | **CLI is the only surface for now.** What is being proved is the model's judgement, and a richer surface would not prove it sooner | Research §Minimal CLI |
 | Language | **Swahili is off the critical path.** The African-use-case bonus does not require it | Research §Contradiction matrix |
 | Licence | **MIT**, `Copyright (c) 2026 Aheebwa Ramadhan`. The ADTC template's GPL-3.0 governs the submission fork, not this repo | [ADR-0001](adrs/0001-mit-licence-and-public-repository.md) |
 | Publication | **This repo is public.** The research document was redacted first. Does *not* resolve the Participation Agreement | [ADR-0001](adrs/0001-mit-licence-and-public-repository.md) |
@@ -64,15 +69,22 @@ Read it before changing any decision below.
 
 ## Traps already identified
 
+Most of these are properties of the ADTC scoring harness rather than of the product. They are
+recorded because they invalidate otherwise-reasonable decisions, and they expire when the
+evaluation does.
+
+
 - **The profiler does not apply a chat template.** Current `accuracy.py` calls raw
   `create_completion()` at `temperature=0.0` with a fixed 2,048-token context. A model that
   only performs well inside its vendor's chat template will underperform in judging.
   **Test the final GGUF in four modes:** official profiler, raw `llama-cli` completion,
   chat-template interaction, and the CLI.
 - **2,048-token context** invalidates any model choice argued on 128K/262K context.
-- **The submission repo is not this repo.** Gate 1 needs a public repo generated from the
-  official ADTC template, with an idempotent `download_model.sh`, two participant prompts in
-  metadata, no credentials required to fetch the model, and **no weights committed**.
+- **The submission repo is not this repo.** Gate 1 is entered from a public **fork** of the
+  official ADTC template — upstream is not marked as a template, so the mechanism is a fork,
+  not a template instantiation. It needs an idempotent `download_model.sh`, two participant
+  prompts in metadata, no credentials required to fetch the model, and **no weights
+  committed**.
 - **Never train on real confidential material** — no employer production data, no member or
   customer ledgers, no client records, however much more realistic it would make the cases.
   Procedurally generated cases are both safer *and* better, because the ground truth is

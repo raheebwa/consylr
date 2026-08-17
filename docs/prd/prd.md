@@ -54,9 +54,14 @@ Structured JSON with categorical certainty states — `supported`, `ambiguous`, 
 — never uncalibrated numeric confidence. Shape drafted in the research report; to be
 promoted to an RFC before the generator is written.
 
-## Success criteria (Gate 1)
+## Success criteria
 
-These are engineering go/no-go thresholds, not organiser requirements.
+The product's engineering go/no-go thresholds. They were set from what the product has to do to
+be worth using — an analyst cannot act on a disposition whose figures might be wrong, or on a
+model that concludes where the evidence does not reach.
+
+The ADTC Gate 1 evaluation **inherits** these thresholds. It did not set them, and they do not
+expire when it does.
 
 | Metric | Threshold |
 |---|---|
@@ -69,7 +74,12 @@ These are engineering go/no-go thresholds, not organiser requirements.
 | Structured-output parse rate | ≥99% |
 | General enterprise capability vs untuned base | ≥95% |
 | Peak RSS | ≤5 GB hard, ≤4 GB preferred |
-| Official profiler accuracy | Beat untuned base, no regression |
+| Accuracy against the untuned base | Beat it, with no regression on general capability |
+
+*[competition constraint — ADTC profiler]* The last row is additionally verified under the
+official scoring harness, which applies no chat template and fixes the context at 2,048 tokens.
+That is a measurement condition, not a separate threshold — the number has to hold in both
+places.
 
 **Fallback if correspondence misses:** drop direct matching from the headline and ship the
 same model as an evidence-grounded Exception Analyst. The project does not die on that
@@ -79,11 +89,13 @@ threshold.
 
 - Fully offline after model download. No network at inference.
 - CPU-only, ordinary laptop hardware.
-- Single GGUF artefact at submission.
+- A single distributable artefact, so deployment is a file copy rather than an install.
 
-## Roadmap beyond the competition
+## Roadmap
 
-TODO — the research report deliberately stops at Gate 3. Anything past it is unwritten.
+TODO — unwritten, and deliberately so. The captured research stops at the end of the current
+evaluation cycle, so nothing past it has been decided. This section stays empty until it is,
+rather than being filled with plausible-sounding intentions.
 
 ## Open questions
 
