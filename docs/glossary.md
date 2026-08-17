@@ -56,8 +56,10 @@ GSM8K score.
 external-processing dependency. It does not remove access-control, retention, audit or
 data-protection obligations. Never claim offline is "the only lawful architecture."
 
-**The submission repo is not this repo.** Gate 1 requires a public repository generated from
-the official ADTC template. This repo holds the product and its reasoning.
+**The submission repo is not this repo.** Gate 1 is entered from a public **fork** of the
+official ADTC template — the upstream repository is not marked as a template, so the mechanism
+is a fork rather than a template instantiation. This repo holds the product and its
+reasoning.
 
 **Q4_K_M is a baseline, not a preference.** It is the default because each extra gigabyte of
 peak RSS costs roughly 2.86 total competition points, so a heavier quantisation must earn
