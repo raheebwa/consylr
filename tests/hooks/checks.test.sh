@@ -91,6 +91,18 @@ try ok  check_no_artifacts "gitkeep is allowed"  "model/.gitkeep"               
 try ok  check_no_artifacts "ordinary document"   "docs/notes.md"                <<<'text'
 try ok  check_no_artifacts "modelling prose"     "docs/modelling.md"            <<<'text'
 
+# --- check_no_working_docs: internal session material is not a repo artefact ---
+# Unlike the vocabulary sweep, this one belongs in the committed layer: "do not
+# commit internal working documents" is not a secret, so publishing the rule
+# costs nothing and publishing it is what makes it enforceable by a contributor.
+try bad check_no_working_docs "handoff at the root"   "HANDOFF.md"           <<<'notes'
+try bad check_no_working_docs "handoff under docs"    "docs/HANDOFF.md"      <<<'notes'
+try bad check_no_working_docs "lowercase handoff"     "docs/handoff.md"      <<<'notes'
+try bad check_no_working_docs "handoff with a suffix" "docs/handoff-notes.md" <<<'notes'
+try bad check_no_working_docs "mixed case"            "Handoff.md"           <<<'notes'
+try ok  check_no_working_docs "ordinary document"     "docs/prd/prd.md"      <<<'text'
+try ok  check_no_working_docs "prose mentioning it"   "docs/glossary.md"     <<<'the handoff document'
+
 # --- check_pii: the placeholder rule ---
 try ok  check_pii "documented placeholder form" "d.md" <<<'Call +<country-code> 000 000 000 for support.'
 try ok  check_pii "zeroed placeholder" "d2.md" <<<'Call +000 000 000 000 for support.'

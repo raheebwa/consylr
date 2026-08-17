@@ -108,4 +108,5 @@ rather than being filled with plausible-sounding intentions.
    the same trigger question 1 carries.
 4. ADTC Participation Agreement IP terms — **blocks submission**, not just the roadmap. A
    preliminary working read exists; the owner's full read is still required. See
-   [docs/HANDOFF.md](../HANDOFF.md).
+   [docs/decisions.md](../decisions.md), and tracked as blocked in
+   [issue #37](https://github.com/raheebwa/consylr/issues/37).

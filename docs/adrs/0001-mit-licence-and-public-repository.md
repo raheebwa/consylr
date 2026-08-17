@@ -6,7 +6,8 @@
 
 ## Context
 
-Two questions had been left open in [`docs/HANDOFF.md`](../HANDOFF.md): which licence this
+Two questions had been left open in this project's decision index — now
+[`docs/decisions.md`](../decisions.md) — namely which licence this
 repository carries, and whether it goes public at all.
 
 They are not independent. A repository with no `LICENSE` file is not "unlicensed pending a
@@ -80,8 +81,8 @@ items, and must not be read as settling them:
 ## Evidence
 
 - Public-repository requirement, the submission fork being a separate artefact, and the
-  Gate 1 deadline: [`docs/HANDOFF.md`](../HANDOFF.md) §Traps already identified, and
-  [`README.md`](../../README.md) §The immediate vehicle.
+  Gate 1 deadline: [`README.md`](../../README.md) §The immediate vehicle, which carries both,
+  and [`docs/decisions.md`](../decisions.md) for what remains open.
 - Template licensing, and that it does not extend to weights or corpus:
   [`docs/research/2026-08-18-entry-decision-research.md`](../research/2026-08-18-entry-decision-research.md)
   §Base-model licensing.
