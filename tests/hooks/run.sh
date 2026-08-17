@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# SPDX-License-Identifier: MIT
 # Runs every hook test. This is the command CONTRIBUTING.md documents and the
 # command CI will run; if the two ever diverge, the documented one is correct.
 #

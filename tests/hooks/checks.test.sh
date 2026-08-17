@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# SPDX-License-Identifier: MIT
 # Tests for the staged-content checks the pre-commit hook applies.
 #
 # Each check is a pure function of the paths it is given, so it is tested against
@@ -29,7 +30,21 @@ try bad check_spdx "spdx below line five" "c.py" <<<'1
 4
 5
 # SPDX-License-Identifier: MIT'
-try ok  check_spdx "non-python ignored" "notes.md" <<<'no spdx here'
+try ok  check_spdx "prose is not source" "notes.md" <<<'no spdx here'
+
+# Shell counts as source. .githooks/ is exactly the kind of directory people copy
+# between repositories — these hooks descend from another repo's — so the one
+# machine-readable line that survives the copy matters here more than most places.
+try ok  check_spdx "sh with spdx after the shebang" "s.sh" <<<'#!/usr/bin/env bash
+# SPDX-License-Identifier: MIT
+echo hi'
+try bad check_spdx "sh without spdx" "t.sh" <<<'#!/usr/bin/env bash
+echo hi'
+try ok  check_spdx "un-suffixed hook with spdx" ".githooks/commit-msg" <<<'#!/usr/bin/env bash
+# SPDX-License-Identifier: MIT
+exit 0'
+try bad check_spdx "un-suffixed hook without spdx" ".githooks/pre-push" <<<'#!/usr/bin/env bash
+exit 0'
 
 # --- check_license_classifier: path-scoped, free, and waiting for a manifest ---
 try ok  check_license_classifier "expression only" "pyproject.toml" <<<'license = "MIT"'

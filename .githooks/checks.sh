@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# SPDX-License-Identifier: MIT
 # Checks applied to staged content by the pre-commit hook.
 # Usage: checks.sh <check-name|all> <path>...
 #
@@ -9,12 +10,16 @@ set -uo pipefail
 note() { printf '  %s\n' "$1" >&2; }
 
 # Every source file carries its licence identifier, so the file survives being
-# copied out of the tree. In place before the first .py exists, so the rule
-# cannot be broken by the commit that introduces one.
+# copied out of the tree.
+#
+# Shell is source too, and .githooks/ is precisely the kind of directory people
+# copy between repositories — these hooks descend from another repo's — so the
+# rule applies there at least as much as to product code. Scoping it to "product
+# source only" would be an undocumented exception with a label on it.
 check_spdx() {
   local rc=0 f
   for f in "$@"; do
-    case "$f" in *.py) ;; *) continue ;; esac
+    case "$f" in *.py|*.sh|.githooks/*) ;; *) continue ;; esac
     [ -f "$f" ] || continue
     head -n 5 "$f" | grep -qxF '# SPDX-License-Identifier: MIT' \
       || { note "$f: no '# SPDX-License-Identifier: MIT' in the first five lines"; rc=1; }
