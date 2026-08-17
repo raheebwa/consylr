@@ -1,0 +1,45 @@
+# secrets — never committed; values live in `pass` under consylr/<env>/<service>/<field>
+.env
+.env.*
+!.env.example
+
+# local scratch — non-committed working material
+/scratchpad/
+
+# model weights and artefacts — never committed (ADTC template forbids it)
+*.gguf
+*.safetensors
+*.bin
+/model/
+/models/
+/checkpoints/
+/adapters/
+
+# datasets and evaluation output — regenerate from the generator, don't commit
+/data/generated/
+/data/sealed/
+/runs/
+/benchmarks/*.json
+!/benchmarks/.gitkeep
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.hypothesis/
+.coverage
+htmlcov/
+*.egg-info/
+/dist/
+/build/
+
+# node
+node_modules/
+
+# os / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
