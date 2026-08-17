@@ -28,6 +28,11 @@ supersedes: |
 > This is the evidence layer: it is not edited as understanding improves. Decisions
 > extracted from it live in `docs/adrs/`; designs live in `docs/rfcs/`. If this document
 > and an ADR disagree, the ADR is current and should say what it overrode.
+>
+> **Redacted for publication.** One sentence in §Training-data provenance policy named a
+> current employer while warning against training on its data; it now reads "any
+> employer's production data". That is the only alteration to the source text, and the
+> warning it carries is unchanged.
 
 > [!CAUTION]
 > **What this changes** (added at capture, not part of the source text)
@@ -843,7 +848,7 @@ The safest corpus is:
 
 "Publicly visible" does not mean "unrestricted training licence".
 
-Do not use production Relworx data, SACCO member records, customer ledgers or any other real confidential material merely because it would make the cases realistic.
+Do not use any employer's production data, SACCO member records, customer ledgers or any other real confidential material merely because it would make the cases realistic.
 
 ### Privacy framing
 
