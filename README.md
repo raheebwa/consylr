@@ -6,7 +6,8 @@ dispositions — without sending sensitive source data to a hosted model.**
 
 Status: **pre-code.** Docs first, by design. Nothing here is built yet.
 
-⚠️ "Consylr" is a working name. No trademark knock-out search has been run.
+⚠️ The name is cleared at knock-out level only — no registry clearance has been run.
+See [ADR-0002](docs/adrs/0002-keep-the-name-consylr.md) for the residual risk.
 
 ## Start here
 
