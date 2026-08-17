@@ -134,6 +134,43 @@ Commit messages are public surface, permanently, and a tree sweep never sees the
 the change and its reasoning — not the tooling, the local paths, or the private systems that
 happened to be involved in making it.
 
+## Branches
+
+**GitHub Flow.** `main` is always releasable. Every change rides a short-lived branch off
+`main` and lands through a pull request; the branch is deleted on merge. There are no
+long-lived integration branches, no `develop`, and no direct commits to `main`.
+
+Branch names are `<type>/<short-description>`, using the same types as commits and
+kebab-case for the description:
+
+```
+docs/adr-0002-base-model
+feat/sealed-packet-generator
+fix/token-budget-assertion
+```
+
+A branch name is public the moment it is pushed. It names the change, not the tooling or
+the local paths involved in making it.
+
+**`main` is merged into by rebase only.** Squash and merge commits are both disabled, and
+that is a deliberate cost: a squash would be tidier to read and it is refused anyway,
+because this project's history carries two things a squash destroys. One behaviour per
+commit is the evidence for the test policy above — collapse a branch and the RED-then-GREEN
+sequence becomes one commit that proves nothing about the order it was written in. And each
+commit carries its own `Signed-off-by`, which is a per-commit certification; a squashed
+commit's sign-off certifies a diff nobody signed off.
+
+`main` is protected by a repository ruleset: no deletion, no force-push, linear history
+required, and changes arrive by pull request. **Zero approvals are required** — this is a
+solo repository and pretending otherwise would be the half-met checklist this file argues
+against elsewhere. The substitute is stated in §How changes land: a linked decision record,
+and a green run of the documented command once there is one. Review threads must be
+resolved before merge, which is the part of review that still works with one maintainer.
+
+The rules that cannot be waived by a maintainer in a hurry are the ones the ruleset
+enforces: released history stays immutable because force-pushing `main` is refused by the
+host, not because a policy asks nicely.
+
 ## Pull requests
 
 **Every pull request names the ADR or RFC it implements or amends.** Put it in the
