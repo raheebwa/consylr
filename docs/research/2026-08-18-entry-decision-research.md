@@ -4,10 +4,9 @@ working_name: Consylr
 date: 2026-08-18
 source: External deep-research report, delivered in-session 2026-08-18 — resolves the ADTC 2026 entry positioning (Position A vs Position B) and locks a hybrid
 type: product-research
-related_product: somedser
 competition: Africa Deep Tech Challenge 2026 — "The Laptop LLM Challenge"
 gate_1_deadline: 2026-08-24 23:45 PDT (≈2026-08-25 09:45 EAT)
-tags: [consylr, adtc, reconciliation, slm, offline-llm, gguf, quantisation, evidence-grounding, abstention, somedser, source/research]
+tags: [consylr, adtc, reconciliation, slm, offline-llm, gguf, quantisation, evidence-grounding, abstention, source/research]
 status: raw
 capture: delivered as chat text; no source file available at capture time. Swap in original bytes if a file surfaces.
 verification: |
@@ -18,9 +17,9 @@ verification: |
   from vendor model cards (Gemma 3/4, Qwen3/3.5, Phi-4-mini) and vendor marketing
   (BlackLine Verity, Duco Predictive Labelling) are second-hand via this report.
 supersedes: |
-  Materially revises the 2026-06-28 ADTC strategy in `sources/product-research/
-  2026-06-28-somedser-offline-education-memo.md` — see the "What this changes" note below.
-  It does NOT overturn the ENTER verdict on [[somedser]]; it changes the entry's subject.
+  Materially revises the 2026-06-28 ADTC strategy set out in an offline-education memo held
+  in the founder's private research archive — see the "What this changes" note below. It
+  does NOT overturn the decision to enter; it changes the entry's subject.
 ---
 
 > [!WARNING]
@@ -29,10 +28,13 @@ supersedes: |
 > extracted from it live in `docs/adrs/`; designs live in `docs/rfcs/`. If this document
 > and an ADR disagree, the ADR is current and should say what it overrode.
 >
-> **Redacted for publication.** One sentence in §Training-data provenance policy named a
-> current employer while warning against training on its data; it now reads "any
-> employer's production data". That is the only alteration to the source text, and the
-> warning it carries is unchanged.
+> **Redacted for publication**, in two places. In the source text, a sentence in
+> §Training-data provenance policy named a current employer while warning against training
+> on its data; it now reads "any employer's production data". In the capture metadata
+> above, references to an unreleased predecessor product line and to the private archive
+> holding the superseded material were genericised, and a wiki-style link that does not
+> render here was removed. **No warning, figure, ranking or conclusion changed** — the
+> reasoning is as delivered.
 
 > [!CAUTION]
 > **What this changes** (added at capture, not part of the source text)

@@ -10,19 +10,22 @@ disagree, the ADR is current.
 
 ## Lineage — superseded material held elsewhere
 
-This entry began as an offline-education thesis under the [[somedser]] product line. Those
-documents remain in the life-os vault at `sources/product-research/` and are **superseded on
+This entry began as an offline-education thesis under a predecessor product line. Those
+documents remain in the founder's private research archive and are **superseded on
 positioning** by the 2026-08-18 report, though their decode of the competition's scoring
 mechanics remains useful history:
 
-- `2026-06-28-somedser-offline-education-memo.md` — the canonical June decision:
-  education-as-task framing, Gemma-3-4B/1B, Swahili, grand-prize target. **Positioning
-  superseded**; bare-GGUF judging decode still sound.
-- `2026-06-28-somedser-offline-execution-dossier.md` — synthetic-data recipe, Unsloth QLoRA
-  → GGUF spike, 1B-vs-4B score model, week-by-week plan. **Partially reusable**: the
-  training mechanics survive, the task families do not.
-- `2026-06-28-somedser-offline-white-paper.md` — agriculture-leaning first pass, already
-  marked SUPERSEDED in June.
+- **The June 2026 decision memo** — the canonical June call: education-as-task framing,
+  Gemma-3-4B/1B, Swahili, grand-prize target. **Positioning superseded**; its decode of
+  bare-GGUF judging still sound.
+- **The June 2026 execution dossier** — synthetic-data recipe, Unsloth QLoRA → GGUF spike,
+  1B-vs-4B score model, week-by-week plan. **Partially reusable**: the training mechanics
+  survive, the task families do not.
+- **The June 2026 white paper** — agriculture-leaning first pass, already marked superseded
+  in June.
+
+Titles rather than filenames, and no archive path: the archive is not public, so a path
+into it is a dead reference here and tells a reader nothing they can act on.
 
 What changed, in one line: the June plan's differentiator (a Socratic understanding probe)
 was ranked **7th of 9** by the August review as structurally mismatched to single-shot
