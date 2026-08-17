@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# SPDX-License-Identifier: MIT
 # Rejects a commit message that does not match this project's conventions.
 # Installed by: git config core.hooksPath .githooks
 set -uo pipefail

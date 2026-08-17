@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# SPDX-License-Identifier: MIT
 # Refuses a direct push to the default branch.
 # Installed by: git config core.hooksPath .githooks
 set -uo pipefail

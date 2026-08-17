@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# SPDX-License-Identifier: MIT
 # Refuses a commit that would break a rule this project states.
 # Installed by: git config core.hooksPath .githooks
 set -uo pipefail

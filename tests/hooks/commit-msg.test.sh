@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# SPDX-License-Identifier: MIT
 # Tests for the commit-msg hook. No dependencies beyond bash.
 # Run: bash tests/hooks/commit-msg.test.sh
 set -uo pipefail

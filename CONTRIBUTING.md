@@ -45,7 +45,7 @@ Three hooks then run:
   revert subjects, which git writes itself, are exempt.
 - **`pre-commit`** refuses a commit on `main` or on a branch not named
   `<type>/<short-description>`, and rejects staged content that breaks a rule stated elsewhere
-  in this document: a `.py` file without its SPDX header, a `License ::` classifier, a workflow
+  in this document: a source file without its SPDX header, a `License ::` classifier, a workflow
   missing `permissions:` or naming an action not pinned to a 40-character commit SHA, a
   changelog heading whose date is not ISO 8601, a committed model artefact or corpus, and a
   phone number that is not the documented placeholder. Once `pyproject.toml` exists it also
@@ -254,10 +254,13 @@ Consylr is MIT ([`LICENSE`](LICENSE)), decided in
 [ADR-0001](docs/adrs/0001-mit-licence-and-public-repository.md). By signing off a commit you
 agree your contribution is offered under that licence.
 
-- **Every source file begins with an SPDX identifier as its first comment line** — for
-  Python, `# SPDX-License-Identifier: MIT`. One line, machine-readable, and it survives a
-  single file being copied out of the tree. This applies from the first source file added;
-  there are none yet, which is why the rule is written down before it can be broken.
+- **Every source file begins with an SPDX identifier as its first comment line** —
+  `# SPDX-License-Identifier: MIT`, immediately after the shebang where there is one. One line,
+  machine-readable, and it survives a single file being copied out of the tree.
+  **Shell counts as source**, and so do the hook files in `.githooks/`, which carry no
+  extension: that directory is exactly the kind of thing people copy between repositories, so
+  the rule matters there at least as much as in product code. `check_spdx` enforces it for
+  `*.py`, `*.sh` and everything under `.githooks/`.
 - **No REUSE machinery** (`LICENSES/`, `.license` sidecars, `REUSE.toml`). That specification
   exists to disambiguate multi-licence trees; this is a single-licence repository with a root
   `LICENSE`, so the machinery would add files and buy no clarity. **The moment a second
