@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Refuses a direct push to the default branch.
+# Installed by: git config core.hooksPath .githooks
+set -uo pipefail
+
+while read -r _local_ref _local_sha remote_ref _remote_sha; do
+  case "$remote_ref" in
+    refs/heads/main)
+      printf 'pre-push: main is updated by merging a pull request, not by pushing.\n' >&2
+      exit 1
+      ;;
+  esac
+done
+
+# A personal check belongs here rather than in a tracked file. It stays inside
+# the git directory, is never published, and so may contain things a committed
+# file must not — a private vocabulary sweep being the obvious example: its
+# pattern list *is* the list it guards, so publishing the guard defeats it.
+ext="$(git rev-parse --git-common-dir)/hooks/pre-push.local"
+[ -x "$ext" ] && exec "$ext"
+exit 0

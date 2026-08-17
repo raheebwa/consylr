@@ -20,13 +20,64 @@ silent.
 
 | Thing you might look for | Where it stands |
 |---|---|
-| Test command | **Does not exist.** No source files, nothing to run. When the first module lands, the exact command replaces this row, and CI runs that same command. |
+| Test command | **`bash tests/hooks/run.sh`** — the hook rules carry tests, so this exists before any product code does. It grows to cover the product's own tests as they land; CI will run this same command. |
 | CI workflow | **Deliberately absent.** A workflow that runs nothing is a green tick that means nothing. It arrives in the commit that adds the first thing worth running. |
 | Package manifest | Not yet. Python is the expected language; the manifest lands with the first module. |
 | Benchmarks | None published. No figure has been measured yet, and none is quoted anywhere as though it had been. |
 
-Until then, contributions are documents: decision records, designs, and corrections to the
-evidence layer. Those have conventions too, and they are below.
+Until then, contributions are documents — decision records, designs, corrections to the
+evidence layer — plus the hooks that enforce the conventions below. Both have rules, and both
+are covered by the test command above.
+
+## Hooks
+
+The rules in this file are enforced locally, not merely documented. Enable them once per
+clone:
+
+```sh
+git config core.hooksPath .githooks
+```
+
+Three hooks then run:
+
+- **`commit-msg`** rejects a subject that is not `<type>(<scope>): <subject>`, a subject over
+  50 characters, a missing sign-off, and any trailer other than `Signed-off-by:`. Merge and
+  revert subjects, which git writes itself, are exempt.
+- **`pre-commit`** refuses a commit on `main` or on a branch not named
+  `<type>/<short-description>`, and rejects staged content that breaks a rule stated elsewhere
+  in this document: a `.py` file without its SPDX header, a `License ::` classifier, a workflow
+  missing `permissions:` or naming an action not pinned to a 40-character commit SHA, a
+  changelog heading whose date is not ISO 8601, a committed model artefact or corpus, and a
+  phone number that is not the documented placeholder. Once `pyproject.toml` exists it also
+  runs `ruff`, `mypy` and the test suite.
+- **`pre-push`** refuses a direct push to `main`.
+
+`pre-commit` judges the **staged** content, not the working tree: a partially staged file is
+committed as staged, and that is the version the rules have to hold for. The checks themselves
+live in `.githooks/checks.sh` as functions of the paths they are given, so they are tested
+against fixtures in [`tests/hooks/`](tests/hooks/) — **a hook nobody tested enforces nothing.**
+
+This is work CI cannot do. CI sees a branch only once its history is already written, and a
+malformed subject or a missing sign-off cannot be fixed afterwards without rewriting the
+branch — cheap before a push, disruptive after one. The moment of the commit is the only point
+where the fix is free.
+
+`git config` is per clone, so a fresh clone needs the line again.
+
+### Local extensions
+
+Each of `pre-commit` and `pre-push` will also run
+`$(git rev-parse --git-common-dir)/hooks/<name>.local` if you create one and mark it
+executable. That is where a personal check belongs: it stays inside the git directory and is
+never published, so it may contain things a tracked file must not.
+
+A vocabulary or secret sweep is the clearest example. Such a guard's pattern list *is* the list
+it guards, so committing it — or moving it into CI — would publish exactly what it exists to
+keep out. The same reasoning applies to ignoring a private path: those entries go in
+`.git/info/exclude`, never in the committed `.gitignore`, because **an ignore entry names the
+path it ignores and so announces that the path exists.**
+
+If a hook is wrong, fix the hook. `--no-verify` leaves the defect in the history.
 
 ## How the documents fit together
 
@@ -48,11 +99,12 @@ gapless; a withdrawn record keeps its number and says it was withdrawn.
 New or unobvious terms go in [`docs/glossary.md`](docs/glossary.md) in the same change that
 introduces them.
 
-## Test policy, declared before there is a test
+## Test policy
 
 **Test-driven development is the policy of this project, and the commit sequence is the
 evidence for it.** Declaring the policy is not the same as following it, so the history is
-where to check:
+where to check — starting with the hook tests, which were written RED-first before the checks
+they cover existed:
 
 1. Write the failing test first. Run it. Confirm it fails, **and that it fails for the
    reason you expect** — a test that passes before the behaviour exists is testing nothing.
