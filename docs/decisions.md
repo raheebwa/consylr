@@ -23,8 +23,10 @@ being built, and in what order, is tracked in
 | Arithmetic | Deterministic. Generation is never the authority for a number | Research §What the numerical-reasoning research really says |
 | Abstention | First-class trained behaviour, not a prompt instruction | Research §Grounding and abstention |
 | Model band | **3.8–4B**, chosen by bake-off, frozen on the *quantised GGUF* never the BF16 checkpoint | Research §Bake-off sequence |
-| Quantisation | **Q4_K_M baseline.** Q5 only if sealed evaluation pays for its RAM/TPS cost | Research §Size and quantisation |
-| Memory | **≤5 GB peak RSS hard internal, ≤4 GB preferred** (ceiling is 7 GB; each extra GB costs ~2.86 total points) | Research §Hard memory target |
+| Base model | **`Qwen3-4B-Instruct-2507`**, frozen on its Q4_K_M GGUF after the whole chain ran end to end. Qwen3.5-4B killed **on the local path only** — it converts correctly from a standard HF layout, so it re-enters only together with a backend that produces one | [ADR-0003](adrs/0003-freeze-base-model-and-training-backend.md) |
+| Training backend | **Local Apple Silicon path** — `mlx_lm.lora` → `mlx_lm.fuse` → `convert_hf_to_gguf.py` → `llama-quantize`, converter pinned to the same `llama.cpp` tag as the binaries. A decision in its own right, revisitable without reopening the model | [ADR-0003](adrs/0003-freeze-base-model-and-training-backend.md) |
+| Quantisation | **Q4_K_M baseline.** **Q5 is now effectively off the table** — the frozen model already clears the hard memory target by only 80 MB | [ADR-0003](adrs/0003-freeze-base-model-and-training-backend.md) |
+| Memory | **≤4 GB preferred is now the working target**, not ≤5 GB. Measured 4.90 GB on the frozen model — 80 MB inside the hard target, which is not margin. *[competition constraint — ADTC audit profile]* evaluation runs on 4 vCPU / 8 GB with the OS and runtime on top, and an out-of-memory there is **automatic disqualification**, not a low score | [ADR-0003](adrs/0003-freeze-base-model-and-training-backend.md) |
 | Throughput | Fast enough that a local session feels responsive, and optimised past that. The harness's 15 TPS cap is an implementation detail, not the goal | Research §Contradiction matrix |
 | App scope | **CLI is the only surface for now.** What is being proved is the model's judgement, and a richer surface would not prove it sooner | Research §Minimal CLI |
 | Language | **Swahili is off the critical path.** The African-use-case bonus does not require it | Research §Contradiction matrix |
@@ -34,8 +36,6 @@ being built, and in what order, is tracked in
 
 ## What is explicitly not decided
 
-- **Base model.** Bake-off order: Qwen3.5-4B (mandatory 2-hour conversion spike first) →
-  Qwen3-4B → Gemma 3 4B → Phi-4-mini → 1–2B efficiency baseline.
 - **The ADTC Participation Agreement.** Still a pre-submission blocker, now with a partial
   answer rather than none. A **preliminary working read on 2026-08-18** indicated that
   participants retain ownership of IP created for the contest, and grant the organisers and
