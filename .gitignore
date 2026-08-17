@@ -1,4 +1,4 @@
-# secrets — never committed; values live in `pass` under consylr/<env>/<service>/<field>
+# secrets — never committed
 .env
 .env.*
 !.env.example
