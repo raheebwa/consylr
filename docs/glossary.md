@@ -11,9 +11,9 @@ moment a term causes a second question.
 | **RFC** | Request for Comments — `docs/rfcs/`. Records a design: interface, behaviour, refusals, verification. Depends on an ADR. |
 | **PRD** | Product Requirements Document — `docs/prd/prd.md`. What we're building and for whom. |
 | **SFT** | Supervised fine-tuning — the training stage that teaches the task families. |
-| **QLoRA** | Quantised low-rank adaptation — the parameter-efficient fine-tuning method planned here. |
-| **GGUF** | The quantised model file format `llama.cpp` loads. The judged artefact. |
-| **TPS** | Tokens per second — the throughput measure, worth 30% of the score. |
+| **QLoRA** | Quantised low-rank adaptation — a parameter-efficient fine-tuning method. The training backend is not yet frozen; see the base-model epic. |
+| **GGUF** | The quantised model file format `llama.cpp` loads. The artefact that ships, and therefore the one that gets measured. |
+| **TPS** | Tokens per second — the throughput measure. The product target is a session that feels responsive on ordinary hardware; the ADTC harness additionally weights it at 30% of its score (see Competition terms). |
 
 ## Product terms
 
@@ -56,11 +56,16 @@ GSM8K score.
 external-processing dependency. It does not remove access-control, retention, audit or
 data-protection obligations. Never claim offline is "the only lawful architecture."
 
-**The submission repo is not this repo.** Gate 1 is entered from a public **fork** of the
-official ADTC template — the upstream repository is not marked as a template, so the mechanism
-is a fork rather than a template instantiation. This repo holds the product and its
-reasoning.
+**The submission repo is not this repo.** *(Competition-scoped.)* ADTC Gate 1 is entered from a
+public **fork** of the official ADTC template — the upstream repository is not marked as a
+template, so the mechanism is a fork rather than a template instantiation. This repo holds the
+product and its reasoning; the fork is an artefact produced from it for one evaluation.
 
-**Q4_K_M is a baseline, not a preference.** It is the default because each extra gigabyte of
-peak RSS costs roughly 2.86 total competition points, so a heavier quantisation must earn
-about 5.71 raw accuracy points per gigabyte just to break even.
+**Q4_K_M is a baseline, not a preference.** It is the default because the product has to run
+in memory an ordinary laptop can spare while other work is open, and a heavier quantisation has
+to earn that memory back in accuracy before it is worth taking.
+
+*[competition constraint — ADTC profiler]* The same trade-off is priced explicitly by the
+scoring formula: each additional gigabyte of peak RSS costs roughly 2.86 total points, so a
+heavier quantisation must earn about 5.71 raw accuracy points per gigabyte just to break even.
+That arithmetic is the harness's, but it points the same way the product requirement does.
