@@ -28,7 +28,15 @@ from consylr.violation import Violation
 class Tokeniser(Protocol):
     """Whatever the frozen model tokenises with."""
 
-    def encode(self, text: str) -> Sequence[int]: ...
+    def encode(self, text: str) -> Sequence[int]:
+        """Every token the runtime will charge against the window.
+
+        Including the ones the caller did not write: BOS, EOS and any chat
+        template markers occupy the same context as the prompt does. An adapter
+        that suppresses them undercounts by exactly the amount that decides the
+        boundary, and the check passes a prompt the runtime will truncate.
+        """
+        ...
 
 
 @dataclass(frozen=True)
@@ -68,7 +76,13 @@ class Budget:
 DEFAULT = Budget()
 
 
-def check(rendered_prompt: str, tokeniser: Tokeniser, budget: Budget = DEFAULT) -> list[Violation]:
+def check(
+    rendered_prompt: str,
+    tokeniser: Tokeniser,
+    budget: Budget = DEFAULT,
+    *,
+    case: str | None = None,
+) -> list[Violation]:
     """Every way the rendered prompt breaks the budget.
 
     `rendered_prompt` is the exact string the runtime sends, after templating —
@@ -85,6 +99,7 @@ def check(rendered_prompt: str, tokeniser: Tokeniser, budget: Budget = DEFAULT) 
                 f"rendered prompt is {used} tokens; the cap is {budget.prompt_max} "
                 f"(packet_max {budget.packet_max} + template_overhead "
                 f"{budget.template_overhead})",
+                case,
             )
         )
 
@@ -96,6 +111,7 @@ def check(rendered_prompt: str, tokeniser: Tokeniser, budget: Budget = DEFAULT) 
                 f"rendered prompt is {used} tokens and overruns the "
                 f"{budget.context}-token context by {-remaining}; "
                 f"{budget.output_reserve} was reserved for output",
+                case,
             )
         )
     elif remaining < budget.output_reserve:
@@ -103,7 +119,9 @@ def check(rendered_prompt: str, tokeniser: Tokeniser, budget: Budget = DEFAULT) 
             Violation(
                 "headroom_lost",
                 f"rendered prompt is {used} tokens, leaving {remaining} of the "
-                f"{budget.output_reserve} reserved for output in a {budget.context}-token context",
+                f"{budget.output_reserve} reserved for output in a "
+                f"{budget.context}-token context",
+                case,
             )
         )
 

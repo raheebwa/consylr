@@ -148,3 +148,36 @@ def test_a_prompt_one_token_into_the_reserve_fails() -> None:
         "prompt_over_budget",
         "headroom_lost",
     ]
+
+
+def test_a_rejection_can_name_the_case_it_came_from() -> None:
+    # RFC-0003: a rejection names the case, the measured count, the limit, and
+    # which limit it broke. In a corpus-wide audit the first three are useless
+    # without the fourth — a list of counts with no case attached sends the
+    # reader back through the corpus to find which packet produced it.
+    v = check("x" * 5000, TOK, DEFAULT, case="pkt-0041")[0]
+    assert v.case == "pkt-0041"
+
+
+def test_a_rejection_without_a_case_still_reports() -> None:
+    assert check("x" * 5000, TOK, DEFAULT)[0].case is None
+
+
+def test_the_tokeniser_contract_is_the_count_the_runtime_will_see() -> None:
+    # A tokeniser that drops the special tokens the runtime adds is wrong by
+    # exactly the amount that matters here: BOS and any chat-template markers are
+    # charged against the same window, so the adapter must include them.
+    class WithoutSpecials:
+        def encode(self, text: str) -> list[int]:
+            return [0] * len(text)
+
+    class WithSpecials:
+        def encode(self, text: str) -> list[int]:
+            return [1, *([0] * len(text)), 2]
+
+    budget = Budget(context=1000, packet_max=400, output_reserve=600).validate()
+    assert check("x" * 400, WithoutSpecials(), budget) == []
+    assert [v.code for v in check("x" * 400, WithSpecials(), budget)] == [
+        "prompt_over_budget",
+        "headroom_lost",
+    ]
