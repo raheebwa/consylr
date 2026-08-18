@@ -19,7 +19,7 @@ from pathlib import Path
 from consylr.cases import build
 from consylr.identity import scenario
 from consylr.prompt import render
-from consylr.templates import check, load, shape_violations
+from consylr.templates import Template, check, load, shape_violations
 from tests.support import FAKE_BUDGET, PerCharacter
 
 TRAIN = Path(__file__).resolve().parent.parent / "templates-train"
@@ -31,7 +31,7 @@ SAMPLE = 5
 CASES = 20
 
 
-def templates() -> list:
+def templates() -> list[Template]:
     return load(TRAIN)
 
 
@@ -70,7 +70,7 @@ def test_a_pattern_yields_many_distinct_cases() -> None:
     rather than a louder failure.
     """
     tok = PerCharacter()
-    for template in templates()[::len(templates()) // SAMPLE][:SAMPLE]:
+    for template in templates()[:: len(templates()) // SAMPLE][:SAMPLE]:
         packets = set()
         for index in range(CASES):
             case = build(
