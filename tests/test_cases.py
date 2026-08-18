@@ -9,7 +9,7 @@ honest, and it is the whole of the provenance story.
 
 import pytest
 
-from consylr.cases import DEFORMATIONS, build, case_seed
+from consylr.cases import DEFORMATIONS, _serialise, build, case_seed
 from consylr.templates import Template
 
 ROOT = 20260818
@@ -142,7 +142,7 @@ def test_a_template_whose_sides_are_not_records_is_refused() -> None:
 # --- every family, put to the validator that will grade the model -------------
 
 
-def a_richer_template(family: str) -> Template:
+def a_richer_template(family: str, pairs: int = 4) -> Template:
     body: dict[str, object] = {
         "id": f"t-{family}",
         "family": family,
@@ -153,7 +153,7 @@ def a_richer_template(family: str) -> Template:
                 "date": "2026-03-02",
                 "amount": "500.00",
             }
-            for i in range(4)
+            for i in range(pairs)
         ],
         "right": [
             {
@@ -162,7 +162,7 @@ def a_richer_template(family: str) -> Template:
                 "date": "2026-03-04",
                 "amount": "500.00",
             }
-            for i in range(4)
+            for i in range(pairs)
         ],
         "policy": [
             {"id": "P-1", "text": "Invoices settle at face value unless a deduction is stated."},
@@ -237,8 +237,8 @@ def test_an_over_budget_case_is_reported_when_a_tokeniser_is_supplied() -> None:
         tokeniser=PerCharacter(),
         budget=tiny,
     )
-    assert "prompt_over_budget" in [v.code for v in case.violations]
-    assert case.meta["prompt_tokens"] > 50
+    assert "packet_over_budget" in [v.code for v in case.violations]
+    assert case.meta["packet_tokens"] > 50
 
 
 # --- the refusals, each demonstrated rather than asserted ---------------------
@@ -292,3 +292,109 @@ def test_a_template_whose_sides_do_not_correspond_is_refused() -> None:
     body["right"] = list(body["right"])[:2]
     with pytest.raises(ValueError, match="same clean pairs"):
         build(Template.from_mapping(body), root_seed=ROOT, case_index=0, role="train")
+
+
+# --- the packet and the prompt are different strings --------------------------
+
+
+class PerCharacter:
+    def encode(self, text: str) -> list[int]:
+        return [0] * len(text)
+
+
+def test_declaring_a_wrapper_does_not_loosen_the_packet_allowance() -> None:
+    # The cap on the rendered prompt is packet_max + template_overhead. Measuring
+    # the *packet* against that cap makes every declared token of wrapper an
+    # extra token of packet allowance — so the more honestly a caller describes
+    # its template, the weaker the gate becomes. The failure it lets through is
+    # the harness left-truncating the prompt: valid JSON, healthy parse rate, and
+    # the model answering about records it never saw.
+    from consylr.budget import Budget
+
+    template = a_richer_template("clean_match")
+    measured = build(
+        template, root_seed=ROOT, case_index=0, role="train", tokeniser=PerCharacter()
+    ).meta["packet_tokens"]
+
+    # One token over the packet allowance, and comfortably under the prompt cap.
+    # Checked against the prompt cap this packet is legal, which is the mistake.
+    budget = Budget(
+        context=8192, packet_max=measured - 1, template_overhead=500, output_reserve=600
+    ).validate()
+    case = build(
+        template,
+        root_seed=ROOT,
+        case_index=0,
+        role="train",
+        tokeniser=PerCharacter(),
+        budget=budget,
+    )
+    assert budget.packet_max < case.meta["packet_tokens"] < budget.prompt_max
+    assert "packet_over_budget" in [v.code for v in case.violations]
+
+
+def test_the_packet_count_is_recorded_under_a_name_that_means_the_packet() -> None:
+    case = build(
+        a_richer_template("clean_match"),
+        root_seed=ROOT,
+        case_index=0,
+        role="train",
+        tokeniser=PerCharacter(),
+    )
+    assert "packet_tokens" in case.meta
+    assert "prompt_tokens" not in case.meta, "nothing here has rendered a prompt"
+
+
+def test_a_rendered_prompt_is_checked_against_the_prompt_cap_when_one_is_given() -> None:
+    """A packet inside its allowance whose prompt is not.
+
+    Calibrated against the packet this fixture actually produces, so the test
+    isolates the prompt cap rather than tripping the packet one on the way.
+    """
+    from consylr.budget import Budget
+
+    template = a_richer_template("clean_match")
+    measured = build(
+        template, root_seed=ROOT, case_index=0, role="train", tokeniser=PerCharacter()
+    ).meta["packet_tokens"]
+
+    # Room for the packet, and for a wrapper half the size of the real one.
+    budget = Budget(
+        context=4096, packet_max=measured, template_overhead=10, output_reserve=600
+    ).validate()
+    case = build(
+        template,
+        root_seed=ROOT,
+        case_index=0,
+        role="train",
+        tokeniser=PerCharacter(),
+        budget=budget,
+        render=lambda packet: "instructions, at some length: " + _serialise(packet) + " decide.",
+    )
+    assert case.meta["prompt_tokens"] > case.meta["packet_tokens"]
+    codes = [v.code for v in case.violations]
+    assert "prompt_over_budget" in codes and "packet_over_budget" not in codes
+
+
+def test_a_template_with_no_id_is_refused_rather_than_built_under_an_empty_one() -> None:
+    # It built clean and wrote meta['template_id'] == '', which the split then
+    # treats as a template — one that every other id-less template is an alias of.
+    body = dict(a_richer_template("clean_match").body)
+    del body["id"]
+    with pytest.raises(ValueError, match="id"):
+        build(Template.from_mapping(body), root_seed=ROOT, case_index=0, role="train")
+
+
+def test_a_record_carrying_its_own_id_does_not_override_the_generated_one() -> None:
+    # Identifiers are the packet's, assigned by side and position. A record that
+    # brought its own would collide across sides or point a citation at nothing,
+    # and every `why` in the expected output is written against the generated id.
+    body = dict(a_richer_template("clean_match").body)
+    left = [dict(r) for r in body["left"]]
+    left[0]["id"] = "B-999"
+    body["left"] = left
+    case = build(Template.from_mapping(body), root_seed=ROOT, case_index=0, role="train")
+    ids = [r["id"] for r in case.packet["records"]]
+    assert "B-999" not in ids
+    assert len(ids) == len(set(ids))
+    assert case.violations == []
