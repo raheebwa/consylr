@@ -1,0 +1,97 @@
+{
+  "cause": "P-2",
+  "documents": [
+    {
+      "id": "D-1",
+      "text": "Remittance advice, batch 061."
+    }
+  ],
+  "family": "withholding",
+  "id": "withholding-011",
+  "left": [
+    {
+      "amount": "1904.40",
+      "date": "2026-05-21",
+      "party": "Copperfield Supply Ltd",
+      "ref": "PO-06257"
+    },
+    {
+      "amount": "1250.00",
+      "date": "2026-06-03",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "CN-06268"
+    },
+    {
+      "amount": "6300.00",
+      "date": "2026-06-16",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "STM-06279"
+    },
+    {
+      "amount": "3075.25",
+      "date": "2026-06-29",
+      "party": "Pennine Metals Ltd",
+      "ref": "REM-06290"
+    },
+    {
+      "amount": "29840.00",
+      "date": "2026-03-02",
+      "party": "Quayside Packaging Ltd",
+      "ref": "INV-06301"
+    },
+    {
+      "amount": "480.00",
+      "date": "2026-03-11",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "PO-06312"
+    }
+  ],
+  "policy": [
+    {
+      "id": "P-1",
+      "text": "Invoices settle at face value unless a deduction is stated in this schedule."
+    },
+    {
+      "id": "P-2",
+      "text": "Withholding tax is deducted before remittance at the statutory rate."
+    }
+  ],
+  "right": [
+    {
+      "amount": "1904.40",
+      "date": "2026-05-26",
+      "party": "Copperfield Supply Ltd",
+      "ref": "PO-06257"
+    },
+    {
+      "amount": "1250.00",
+      "date": "2026-06-09",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "CN-06268"
+    },
+    {
+      "amount": "6300.00",
+      "date": "2026-06-22",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "STM-06279"
+    },
+    {
+      "amount": "3075.25",
+      "date": "2026-07-02",
+      "party": "Pennine Metals Ltd",
+      "ref": "REM-06290"
+    },
+    {
+      "amount": "29840.00",
+      "date": "2026-03-05",
+      "party": "Quayside Packaging Ltd",
+      "ref": "INV-06301"
+    },
+    {
+      "amount": "480.00",
+      "date": "2026-03-13",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "PO-06312"
+    }
+  ]
+}

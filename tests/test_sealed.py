@@ -28,22 +28,40 @@ def test_every_family_is_represented_in_the_sealed_set() -> None:
     """Per-family metrics are reported, so a family absent from the exam is a
     metric that cannot be computed — and a refusal rate needs the abstention
     families present in numbers, not merely present."""
-    chosen = sealed_templates(all_templates(), CONFIG)
-    families = {t.family for t in chosen}
-    assert families == set(DEFORMATIONS)
+    chosen = sealed_templates(all_templates(), CONFIG, tokeniser=PerFourCharacters())
+    assert {t.family for t in chosen} == set(DEFORMATIONS)
+
+
+def test_every_family_has_enough_packets_to_be_a_number(tmp_path: Path) -> None:
+    # Counting templates gave a family fourteen packets or one, depending on
+    # whether its deformation varies with the case index at all.
+    import collections
+    import json as _json
+
+    written = seal(all_templates(), CONFIG, tmp_path, tokeniser=PerFourCharacters())
+    per = collections.Counter(_json.loads((d / "meta.json").read_text())["family"] for d in written)
+    assert min(per.values()) >= CONFIG.packets_per_family
 
 
 def test_the_sealed_choice_is_the_same_every_time() -> None:
     templates = all_templates()
-    first = [t.id for t in sealed_templates(templates, CONFIG)]
-    second = [t.id for t in sealed_templates(list(reversed(templates)), CONFIG)]
+    first = [t.id for t in sealed_templates(templates, CONFIG, tokeniser=PerFourCharacters())]
+    second = [
+        t.id
+        for t in sealed_templates(list(reversed(templates)), CONFIG, tokeniser=PerFourCharacters())
+    ]
     assert first == second
 
 
 def test_a_different_seed_seals_a_different_set() -> None:
     templates = all_templates()
-    a = {t.id for t in sealed_templates(templates, CONFIG)}
-    b = {t.id for t in sealed_templates(templates, Sealed(seed=CONFIG.seed + 1))}
+    a = {t.id for t in sealed_templates(templates, CONFIG, tokeniser=PerFourCharacters())}
+    b = {
+        t.id
+        for t in sealed_templates(
+            templates, Sealed(seed=CONFIG.seed + 1), tokeniser=PerFourCharacters()
+        )
+    }
     assert a != b
 
 
@@ -51,7 +69,7 @@ def test_no_sealed_template_is_also_a_training_template() -> None:
     # The whole property. A template in both roles means the exam asks what the
     # training set already answered.
     templates = all_templates()
-    chosen = {t.id for t in sealed_templates(templates, CONFIG)}
+    chosen = {t.id for t in sealed_templates(templates, CONFIG, tokeniser=PerFourCharacters())}
     training = {t.id for t in templates} - chosen
     assert chosen and training
     assert not (chosen & training)
@@ -59,7 +77,7 @@ def test_no_sealed_template_is_also_a_training_template() -> None:
 
 def test_sealing_writes_roughly_two_hundred_packets(tmp_path: Path) -> None:
     written = seal(all_templates(), CONFIG, tmp_path, tokeniser=PerFourCharacters())
-    assert 150 <= len(written) <= 260, f"{len(written)} packets"
+    assert 190 <= len(written) <= 260, f"{len(written)} packets"
 
 
 def test_every_sealed_case_is_recorded_as_holdout(tmp_path: Path) -> None:

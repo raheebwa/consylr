@@ -26,7 +26,13 @@ from tests.support import PerCharacter, a_template, built, template_body
 ROLES = ("train", "holdout")
 
 
-def case_rows(template: Template, role: str, indices: tuple[int, ...] = (0, 1)) -> list[Any]:
+def case_rows(template: Template, role: str, indices: tuple[int, ...] = (0,)) -> list[Any]:
+    """Cases from one template.
+
+    One index by default: a `clean_match` template yields exactly one distinct
+    case however many are asked for, and asking for two now produces a duplicate
+    the writer refuses — which is the behaviour, not an inconvenience.
+    """
     return [built(template, case_index=i, role=role) for i in indices]
 
 
@@ -34,6 +40,14 @@ def test_a_clean_corpus_passes() -> None:
     rows = case_rows(a_template(id="t-001"), "train") + case_rows(
         a_template(id="t-002", amount="900.00"), "holdout"
     )
+    assert check(rows) == []
+
+
+def test_a_corpus_of_one_case_per_distinct_template_passes() -> None:
+    rows = [
+        built(a_template(id=f"t-{i:03d}", amount=f"{100 + i}.00"), case_index=0, role="train")
+        for i in range(5)
+    ]
     assert check(rows) == []
 
 
@@ -98,7 +112,10 @@ def test_a_corpus_that_fails_its_audit_does_not_reach_disk(tmp_path: Path) -> No
 
 
 def test_a_clean_corpus_is_written_as_rfc_0003_describes(tmp_path: Path) -> None:
-    rows = case_rows(a_template(id="t-001"), "train")
+    rows = [
+        built(a_template(id=f"t-{i:03d}", amount=f"{100 + i}.00"), case_index=0, role="train")
+        for i in range(2)
+    ]
     write(tmp_path, rows)
 
     written = sorted(p.name for p in tmp_path.iterdir())
@@ -110,7 +127,7 @@ def test_a_clean_corpus_is_written_as_rfc_0003_describes(tmp_path: Path) -> None
             "packet.json",
         ]
         meta = json.loads((case_dir / "meta.json").read_text())
-        assert meta["template_id"] == "t-001"
+        assert meta["template_id"].startswith("t-")
         assert meta["role"] == "train"
         assert meta["prompt_digest"], "a case must record the interface it was rendered against"
 

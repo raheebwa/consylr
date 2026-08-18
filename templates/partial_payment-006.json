@@ -1,0 +1,92 @@
+{
+  "documents": [
+    {
+      "id": "D-1",
+      "text": "Remittance advice, batch 156."
+    }
+  ],
+  "family": "partial_payment",
+  "id": "partial_payment-006",
+  "left": [
+    {
+      "amount": "480.00",
+      "date": "2026-05-08",
+      "party": "Northwind Ltd",
+      "ref": "PO-09772"
+    },
+    {
+      "amount": "925.50",
+      "date": "2026-05-21",
+      "party": "Southgate Ltd",
+      "ref": "CN-09783"
+    },
+    {
+      "amount": "42150.00",
+      "date": "2026-06-03",
+      "party": "Eastvale Trading Ltd",
+      "ref": "STM-09794"
+    },
+    {
+      "amount": "755.00",
+      "date": "2026-06-16",
+      "party": "Westbrook Services Ltd",
+      "ref": "REM-09805"
+    },
+    {
+      "amount": "63.15",
+      "date": "2026-06-29",
+      "party": "Harbourline Freight Ltd",
+      "ref": "INV-09816"
+    },
+    {
+      "amount": "17400.00",
+      "date": "2026-03-02",
+      "party": "Copperfield Supply Ltd",
+      "ref": "PO-09827"
+    }
+  ],
+  "policy": [
+    {
+      "id": "P-1",
+      "text": "Invoices settle at face value unless a deduction is stated in this schedule."
+    }
+  ],
+  "right": [
+    {
+      "amount": "480.00",
+      "date": "2026-05-12",
+      "party": "Northwind Ltd",
+      "ref": "PO-09772"
+    },
+    {
+      "amount": "925.50",
+      "date": "2026-05-26",
+      "party": "Southgate Ltd",
+      "ref": "CN-09783"
+    },
+    {
+      "amount": "42150.00",
+      "date": "2026-06-09",
+      "party": "Eastvale Trading Ltd",
+      "ref": "STM-09794"
+    },
+    {
+      "amount": "755.00",
+      "date": "2026-06-22",
+      "party": "Westbrook Services Ltd",
+      "ref": "REM-09805"
+    },
+    {
+      "amount": "63.15",
+      "date": "2026-07-02",
+      "party": "Harbourline Freight Ltd",
+      "ref": "INV-09816"
+    },
+    {
+      "amount": "17400.00",
+      "date": "2026-03-05",
+      "party": "Copperfield Supply Ltd",
+      "ref": "PO-09827"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "cause": "P-2",
+  "documents": [
+    {
+      "id": "D-1",
+      "text": "Remittance advice, batch 089."
+    }
+  ],
+  "family": "timing_cutoff",
+  "id": "timing_cutoff-014",
+  "left": [
+    {
+      "amount": "63.15",
+      "date": "2026-04-02",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "REM-07293"
+    },
+    {
+      "amount": "17400.00",
+      "date": "2026-04-14",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "INV-07304"
+    },
+    {
+      "amount": "88.75",
+      "date": "2026-04-27",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "PO-07315"
+    }
+  ],
+  "policy": [
+    {
+      "id": "P-1",
+      "text": "Invoices settle at face value unless a deduction is stated in this schedule."
+    },
+    {
+      "id": "P-2",
+      "text": "The period closes on the last business day; a later value date falls after."
+    }
+  ],
+  "right": [
+    {
+      "amount": "63.15",
+      "date": "2026-04-06",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "REM-07293"
+    },
+    {
+      "amount": "17400.00",
+      "date": "2026-04-17",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "INV-07304"
+    },
+    {
+      "amount": "88.75",
+      "date": "2026-05-04",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "PO-07315"
+    }
+  ]
+}

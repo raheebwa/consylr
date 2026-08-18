@@ -88,6 +88,23 @@ def check(cases: Iterable[Case]) -> list[Violation]:
                     "examined on the other, and no packet distinguishes them",
                 )
             )
+            continue
+
+        # Same packet, same answer: not a contradiction, and not a corpus
+        # either. The first sealed set held 196 packets and 73 distinct ones,
+        # so a metric computed on it weighted the repeated cases sevenfold —
+        # measurement with a bent ruler. The count is named rather than
+        # absorbed, because a thin template set otherwise reads as a large
+        # corpus rather than as the same question asked repeatedly.
+        ids = next(iter(by_answer.values()))
+        if len(ids) > 1:
+            violations.append(
+                Violation(
+                    "duplicate_packet",
+                    f"{_named(ids)} produce one identical packet {len(ids)} times; every metric "
+                    "computed on this corpus would weight it that many times over",
+                )
+            )
 
     for by_role in roles.values():
         if len(by_role) > 1:

@@ -1,0 +1,44 @@
+{
+  "documents": [
+    {
+      "id": "D-1",
+      "text": "Remittance advice, batch 110."
+    }
+  ],
+  "family": "reference_mangled",
+  "id": "reference_mangled-010",
+  "left": [
+    {
+      "amount": "925.50",
+      "date": "2026-03-02",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "INV-08070"
+    },
+    {
+      "amount": "42150.00",
+      "date": "2026-03-11",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "PO-08081"
+    }
+  ],
+  "policy": [
+    {
+      "id": "P-1",
+      "text": "Invoices settle at face value unless a deduction is stated in this schedule."
+    }
+  ],
+  "right": [
+    {
+      "amount": "925.50",
+      "date": "2026-03-05",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "INV-08070"
+    },
+    {
+      "amount": "42150.00",
+      "date": "2026-03-13",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "PO-08081"
+    }
+  ]
+}

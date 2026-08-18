@@ -1,0 +1,56 @@
+{
+  "documents": [
+    {
+      "id": "D-1",
+      "text": "Remittance advice, batch 164."
+    }
+  ],
+  "family": "partial_payment",
+  "id": "partial_payment-014",
+  "left": [
+    {
+      "amount": "6300.00",
+      "date": "2026-06-03",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "REM-10068"
+    },
+    {
+      "amount": "3075.25",
+      "date": "2026-06-16",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "INV-10079"
+    },
+    {
+      "amount": "29840.00",
+      "date": "2026-06-29",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "PO-10090"
+    }
+  ],
+  "policy": [
+    {
+      "id": "P-1",
+      "text": "Invoices settle at face value unless a deduction is stated in this schedule."
+    }
+  ],
+  "right": [
+    {
+      "amount": "6300.00",
+      "date": "2026-06-09",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "REM-10068"
+    },
+    {
+      "amount": "3075.25",
+      "date": "2026-06-22",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "INV-10079"
+    },
+    {
+      "amount": "29840.00",
+      "date": "2026-07-02",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "PO-10090"
+    }
+  ]
+}
