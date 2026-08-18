@@ -18,7 +18,7 @@ That is the shape of the product, and everything below is an elaboration of it.
 > [!NOTE]
 > **Status: early.** Docs first, by design — the product definition, the decisions and the
 > evidence came before the build so the build has something to be checked against. The first
-> module has landed. See [Where this stands](#where-this-stands).
+> modules have landed. See [Where this stands](#where-this-stands).
 
 ⚠️ The name is cleared at knock-out level only — no registry clearance has been run.
 See [ADR-0002](docs/adrs/0002-keep-the-name-consylr.md) for the residual risk.
@@ -100,7 +100,8 @@ or lawful.** "Offline" is a data-disclosure property, not a legal one — see
 
 Documents first, deliberately: the reasoning was written before the build so that the build has
 something to be checked against, and so that a decision can be found later instead of guessed at.
-The first module — the output validator — has landed against RFC-0001.
+Three modules have landed: the output validator against RFC-0001, and the token-budget and
+quota assertions against RFC-0002 and RFC-0003.
 
 **Decided** — the positioning; that the model itself decides correspondence, with no external
 deterministic matcher in the runtime; deterministic arithmetic; trained abstention; the 3.8–4B
