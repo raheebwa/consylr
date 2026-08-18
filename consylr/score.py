@@ -196,3 +196,47 @@ def score(answers: Iterable[Answer]) -> Report:
         family = report.per_family.setdefault(answer.family, Tally())
         _tally(answer, (report, family))
     return report
+
+
+def record(
+    answers: Sequence[Answer],
+    report: Report,
+    *,
+    exam: str,
+    model: str,
+    mode: str,
+    **extra: Any,
+) -> dict[str, Any]:
+    """One run, in the form it is kept in — metrics and what was actually said.
+
+    **The raw output is retained on every case, not only on failures.** RFC-0001
+    left that open; the first scaffolded reference run closed it. It reported a
+    correspondence F1 of exactly 0.500 on nine of fourteen families, the
+    arithmetic behind it was sound, and the only way to tell an honest result
+    from an artefact was to read what the model emitted — which the run had
+    scored and thrown away.
+
+    Failure-only retention would not have helped. Those answers parsed. An
+    implausible number on a well-formed answer is precisely the case it misses,
+    and it is the case worth investigating, because a malformed answer already
+    announces itself.
+    """
+    return {
+        "exam": exam,
+        "model": model,
+        "mode": mode,
+        "packets": len(answers),
+        "parse_rate": report.parse_rate,
+        "schema_valid": report.schema_valid,
+        "exact_match": report.exact_match,
+        "correspondence_f1": report.correspondence_f1,
+        "citation_resolution": report.citation_resolution,
+        "correct_abstention": report.correct_abstention,
+        "false_abstention": report.false_abstention,
+        "per_family": {
+            f: {"exact": t.exact_match, "f1": t.correspondence_f1, "n": t.asked}
+            for f, t in report.per_family.items()
+        },
+        "cases": [{"family": a.family, "produced": a.produced} for a in answers],
+        **extra,
+    }

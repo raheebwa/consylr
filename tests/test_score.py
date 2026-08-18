@@ -16,7 +16,7 @@ need care rather than arithmetic:
 import json
 from typing import Any
 
-from consylr.score import Answer, score
+from consylr.score import Answer, record, score
 
 PACKET = {
     "records": [{"id": "A-001"}, {"id": "B-001"}],
@@ -111,3 +111,35 @@ def test_per_family_accuracy_is_reported_separately() -> None:
     )
     assert report.per_family["clean_match"].exact_match == 1.0
     assert report.per_family["decoy"].exact_match == 0.0
+
+
+def test_a_run_record_keeps_what_the_model_actually_said() -> None:
+    """RFC-0001 open question 3, answered by evidence rather than by preference.
+
+    The first scaffolded reference run produced a correspondence F1 of exactly
+    0.500 on nine of fourteen families. The arithmetic was sound, so the number
+    could only be explained by reading what the model emitted — and the run had
+    scored the answers and discarded them. Nothing about the metric was wrong;
+    it was simply undiagnosable.
+
+    Retention is therefore always, not on failure. An implausible number on a
+    **parseable** answer is exactly the case failure-only retention misses.
+    """
+    answers = [answer("not json at all", CLEAN), answer(json.dumps(CLEAN), CLEAN)]
+
+    kept = record(answers, score(answers), exam="sealed-v4", model="m", mode="profiler")
+
+    assert [c["produced"] for c in kept["cases"]] == ["not json at all", json.dumps(CLEAN)]
+    assert [c["family"] for c in kept["cases"]] == ["clean_match", "clean_match"]
+
+
+def test_a_run_record_still_carries_the_metrics_it_always_did() -> None:
+    """The retention is an addition. A record that dropped a metric to make room
+    would trade one undiagnosable number for a missing one."""
+    answers = [answer(json.dumps(CLEAN), CLEAN)]
+
+    kept = record(answers, score(answers), exam="sealed-v4", model="m", mode="profiler")
+
+    for key in ("parse_rate", "correspondence_f1", "correct_abstention", "false_abstention"):
+        assert key in kept, f"{key} is no longer recorded"
+    assert kept["mode"] == "profiler" and kept["packets"] == 1
