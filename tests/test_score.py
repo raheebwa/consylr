@@ -16,7 +16,7 @@ need care rather than arithmetic:
 import json
 from typing import Any
 
-from consylr.score import Answer, record, score
+from consylr.score import Answer, positional, record, score
 
 PACKET = {
     "records": [{"id": "A-001"}, {"id": "B-001"}],
@@ -168,3 +168,37 @@ def test_a_run_record_names_the_artefact_that_produced_it() -> None:
 
     assert kept["adapter"] == "adapters-v1"
     assert kept["exam_digest"] == "abc"
+
+
+def test_the_null_answer_pairs_by_position_and_reads_nothing() -> None:
+    """The control every reported F1 must sit beside.
+
+    A model that pairs record n on one side with record n on the other, claims
+    every pair supported, and cites only the two records, scores 0.839
+    correspondence F1 on sealed-v4 — because the generator emits records in
+    correspondence order. A tuned model at 0.904 is therefore 0.065 above
+    reading nothing, not 0.904 above it.
+
+    It is built from the packet's ids alone. If it ever consults `expected`,
+    it stops being a control and becomes a cheat.
+    """
+    produced = json.loads(positional(PACKET))
+
+    assert produced["matches"] == [
+        {"l": ["A-001"], "r": ["B-001"], "c": "supported", "why": ["A-001", "B-001"]}
+    ]
+    assert produced["residue"] == {"l": [], "r": []}
+
+
+def test_the_null_answer_leaves_an_unpaired_record_as_residue() -> None:
+    """Sides of unequal length are the case the null model cannot pair away.
+
+    Declaring them matched anyway would make the control score better than
+    reading nothing actually can, which would understate the real gain.
+    """
+    packet = {"records": [{"id": "A-001"}, {"id": "A-002"}, {"id": "B-001"}], "policy": []}
+
+    produced = json.loads(positional(packet))
+
+    assert len(produced["matches"]) == 1
+    assert produced["residue"] == {"l": ["A-002"], "r": []}
