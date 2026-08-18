@@ -12,6 +12,19 @@ So it renders through `prompt.render`, and it refuses a corpus whose recorded
 prompt digest is not this template's. That check is cheap and it is the only
 thing standing between a corpus and a training run nobody can reproduce.
 
+**The rows carry `text`, not `prompt` and `completion`, and that is not a
+stylistic choice.** The training backend picks its dataset class by which keys a
+row holds, and a `prompt`/`completion` pair selects the class that wraps them in
+the model's *chat template* — so the model would learn to answer after an
+assistant marker while the profiler sends a bare prompt with no marker at all.
+The interfaces would differ by a few tokens nobody looks at, the loss would
+fall, the eval would be poor, and nothing would name the cause. A `text` row is
+tokenised verbatim, so the answer begins exactly where generation begins.
+
+The cost is that the loss covers the prompt as well as the answer, since prompt
+masking is not offered for that row shape. Diluted gradient is the cheaper
+mistake: a wrong interface is not a matter of degree.
+
 It reads a corpus from disk rather than taking cases in memory, deliberately.
 The artefacts on disk are what passed the audit; anything held in memory is
 something that might not have.
@@ -39,9 +52,9 @@ def emit(
 ) -> int:
     """Write one JSON line per case, and return how many.
 
-    The shape is `{"prompt": ..., "completion": ...}`, which is what the
-    training backend in ADR-0003 reads, plus the template id so a split can be
-    checked after the fact.
+    The shape is `{"text": ...}`, deliberately — see the module docstring. The
+    template id rides along so a split can be checked after the fact; it is not
+    a key the backend selects on.
 
     A validation slice is split **by template**, never by row — the same rule
     the exam is held to. Drawn at random it would share templates with training,
@@ -75,15 +88,12 @@ def emit(
         packet = json.loads((case / "packet.json").read_text(encoding="utf-8"))
         expected = json.loads((case / "expected.json").read_text(encoding="utf-8"))
         template_id = str(meta.get("template_id", ""))
-        row = json.dumps(
-            {
-                "prompt": render(packet),
-                # Separators matched to the packet's own serialisation, so the
-                # model is trained to produce the shape the validator reads.
-                "completion": json.dumps(expected, sort_keys=True, separators=(",", ":")),
-                "template_id": template_id,
-            }
-        )
+        # The answer follows the prompt with nothing between them, because
+        # nothing is between them at inference either. Separators match the
+        # packet's own serialisation, so the model is trained to produce the
+        # shape the validator reads.
+        answer = json.dumps(expected, sort_keys=True, separators=(",", ":"))
+        row = json.dumps({"text": render(packet) + answer, "template_id": template_id})
         (held if validation(template_id) else lines).append(row)
 
     out.parent.mkdir(parents=True, exist_ok=True)
