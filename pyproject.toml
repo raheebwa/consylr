@@ -10,7 +10,11 @@ authors = [{ name = "Aheebwa Ramadhan", email = "hello@badrama.com" }]
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "mypy>=1.11"]
+# `tokenizers` is here so the pinned template overhead can actually be
+# re-measured. The check was unrunnable without it, which made the pin a number
+# nobody could contradict — it skips wherever the frozen model is absent, and a
+# skip is not a pass.
+dev = ["pytest>=8", "mypy>=1.11", "tokenizers>=0.20"]
 
 [build-system]
 requires = ["hatchling"]

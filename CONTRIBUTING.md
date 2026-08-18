@@ -36,7 +36,7 @@ From a clone, at the repository root:
 ```sh
 mise trust
 mise install
-mise exec -- uv pip install -e ".[dev]"
+mise exec -- uv sync --frozen --extra dev
 ```
 
 [mise](https://mise.jdx.dev) pins the interpreter in `mise.toml`, so a contributor's run and a CI
@@ -45,10 +45,17 @@ variables, and the tool will not read one until you say it may.
 
 **`mise exec --` is load-bearing on that third line**, and the recipe fails without it. The
 virtualenv is created when mise resolves the environment, not when it installs tools — so after
-`mise install` alone there is no `.venv`, and `uv pip install` exits with "No virtual environment
+`mise install` alone there is no `.venv`, and the install exits with "No virtual environment
 found". If you have mise wired into your shell, the prefix is redundant; if you do not, it is the
 difference between a working checkout and a confusing error. Prefix the commands below the same
 way, or run `mise activate` once.
+
+**`--frozen` installs exactly what `uv.lock` records**, and fails if the lock and the manifest
+disagree. `uv.lock` is committed and CI installs from it the same way. Resolving afresh on each
+run would let a transitive dependency change under a green build with nothing in the diff to show
+it — and a project whose central claim is that its evidence can be regenerated from pinned inputs
+cannot leave its own inputs unpinned. After editing dependencies in `pyproject.toml`, run
+`mise exec -- uv lock` and commit the result with the change.
 
 CI reaches the same state through the mise action, which resolves the environment as part of its
 own setup.
