@@ -207,6 +207,28 @@ def shape_violations(template: Template) -> list[Violation]:
                         template.id or None,
                     )
                 )
+            # A pattern template declares a pool where a fixed one declares a
+            # value, and `instantiate` resolves it before a case is built. Where
+            # that step is skipped the pool reaches the packet, and only `amount`
+            # was ever caught — by `money.canonical` failing to read a list. The
+            # fields no canonicaliser touches went through clean: a pool on
+            # 'party' rendered `['Northwind Ltd', 'Southgate Ltd']` into the
+            # prompt as a counterparty, in a case the corpus writer accepted.
+            for key in sorted(RECORD_FIELDS & set(record)):
+                # A container, not merely a non-string. RFC-0003 canonicalises
+                # amounts, so `1000`, `1000.0` and `"1000.00"` are one amount and
+                # a numeric one is legitimate — rejecting every non-string here
+                # broke eight tests that assert exactly that tolerance. What
+                # cannot reach a packet is a pool.
+                if isinstance(record[key], (list, dict, set, tuple)):
+                    out.append(
+                        Violation(
+                            "bad_type",
+                            f"{name}: {side} entry {n} has a {key!r} that is not a value; a "
+                            "pattern's pool was not instantiated, and it would reach the packet",
+                            template.id or None,
+                        )
+                    )
 
     for section in ("policy", "documents"):
         for n, entry in enumerate(body.get(section, []) or [], start=1):
