@@ -297,35 +297,6 @@ def test_a_loaded_template_that_produced_no_cases_is_reported() -> None:
     ]
 
 
-def test_a_template_that_cannot_be_built_is_reported_not_raised_through() -> None:
-    """`partition` and `check` called `scenario()` unguarded.
-
-    So one template that `templates.check` certifies clean — a cause-bearing
-    family with no `cause` key, which is the shape every such template had
-    before that check existed — aborted the whole audit with an uncaught
-    ValueError, where its sibling `identity.check` reports it as one violation
-    among many. An audit that must count every problem died at the first one.
-    """
-    legacy = Template.from_mapping(
-        {
-            **template_body(id="t-legacy", family="fee_at_source"),
-            "cause": "P-2",
-            "policy": [{"id": "P-2", "text": "Invoices settle at face value."}],
-        }
-    )
-    good = a_template(id="t-good")
-
-    roles = partition([good, legacy], holdout_share=0.3, seed=1)
-    assert legacy.id not in roles, "an unbuildable template has no scenario to place"
-    assert good.id in roles
-
-    # `identity.check` owns whether a template emits a case at all; what matters
-    # here is that neither of these raises through an audit meant to count.
-    codes = [v.code for v in check([case(good, roles[good.id])], [good, legacy])]
-    assert codes, "the audit ran and reported"
-    assert "unbuildable_template" in [v.code for v in identity_check([legacy])]
-
-
 def test_the_audit_asks_each_template_for_its_scenario_once(monkeypatch: Any) -> None:
     """It asked once per comparison, which is quadratic in the corpus.
 
@@ -352,3 +323,30 @@ def test_the_audit_asks_each_template_for_its_scenario_once(monkeypatch: Any) ->
 
     # Once for the partition and once for the audit; never once per comparison.
     assert len(calls) <= 2 * len(templates)
+
+
+def test_a_template_that_cannot_be_built_stops_the_partition() -> None:
+    """Reported, never skipped.
+
+    Dropping it silently was worse than either alternative: `partition` returned
+    a dict missing that template, so `split.check(expected=...)` found no
+    expected role for it and its `if want is not None` guard short-circuited —
+    the corpus could then record any role at all and the cross-check that is
+    meant to be the difference between passing a corpus and passing its exact
+    inverse never fired.
+
+    `identity.check` still reports it as a violation for an audit that must
+    count every problem. A partition is not an audit: it is a decision, and a
+    decision that quietly omits its subject is not one.
+    """
+    legacy = Template.from_mapping(
+        {
+            **template_body(id="t-legacy", family="fee_at_source"),
+            "cause": "P-2",
+            "policy": [{"id": "P-2", "text": "Invoices settle at face value."}],
+        }
+    )
+    with pytest.raises(ValueError, match="t-legacy"):
+        partition([a_template(id="t-good"), legacy], holdout_share=0.3, seed=1)
+
+    assert "unbuildable_template" in [v.code for v in identity_check([legacy])]
