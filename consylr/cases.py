@@ -601,10 +601,31 @@ def build(
     if not template.id:
         raise ValueError("a template with no id cannot be built; the split separates on it")
 
+    # Imported here rather than at module scope: `instantiate` needs `case_seed`
+    # from this module, and the two would import each other. The direction that
+    # matters is this one — a case is built from a resolved template, and the
+    # resolver knows nothing about building.
+    from consylr.instantiate import instantiate
+
+    # Resolved before anything reads a record. A pattern template declares a pool
+    # where a fixed one declares a value, and doing this inside the builder is
+    # what stops a pool ever reaching a packet — the failure mode is not a
+    # crash but a silent one, since `shape_violations` reads a record's keys and
+    # not the types of its values, and a pool on 'party' rendered
+    # `['Northwind Ltd', 'Southgate Ltd']` into a prompt as a counterparty name.
+    #
+    # It also gives `identity.scenario()` what it needs for free. The probe
+    # builds under a constant seed and a constant id, so it sees one canonical
+    # draw rather than the pool — identity reads the pattern and normalises the
+    # variation, which is the property that lets a template vary at all. A
+    # pattern resolved outside the builder has no scenario, and a template with
+    # no scenario is not in the split rather than merely worse off in it.
+    resolved = instantiate(template, root_seed=root_seed, case_index=case_index)
+
     # One definition of what a template is, shared with the audit. A key the
     # builder does not read still changed what counted as this scenario, so the
     # closed world is enforced here rather than tolerated and reported later.
-    malformed = shape_violations(template)
+    malformed = shape_violations(resolved)
     if malformed:
         raise ValueError("; ".join(v.detail for v in malformed))
 
@@ -612,22 +633,22 @@ def build(
     if deform is None:
         raise ValueError(f"no deformation for family {template.family!r}")
 
-    policy = template.body.get("policy")
+    policy = resolved.body.get("policy")
     if not isinstance(policy, list) or not policy:
         raise ValueError("template 'policy' must be a non-empty list")
 
-    left = _records(template.body, "left", "A")
-    right = _records(template.body, "right", "B")
+    left = _records(resolved.body, "left", "A")
+    right = _records(resolved.body, "right", "B")
     if len(left) != len(right):
         raise ValueError("a template's two sides must describe the same clean pairs")
 
-    resolved = [dict(p) for p in policy]
+    policy_lines = [dict(p) for p in policy]
     draft = Draft(
         a=left,
         b=right,
-        cause=_prove_cause(template, resolved),
-        policy=resolved,
-        documents=[dict(d) for d in template.body.get("documents", [])],
+        cause=_prove_cause(resolved, policy_lines),
+        policy=policy_lines,
+        documents=[dict(d) for d in resolved.body.get("documents", [])],
         pairs=[(a["id"], b["id"]) for a, b in zip(left, right, strict=True)],
     )
 
@@ -645,7 +666,12 @@ def build(
     packet = {"records": draft.a + draft.b, "policy": draft.policy, "documents": draft.documents}
     meta: dict[str, Any] = {
         "template_id": template.id,
+        # Both identities, because they answer different questions. The pattern's
+        # digest is the authored artefact drift detection watches; the resolved
+        # body is what this case actually was. With only the second, "which
+        # pattern produced this case" is an archaeology rather than a lookup.
         "template_fingerprint": template.fingerprint,
+        "case_fingerprint": resolved.fingerprint,
         "family": template.family,
         "role": role,
         "seed": seed,
