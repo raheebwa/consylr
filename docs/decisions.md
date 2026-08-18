@@ -9,8 +9,8 @@ in [`research/2026-08-18-entry-decision-research.md`](research/2026-08-18-entry-
 — read it before changing the decision. Where a row names an ADR, the ADR is current: if it and
 a research document disagree, the ADR wins and should say what it overrode.
 
-**Consylr is pre-code.** The positioning is decided and evidenced; nothing is built yet. What is
-being built, and in what order, is tracked in
+**Consylr is early.** The positioning is decided and evidenced, and the first module has landed.
+What is being built, and in what order, is tracked in
 [issues](https://github.com/raheebwa/consylr/issues), grouped under epics.
 
 ## What is decided

@@ -40,5 +40,14 @@ installing.
 - The illustrative example in RFC-0001 violated the residue rule that RFC defines: a record
   named in `open` and in no match is residue, and the example omitted it from `residue`.
   Found by executing the examples rather than by reading them.
+- RFC-0001 prescribed an answer for the empty packet that its own request-coverage invariant
+  rejected. The invariant wins and the prescribed answer now carries an `open` entry: asking
+  for evidence without recording what is needed is exactly the dangling disposition that rule
+  exists to prevent, and it is likeliest on the packet where there is nothing else to say.
+- RFC-0001 referred to a cap on its one free-text field without giving one. `need` is capped
+  at 120 characters, because "capped" is not a rule a validator can enforce.
+- RFC-0001 left the packet contract implicit, and a policy line span is a locator inside a
+  document rather than an identifier of its own — a validator expecting packets to enumerate
+  citable lines would reject every correctly-cited policy reference.
 
 [Unreleased]: https://github.com/raheebwa/consylr/commits/main

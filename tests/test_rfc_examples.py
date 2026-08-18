@@ -2,8 +2,17 @@
 """Every JSON example in RFC-0001 is executed against the validator.
 
 A specification whose own examples do not satisfy it is worse than one with no
-examples: readers copy the examples, and the training corpus is built to match
-them.
+examples: readers copy the examples, and the corpus is built to match them.
+
+Each example is paired with an **explicitly declared packet**. Deriving the
+packet from the output instead would make `unresolved_id` unreachable by
+construction and the residue rule trivially satisfiable — the test would be
+unable to fail on the two rules it most needs to check.
+
+The RFC is read inside a fixture, not at import. At import, a missing or renamed
+RFC aborts collection for the whole suite — including tests that have nothing to
+do with it — and the pre-commit hook then blocks the very commit that would fix
+the path.
 """
 
 import json
@@ -15,36 +24,42 @@ import pytest
 from consylr.schema import validate
 
 RFC = pathlib.Path(__file__).resolve().parents[1] / "docs" / "rfcs" / "0001-output-schema.md"
-BLOCKS = re.findall(r"```json\n(.*?)\n```", RFC.read_text(encoding="utf-8"), re.DOTALL)
+
+#: One packet per example, in document order. Written out rather than inferred.
+PACKETS: list[dict[str, object]] = [
+    {"records": {"A-017", "B-004", "A-019", "B-011"}, "policy": {"P-02"}, "documents": set()},
+    {"records": {"A-017", "B-004"}, "policy": set(), "documents": set()},
+    {"records": {"A-021", "B-008", "B-009"}, "policy": set(), "documents": set()},
+    {"records": {"A-019", "B-012"}, "policy": {"P-02"}, "documents": set()},
+    {"records": {"A-031", "B-020", "A-032", "B-021"}, "policy": set(), "documents": set()},
+    {"records": {"A-044", "B-030"}, "policy": {"P-05"}, "documents": set()},
+]
 
 
-def packet_for(output: object) -> dict[str, set[str]]:
-    """Every identifier the output names, so only structural rules are exercised."""
-    found: set[str] = set()
-
-    def walk(node: object) -> None:
-        if isinstance(node, dict):
-            for value in node.values():
-                walk(value)
-        elif isinstance(node, list):
-            for value in node:
-                walk(value)
-        elif isinstance(node, str) and re.fullmatch(r"[ABDP]-\d+(:L\d+(-L\d+)?)?", node):
-            found.add(node)
-
-    walk(output)
-    return {
-        "records": {i for i in found if i[0] in "AB"},
-        "policy": {i for i in found if i[0] in "DP"},
-    }
+@pytest.fixture(scope="module")
+def blocks() -> list[str]:
+    text = RFC.read_text(encoding="utf-8")
+    return re.findall(r"```json\n(.*?)\n```", text, re.S)
 
 
-def test_the_rfc_actually_contains_examples() -> None:
-    # Otherwise this file passes by finding nothing, which is not a pass.
-    assert len(BLOCKS) >= 5
+def test_the_rfc_contains_the_examples_this_file_declares_packets_for(blocks: list[str]) -> None:
+    # Otherwise this file passes by checking fewer examples than exist, or by
+    # checking none at all.
+    assert len(blocks) == len(PACKETS)
 
 
-@pytest.mark.parametrize("index", range(len(BLOCKS)))
-def test_every_rfc_example_is_valid_json_and_satisfies_the_schema(index: int) -> None:
-    output = json.loads(BLOCKS[index])
-    assert validate(output, packet_for(output)) == []
+def test_every_rfc_example_is_valid_json_and_satisfies_the_schema(blocks: list[str]) -> None:
+    failures: list[str] = []
+    for index, (block, packet) in enumerate(zip(blocks, PACKETS)):
+        output = json.loads(block)
+        for violation in validate(output, packet):
+            failures.append(f"example {index}: {violation.code}: {violation.detail}")
+    assert failures == []
+
+
+def test_an_example_that_omits_a_packet_record_is_caught(blocks: list[str]) -> None:
+    # Guards the guard: if the packet were derived from the output, adding a
+    # record here would change nothing and this test could never fail.
+    output = json.loads(blocks[1])
+    packet = {"records": {"A-017", "B-004", "A-777"}, "policy": set(), "documents": set()}
+    assert [v.code for v in validate(output, packet)] == ["residue_wrong"]

@@ -19,6 +19,9 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["consylr"]
 
+[tool.hatch.build.targets.wheel.force-include]
+"consylr/py.typed" = "consylr/py.typed"
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
