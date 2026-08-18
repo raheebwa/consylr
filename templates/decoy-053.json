@@ -1,0 +1,56 @@
+{
+  "documents": [
+    {
+      "id": "D-1",
+      "text": "Remittance advice, batch 373."
+    }
+  ],
+  "family": "decoy",
+  "id": "decoy-053",
+  "left": [
+    {
+      "amount": "1904.40",
+      "date": "2026-06-03",
+      "party": "Copperfield Supply Ltd",
+      "ref": "STM-17801"
+    },
+    {
+      "amount": "1250.00",
+      "date": "2026-06-16",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "REM-17812"
+    },
+    {
+      "amount": "6300.00",
+      "date": "2026-06-29",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "INV-17823"
+    }
+  ],
+  "policy": [
+    {
+      "id": "P-1",
+      "text": "Invoices settle at face value unless a deduction is stated in this schedule."
+    }
+  ],
+  "right": [
+    {
+      "amount": "1904.40",
+      "date": "2026-06-09",
+      "party": "Copperfield Supply Ltd",
+      "ref": "STM-17801"
+    },
+    {
+      "amount": "1250.00",
+      "date": "2026-06-22",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "REM-17812"
+    },
+    {
+      "amount": "6300.00",
+      "date": "2026-07-02",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "INV-17823"
+    }
+  ]
+}

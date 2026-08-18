@@ -2,29 +2,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 106."
+      "text": "Remittance advice, batch 116."
     }
   ],
   "family": "reference_mangled",
   "id": "reference_mangled-006",
   "left": [
     {
-      "amount": "1250.00",
-      "date": "2026-06-29",
-      "party": "Copperfield Supply Ltd",
-      "ref": "PO-07922"
+      "amount": "42150.00",
+      "date": "2026-05-21",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "PO-08292"
     },
     {
-      "amount": "6300.00",
-      "date": "2026-03-02",
-      "party": "Marlowe Consulting Ltd",
-      "ref": "CN-07933"
+      "amount": "755.00",
+      "date": "2026-06-03",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "CN-08303"
     },
     {
-      "amount": "3075.25",
-      "date": "2026-03-11",
-      "party": "Ashgrove Logistics Ltd",
-      "ref": "STM-07944"
+      "amount": "63.15",
+      "date": "2026-06-16",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "STM-08314"
     }
   ],
   "policy": [
@@ -35,22 +35,22 @@
   ],
   "right": [
     {
-      "amount": "1250.00",
-      "date": "2026-07-02",
-      "party": "Copperfield Supply Ltd",
-      "ref": "PO-07922"
+      "amount": "42150.00",
+      "date": "2026-05-26",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "PO-08292"
     },
     {
-      "amount": "6300.00",
-      "date": "2026-03-05",
-      "party": "Marlowe Consulting Ltd",
-      "ref": "CN-07933"
+      "amount": "755.00",
+      "date": "2026-06-09",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "CN-08303"
     },
     {
-      "amount": "3075.25",
-      "date": "2026-03-13",
-      "party": "Ashgrove Logistics Ltd",
-      "ref": "STM-07944"
+      "amount": "63.15",
+      "date": "2026-06-22",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "STM-08314"
     }
   ]
 }

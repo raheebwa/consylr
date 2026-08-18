@@ -3,35 +3,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 036."
+      "text": "Remittance advice, batch 061."
     }
   ],
   "family": "fee_at_source",
   "id": "fee_at_source-011",
   "left": [
     {
-      "amount": "88.75",
-      "date": "2026-06-16",
-      "party": "Northwind Ltd",
-      "ref": "PO-05332"
-    },
-    {
-      "amount": "12.60",
-      "date": "2026-06-29",
-      "party": "Southgate Ltd",
-      "ref": "CN-05343"
-    },
-    {
       "amount": "1904.40",
-      "date": "2026-03-02",
-      "party": "Eastvale Trading Ltd",
-      "ref": "STM-05354"
+      "date": "2026-05-21",
+      "party": "Copperfield Supply Ltd",
+      "ref": "PO-06257"
     },
     {
       "amount": "1250.00",
-      "date": "2026-03-11",
-      "party": "Westbrook Services Ltd",
-      "ref": "REM-05365"
+      "date": "2026-06-03",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "CN-06268"
+    },
+    {
+      "amount": "6300.00",
+      "date": "2026-06-16",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "STM-06279"
     }
   ],
   "policy": [
@@ -46,28 +40,22 @@
   ],
   "right": [
     {
-      "amount": "88.75",
-      "date": "2026-06-22",
-      "party": "Northwind Ltd",
-      "ref": "PO-05332"
-    },
-    {
-      "amount": "12.60",
-      "date": "2026-07-02",
-      "party": "Southgate Ltd",
-      "ref": "CN-05343"
-    },
-    {
       "amount": "1904.40",
-      "date": "2026-03-05",
-      "party": "Eastvale Trading Ltd",
-      "ref": "STM-05354"
+      "date": "2026-05-26",
+      "party": "Copperfield Supply Ltd",
+      "ref": "PO-06257"
     },
     {
       "amount": "1250.00",
-      "date": "2026-03-13",
-      "party": "Westbrook Services Ltd",
-      "ref": "REM-05365"
+      "date": "2026-06-09",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "CN-06268"
+    },
+    {
+      "amount": "6300.00",
+      "date": "2026-06-22",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "STM-06279"
     }
   ]
 }

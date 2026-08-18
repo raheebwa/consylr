@@ -1,79 +1,108 @@
-# The sealed evaluation set
+# The corpora
 
-The corpus is not committed — RFC-0003 keeps corpora out of the repository and
+Neither corpus is committed — RFC-0003 keeps corpora out of the repository and
 makes them reproducible from a configuration and a seed instead. This is that
-record: what the exam is, how to rebuild it, and what binds it.
+record.
 
-## Current: sealed-v2
+**The templates are frozen with the exam.** Re-authoring them broke an earlier
+exam outright: thirteen of its templates ceased to exist and 169 of its 209
+packets no longer matched the template content they recorded. The exam detected
+that itself, because every case carries the fingerprint of the template that
+produced it — but the lesson is that the exam and `templates/` are one artefact
+with two halves.
 
-Frozen 2026-08-18.
+## The exam: sealed-v4
+
+Frozen 2026-08-18, from 540 templates.
 
 | | |
 |---|---|
 | Seed | `20260818` — **reserved; never a training seed** |
-| Templates | 350 authored, 63 sealed |
-| Packets | **209, every one distinct** |
+| Packets | **204, every one distinct** |
 | Records per packet | 5–10, none outside *[competition constraint — ADTC profiler]* |
-| Families | 14, between 14 and 17 packets each |
-| Certainty | 162 supported · 33 ambiguous · 14 unsupported |
-| Abstention families | 31 packets (15%) |
-| Worst rendered prompt | 915 tokens against a 1,448 cap |
+| Families | 14, between 14 and 16 packets each |
+| Certainty | 161 supported · 29 ambiguous · 14 unsupported |
+| Worst rendered prompt | 821 tokens against a 1,448 cap |
 | Role | `holdout`, and nothing in the configuration can say otherwise |
-| Content digest | `08e313c8a642ef9c…` — the authoritative value is `consylr.corpus.content_digest`, computed from the corpus rather than transcribed |
+| Corpus digest | `consylr.corpus.content_digest(<exam dir>)` |
+| Template digest | sha256 over the sorted per-file digests of `templates/` |
 
-Rebuild it with `consylr.sealed.seal`, the 350 templates in `templates/`, the
-seed above, and the frozen model's tokeniser per
-[ADR-0003](adrs/0003-freeze-base-model-and-training-backend.md). A different
-tokeniser gives different counts and therefore a different budget verdict, which
-is why it is named rather than assumed.
+## The training corpus: train-v1
 
-## Retired: sealed-v1
+| | |
+|---|---|
+| Seed | `7` |
+| Cases | **903, every one distinct**, from 442 templates |
+| Duplicates refused | 1,749 of 2,652 asked |
+| Clearly supported | **48%** — RFC-0002 wants 40–50% |
+| `cause_not_established` | **11%** — RFC-0002 wants 10–15% |
+| Smallest family | 36 cases, against a floor of 20 |
+| Corpus digest | `consylr.corpus.content_digest(<corpus dir>)` |
 
-**Invalidated, never used for any number.** It held 196 packets and **73
-distinct ones** — 63% duplicates, the most repeated appearing seven times, so
-any metric computed on it would have carried a hidden sevenfold weighting.
-Verified by digesting every packet on disk.
+**903 is short of RFC-0003's 8,000–15,000, and it is not padded to reach it.**
+A template yields as many distinct cases as its deformation can distinguish —
+three for most families, exactly one for the three whose deformation does not
+draw on the generator. Reaching the RFC's figure needs per-case instantiation
+([#20](https://github.com/raheebwa/consylr/issues/20)), where a template carries
+drawn amounts, references, dates and counterparties rather than fixed ones.
+Padding to the number would mean duplicates, which the writer refuses.
 
-The reason it happened is the reason it is recorded here rather than deleted.
-RFC-0003 listed near-duplicate detection in the audit command's stack, and the
-audit command does not exist — so the writer refused a corpus whose packets
-carried two answers and accepted one that asked the same question seven times.
-A rule written down and never made into a gate.
+**No digest is transcribed here.** A transcribed digest is a second source of
+truth that can disagree with the first, and it has to be re-copied every time
+the artefact moves — so the table names the function that computes it instead.
+A scoring run asserts the value it computes, not a value someone typed.
 
-A second defect was found in the same set before it was digested: **101 of its
-206 packets were outside the 5–10 record range**, because a template's pair
-count was chosen freely while deformations add and remove records on top of it.
-Also specified, also ungated.
+## The template mix is deliberately unequal
 
-Both classes are closed now, and every specified constraint has been swept for
-the same defect — see [constraints.md](constraints.md).
+Eleven of the fourteen families produce a clearly-supported answer, so an equal
+split gives 80% supported — nearly double RFC-0002's band. A corpus that meets
+the quota needs a template set weighted toward the cases the model finds hard,
+which is the quota's whole point: a model trained on a mix that is four-fifths
+clean learns that most things reconcile.
 
-## What binds the current set
+`clean_match`, `batched_vs_itemised` and `decoy` carry the most templates for a
+different reason — their deformations ignore the case index, so each template
+yields exactly one distinct case where others yield three. Twenty templates gave
+six training cases against a floor of twenty, and the quota gate refused the
+corpus until the counts were raised.
 
-The prompt template, by digest. **Changing it invalidates this set**: budgets
-re-assert over every case and the exam is rebuilt. The model was trained against
-one interface, and a changed interface is a different one whatever the diff
-looks like.
+## What was checked before either reached disk
 
-The templates in `templates/`. Re-authoring them changes what the exam asks.
-
-## What was checked before it was written
-
-Nothing here was audited afterwards. `consylr.corpus.write` refuses, so a set
-that reached disk had already passed:
+Nothing was audited afterwards. `consylr.corpus.write` refuses, so a corpus that
+reached disk had already passed:
 
 - every case against the validator that ships in the product;
 - every packet inside the token budget, measured with the frozen tokeniser;
 - every packet inside the 5–10 record range;
-- the template set's shape rules and duplicate-scenario audit;
-- **no two packets identical under different answers** — contradictory ground
-  truth, which trains the model on one answer and examines it on the other;
-- **no packet in both roles** — the leak that raises measured accuracy;
-- **no packet twice** — the defect that invalidated v1.
+- the template set's shape rules and its duplicate-scenario audit;
+- **no two packets identical under different answers**;
+- **no packet twice**;
+- **no packet in both roles**;
+- **no training packet that the exam already asks** — compared byte for byte
+  against all 204, which is the pair that matters most;
+- the certainty bands and family floors, for the training corpus.
 
-The last three are exhaustive over the whole corpus rather than sampled.
+Every one of those is exhaustive rather than sampled.
+
+## Earlier attempts, and why they are gone
+
+Three sets were built and discarded before this one, none of which produced a
+single number. They are recorded because each failed for a reason worth keeping.
+
+- **v1** — 196 packets, **73 distinct**. 63% duplicates, the most repeated seven
+  times, so any metric would have carried a hidden sevenfold weighting.
+  Near-duplicate detection was specified in RFC-0003's audit stack and the audit
+  command does not exist.
+- **v2** — **101 of 206 packets outside the 5–10 record range**. Also specified,
+  also ungated: a template's pair count was chosen freely while deformations add
+  and remove records on top of it.
+- **v3** — sound, then invalidated by its own templates being re-authored to meet
+  the quota. Which is why the templates are now frozen with the exam.
+
+All three defect classes are closed, and every specified constraint has been
+swept for the same failure — see [constraints.md](constraints.md).
 
 ## Positioning
 
-RFC-0002 makes this the set that decides positioning. After it is frozen the
+RFC-0002 makes the exam the set that decides positioning. After it is frozen the
 argument about positioning is over — which is the point of freezing it.

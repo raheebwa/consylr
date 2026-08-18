@@ -1,0 +1,56 @@
+{
+  "documents": [
+    {
+      "id": "D-1",
+      "text": "Remittance advice, batch 045."
+    }
+  ],
+  "family": "clean_match",
+  "id": "clean_match-045",
+  "left": [
+    {
+      "amount": "925.50",
+      "date": "2026-04-02",
+      "party": "Northwind Ltd",
+      "ref": "INV-05665"
+    },
+    {
+      "amount": "42150.00",
+      "date": "2026-04-14",
+      "party": "Southgate Ltd",
+      "ref": "PO-05676"
+    },
+    {
+      "amount": "755.00",
+      "date": "2026-04-27",
+      "party": "Eastvale Trading Ltd",
+      "ref": "CN-05687"
+    }
+  ],
+  "policy": [
+    {
+      "id": "P-1",
+      "text": "Invoices settle at face value unless a deduction is stated in this schedule."
+    }
+  ],
+  "right": [
+    {
+      "amount": "925.50",
+      "date": "2026-04-06",
+      "party": "Northwind Ltd",
+      "ref": "INV-05665"
+    },
+    {
+      "amount": "42150.00",
+      "date": "2026-04-17",
+      "party": "Southgate Ltd",
+      "ref": "PO-05676"
+    },
+    {
+      "amount": "755.00",
+      "date": "2026-05-04",
+      "party": "Eastvale Trading Ltd",
+      "ref": "CN-05687"
+    }
+  ]
+}

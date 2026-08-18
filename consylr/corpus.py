@@ -56,6 +56,7 @@ def check(
     *,
     templates: Iterable[Template] | None = None,
     plan: Plan | None = None,
+    held_out: Iterable[Mapping[str, Any]] | None = None,
 ) -> list[Violation]:
     """Every way a corpus is unfit to be trained on or examined with.
 
@@ -136,6 +137,23 @@ def check(
                 )
             )
 
+    # train x sealed, which no within-corpus check can see: the exam is a
+    # different corpus, written earlier. A training packet identical to one in
+    # it means the model is examined on what it was trained on.
+    if held_out is not None:
+        exam = {_canonical(packet) for packet in held_out}
+        for case in rows:
+            if _canonical(case.packet) in exam:
+                violations.append(
+                    Violation(
+                        "packet_in_the_exam",
+                        f"{case.meta.get('template_id', '<unknown>')} produces a packet the "
+                        "sealed set already asks; the model would be examined on what it "
+                        "was trained on",
+                        str(case.meta.get("template_id", "")) or None,
+                    )
+                )
+
     for by_role in roles.values():
         if len(by_role) > 1:
             violations.append(
@@ -174,6 +192,7 @@ def write(
     *,
     templates: Iterable[Template],
     plan: Plan | None = None,
+    held_out: Iterable[Mapping[str, Any]] | None = None,
 ) -> list[Path]:
     """Write a corpus, or refuse to.
 
@@ -182,7 +201,7 @@ def write(
     fails it leaves nothing behind.
     """
     rows = list(cases)
-    problems = check(rows, templates=templates, plan=plan)
+    problems = check(rows, templates=templates, plan=plan, held_out=held_out)
     if problems:
         raise ValueError(
             "this corpus was not written; "

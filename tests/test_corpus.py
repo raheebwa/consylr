@@ -255,3 +255,31 @@ def test_a_corpus_with_its_templates_and_no_plan_is_written(tmp_path: Path) -> N
     templates = [a_template(id=f"t-{i:03d}", amount=f"{100 + i}.00") for i in range(3)]
     rows = [built(t, case_index=0, role="train") for t in templates]
     assert len(write(tmp_path, rows, templates=templates)) == 3
+
+
+def test_a_training_packet_that_is_in_the_exam_is_refused(tmp_path: Path) -> None:
+    """train x sealed is the comparison that matters most.
+
+    Within-corpus checks cannot see it: the exam is a different corpus, written
+    earlier, and a training packet identical to one in it means the model is
+    examined on what it was trained on — the leak that raises measured accuracy
+    rather than lowering it.
+    """
+    template = a_template(id="t-001")
+    exam = built(template, case_index=0, role="holdout")
+    training = built(template, case_index=0, role="train")
+
+    v = next(
+        x
+        for x in check([training], templates=[template], held_out=[exam.packet])
+        if x.code == "packet_in_the_exam"
+    )
+    assert "t-001" in v.detail
+
+
+def test_a_training_corpus_disjoint_from_the_exam_passes(tmp_path: Path) -> None:
+    exam_template = a_template(id="t-001")
+    exam = built(exam_template, case_index=0, role="holdout")
+    templates = [a_template(id=f"t-{i:03d}", amount=f"{200 + i}.00") for i in range(3)]
+    rows = [built(t, case_index=0, role="train") for t in templates]
+    assert check(rows, templates=templates, held_out=[exam.packet]) == []

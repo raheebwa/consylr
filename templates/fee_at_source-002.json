@@ -3,35 +3,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 027."
+      "text": "Remittance advice, batch 052."
     }
   ],
   "family": "fee_at_source",
   "id": "fee_at_source-002",
   "left": [
     {
-      "amount": "3075.25",
-      "date": "2026-04-14",
-      "party": "Northwind Ltd",
-      "ref": "CN-04999"
-    },
-    {
-      "amount": "29840.00",
-      "date": "2026-04-27",
-      "party": "Southgate Ltd",
-      "ref": "STM-05010"
-    },
-    {
       "amount": "480.00",
-      "date": "2026-05-08",
-      "party": "Eastvale Trading Ltd",
-      "ref": "REM-05021"
+      "date": "2026-03-19",
+      "party": "Copperfield Supply Ltd",
+      "ref": "CN-05924"
     },
     {
       "amount": "925.50",
-      "date": "2026-05-21",
-      "party": "Westbrook Services Ltd",
-      "ref": "INV-05032"
+      "date": "2026-04-02",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "STM-05935"
+    },
+    {
+      "amount": "42150.00",
+      "date": "2026-04-14",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "REM-05946"
     }
   ],
   "policy": [
@@ -46,28 +40,22 @@
   ],
   "right": [
     {
-      "amount": "3075.25",
-      "date": "2026-04-17",
-      "party": "Northwind Ltd",
-      "ref": "CN-04999"
-    },
-    {
-      "amount": "29840.00",
-      "date": "2026-05-04",
-      "party": "Southgate Ltd",
-      "ref": "STM-05010"
-    },
-    {
       "amount": "480.00",
-      "date": "2026-05-12",
-      "party": "Eastvale Trading Ltd",
-      "ref": "REM-05021"
+      "date": "2026-03-24",
+      "party": "Copperfield Supply Ltd",
+      "ref": "CN-05924"
     },
     {
       "amount": "925.50",
-      "date": "2026-05-26",
-      "party": "Westbrook Services Ltd",
-      "ref": "INV-05032"
+      "date": "2026-04-06",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "STM-05935"
+    },
+    {
+      "amount": "42150.00",
+      "date": "2026-04-17",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "REM-05946"
     }
   ]
 }

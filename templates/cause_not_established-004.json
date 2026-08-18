@@ -2,35 +2,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 279."
+      "text": "Remittance advice, batch 284."
     }
   ],
   "family": "cause_not_established",
   "id": "cause_not_established-004",
   "left": [
     {
-      "amount": "925.50",
-      "date": "2026-03-11",
-      "party": "Northwind Ltd",
-      "ref": "REM-14323"
-    },
-    {
-      "amount": "42150.00",
-      "date": "2026-03-19",
-      "party": "Southgate Ltd",
-      "ref": "INV-14334"
-    },
-    {
-      "amount": "755.00",
-      "date": "2026-04-02",
-      "party": "Eastvale Trading Ltd",
-      "ref": "PO-14345"
-    },
-    {
       "amount": "63.15",
-      "date": "2026-04-14",
-      "party": "Westbrook Services Ltd",
-      "ref": "CN-14356"
+      "date": "2026-04-27",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "REM-14508"
+    },
+    {
+      "amount": "17400.00",
+      "date": "2026-05-08",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "INV-14519"
+    },
+    {
+      "amount": "88.75",
+      "date": "2026-05-21",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "PO-14530"
     }
   ],
   "policy": [
@@ -41,28 +35,22 @@
   ],
   "right": [
     {
-      "amount": "925.50",
-      "date": "2026-03-13",
-      "party": "Northwind Ltd",
-      "ref": "REM-14323"
-    },
-    {
-      "amount": "42150.00",
-      "date": "2026-03-24",
-      "party": "Southgate Ltd",
-      "ref": "INV-14334"
-    },
-    {
-      "amount": "755.00",
-      "date": "2026-04-06",
-      "party": "Eastvale Trading Ltd",
-      "ref": "PO-14345"
-    },
-    {
       "amount": "63.15",
-      "date": "2026-04-17",
-      "party": "Westbrook Services Ltd",
-      "ref": "CN-14356"
+      "date": "2026-05-04",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "REM-14508"
+    },
+    {
+      "amount": "17400.00",
+      "date": "2026-05-12",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "INV-14519"
+    },
+    {
+      "amount": "88.75",
+      "date": "2026-05-26",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "PO-14530"
     }
   ]
 }

@@ -2,35 +2,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 234."
+      "text": "Remittance advice, batch 249."
     }
   ],
   "family": "reversal",
   "id": "reversal-009",
   "left": [
     {
-      "amount": "480.00",
-      "date": "2026-06-16",
-      "party": "Northwind Ltd",
-      "ref": "REM-12658"
-    },
-    {
-      "amount": "925.50",
+      "amount": "1250.00",
       "date": "2026-06-29",
-      "party": "Southgate Ltd",
-      "ref": "INV-12669"
+      "party": "Northwind Ltd",
+      "ref": "REM-13213"
     },
     {
-      "amount": "42150.00",
+      "amount": "6300.00",
       "date": "2026-03-02",
-      "party": "Eastvale Trading Ltd",
-      "ref": "PO-12680"
+      "party": "Southgate Ltd",
+      "ref": "INV-13224"
     },
     {
-      "amount": "755.00",
+      "amount": "3075.25",
       "date": "2026-03-11",
-      "party": "Westbrook Services Ltd",
-      "ref": "CN-12691"
+      "party": "Eastvale Trading Ltd",
+      "ref": "PO-13235"
     }
   ],
   "policy": [
@@ -41,28 +35,22 @@
   ],
   "right": [
     {
-      "amount": "480.00",
-      "date": "2026-06-22",
-      "party": "Northwind Ltd",
-      "ref": "REM-12658"
-    },
-    {
-      "amount": "925.50",
+      "amount": "1250.00",
       "date": "2026-07-02",
-      "party": "Southgate Ltd",
-      "ref": "INV-12669"
+      "party": "Northwind Ltd",
+      "ref": "REM-13213"
     },
     {
-      "amount": "42150.00",
+      "amount": "6300.00",
       "date": "2026-03-05",
-      "party": "Eastvale Trading Ltd",
-      "ref": "PO-12680"
+      "party": "Southgate Ltd",
+      "ref": "INV-13224"
     },
     {
-      "amount": "755.00",
+      "amount": "3075.25",
       "date": "2026-03-13",
-      "party": "Westbrook Services Ltd",
-      "ref": "CN-12691"
+      "party": "Eastvale Trading Ltd",
+      "ref": "PO-13235"
     }
   ]
 }

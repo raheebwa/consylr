@@ -3,35 +3,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 031."
+      "text": "Remittance advice, batch 056."
     }
   ],
   "family": "fee_at_source",
   "id": "fee_at_source-006",
   "left": [
     {
-      "amount": "755.00",
-      "date": "2026-04-27",
-      "party": "Copperfield Supply Ltd",
-      "ref": "PO-05147"
-    },
-    {
-      "amount": "63.15",
-      "date": "2026-05-08",
-      "party": "Marlowe Consulting Ltd",
-      "ref": "CN-05158"
-    },
-    {
       "amount": "17400.00",
-      "date": "2026-05-21",
-      "party": "Ashgrove Logistics Ltd",
-      "ref": "STM-05169"
+      "date": "2026-04-02",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "PO-06072"
     },
     {
       "amount": "88.75",
-      "date": "2026-06-03",
-      "party": "Pennine Metals Ltd",
-      "ref": "REM-05180"
+      "date": "2026-04-14",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "CN-06083"
+    },
+    {
+      "amount": "12.60",
+      "date": "2026-04-27",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "STM-06094"
     }
   ],
   "policy": [
@@ -46,28 +40,22 @@
   ],
   "right": [
     {
-      "amount": "755.00",
-      "date": "2026-05-04",
-      "party": "Copperfield Supply Ltd",
-      "ref": "PO-05147"
-    },
-    {
-      "amount": "63.15",
-      "date": "2026-05-12",
-      "party": "Marlowe Consulting Ltd",
-      "ref": "CN-05158"
-    },
-    {
       "amount": "17400.00",
-      "date": "2026-05-26",
-      "party": "Ashgrove Logistics Ltd",
-      "ref": "STM-05169"
+      "date": "2026-04-06",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "PO-06072"
     },
     {
       "amount": "88.75",
-      "date": "2026-06-09",
-      "party": "Pennine Metals Ltd",
-      "ref": "REM-05180"
+      "date": "2026-04-17",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "CN-06083"
+    },
+    {
+      "amount": "12.60",
+      "date": "2026-05-04",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "STM-06094"
     }
   ]
 }

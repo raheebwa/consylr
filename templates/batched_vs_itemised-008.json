@@ -2,35 +2,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 183."
+      "text": "Remittance advice, batch 178."
     }
   ],
   "family": "batched_vs_itemised",
   "id": "batched_vs_itemised-008",
   "left": [
     {
-      "amount": "3075.25",
-      "date": "2026-06-29",
-      "party": "Northwind Ltd",
-      "ref": "STM-10771"
+      "amount": "1904.40",
+      "date": "2026-05-08",
+      "party": "Copperfield Supply Ltd",
+      "ref": "STM-10586"
     },
     {
-      "amount": "29840.00",
-      "date": "2026-03-02",
-      "party": "Southgate Ltd",
-      "ref": "REM-10782"
+      "amount": "1250.00",
+      "date": "2026-05-21",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "REM-10597"
     },
     {
-      "amount": "480.00",
-      "date": "2026-03-11",
-      "party": "Eastvale Trading Ltd",
-      "ref": "INV-10793"
-    },
-    {
-      "amount": "925.50",
-      "date": "2026-03-19",
-      "party": "Westbrook Services Ltd",
-      "ref": "PO-10804"
+      "amount": "6300.00",
+      "date": "2026-06-03",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "INV-10608"
     }
   ],
   "policy": [
@@ -41,28 +35,22 @@
   ],
   "right": [
     {
-      "amount": "3075.25",
-      "date": "2026-07-02",
-      "party": "Northwind Ltd",
-      "ref": "STM-10771"
+      "amount": "1904.40",
+      "date": "2026-05-12",
+      "party": "Copperfield Supply Ltd",
+      "ref": "STM-10586"
     },
     {
-      "amount": "29840.00",
-      "date": "2026-03-05",
-      "party": "Southgate Ltd",
-      "ref": "REM-10782"
+      "amount": "1250.00",
+      "date": "2026-05-26",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "REM-10597"
     },
     {
-      "amount": "480.00",
-      "date": "2026-03-13",
-      "party": "Eastvale Trading Ltd",
-      "ref": "INV-10793"
-    },
-    {
-      "amount": "925.50",
-      "date": "2026-03-24",
-      "party": "Westbrook Services Ltd",
-      "ref": "PO-10804"
+      "amount": "6300.00",
+      "date": "2026-06-09",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "INV-10608"
     }
   ]
 }

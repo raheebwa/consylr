@@ -2,35 +2,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 188."
+      "text": "Remittance advice, batch 183."
     }
   ],
   "family": "batched_vs_itemised",
   "id": "batched_vs_itemised-013",
   "left": [
     {
-      "amount": "925.50",
-      "date": "2026-04-02",
-      "party": "Ravensworth Utilities Ltd",
-      "ref": "STM-10956"
+      "amount": "3075.25",
+      "date": "2026-06-29",
+      "party": "Northwind Ltd",
+      "ref": "STM-10771"
     },
     {
-      "amount": "42150.00",
-      "date": "2026-04-14",
-      "party": "Thornbury Chemicals Ltd",
-      "ref": "REM-10967"
+      "amount": "29840.00",
+      "date": "2026-03-02",
+      "party": "Southgate Ltd",
+      "ref": "REM-10782"
     },
     {
-      "amount": "755.00",
-      "date": "2026-04-27",
-      "party": "Ullswater Textiles Ltd",
-      "ref": "INV-10978"
-    },
-    {
-      "amount": "63.15",
-      "date": "2026-05-08",
-      "party": "Vantage Print Ltd",
-      "ref": "PO-10989"
+      "amount": "480.00",
+      "date": "2026-03-11",
+      "party": "Eastvale Trading Ltd",
+      "ref": "INV-10793"
     }
   ],
   "policy": [
@@ -41,28 +35,22 @@
   ],
   "right": [
     {
-      "amount": "925.50",
-      "date": "2026-04-06",
-      "party": "Ravensworth Utilities Ltd",
-      "ref": "STM-10956"
+      "amount": "3075.25",
+      "date": "2026-07-02",
+      "party": "Northwind Ltd",
+      "ref": "STM-10771"
     },
     {
-      "amount": "42150.00",
-      "date": "2026-04-17",
-      "party": "Thornbury Chemicals Ltd",
-      "ref": "REM-10967"
+      "amount": "29840.00",
+      "date": "2026-03-05",
+      "party": "Southgate Ltd",
+      "ref": "REM-10782"
     },
     {
-      "amount": "755.00",
-      "date": "2026-05-04",
-      "party": "Ullswater Textiles Ltd",
-      "ref": "INV-10978"
-    },
-    {
-      "amount": "63.15",
-      "date": "2026-05-12",
-      "party": "Vantage Print Ltd",
-      "ref": "PO-10989"
+      "amount": "480.00",
+      "date": "2026-03-13",
+      "party": "Eastvale Trading Ltd",
+      "ref": "INV-10793"
     }
   ]
 }

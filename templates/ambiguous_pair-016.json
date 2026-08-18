@@ -2,35 +2,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 341."
+      "text": "Remittance advice, batch 456."
     }
   ],
   "family": "ambiguous_pair",
   "id": "ambiguous_pair-016",
   "left": [
     {
-      "amount": "12.60",
-      "date": "2026-03-02",
-      "party": "Ravensworth Utilities Ltd",
-      "ref": "PO-16617"
+      "amount": "3075.25",
+      "date": "2026-04-14",
+      "party": "Northwind Ltd",
+      "ref": "PO-20872"
     },
     {
-      "amount": "1904.40",
-      "date": "2026-03-11",
-      "party": "Thornbury Chemicals Ltd",
-      "ref": "CN-16628"
+      "amount": "29840.00",
+      "date": "2026-04-27",
+      "party": "Southgate Ltd",
+      "ref": "CN-20883"
     },
     {
-      "amount": "1250.00",
-      "date": "2026-03-19",
-      "party": "Ullswater Textiles Ltd",
-      "ref": "STM-16639"
-    },
-    {
-      "amount": "6300.00",
-      "date": "2026-04-02",
-      "party": "Vantage Print Ltd",
-      "ref": "REM-16650"
+      "amount": "480.00",
+      "date": "2026-05-08",
+      "party": "Eastvale Trading Ltd",
+      "ref": "STM-20894"
     }
   ],
   "policy": [
@@ -41,28 +35,22 @@
   ],
   "right": [
     {
-      "amount": "12.60",
-      "date": "2026-03-05",
-      "party": "Ravensworth Utilities Ltd",
-      "ref": "PO-16617"
+      "amount": "3075.25",
+      "date": "2026-04-17",
+      "party": "Northwind Ltd",
+      "ref": "PO-20872"
     },
     {
-      "amount": "1904.40",
-      "date": "2026-03-13",
-      "party": "Thornbury Chemicals Ltd",
-      "ref": "CN-16628"
+      "amount": "29840.00",
+      "date": "2026-05-04",
+      "party": "Southgate Ltd",
+      "ref": "CN-20883"
     },
     {
-      "amount": "1250.00",
-      "date": "2026-03-24",
-      "party": "Ullswater Textiles Ltd",
-      "ref": "STM-16639"
-    },
-    {
-      "amount": "6300.00",
-      "date": "2026-04-06",
-      "party": "Vantage Print Ltd",
-      "ref": "REM-16650"
+      "amount": "480.00",
+      "date": "2026-05-12",
+      "party": "Eastvale Trading Ltd",
+      "ref": "STM-20894"
     }
   ]
 }

@@ -3,35 +3,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 043."
+      "text": "Remittance advice, batch 068."
     }
   ],
   "family": "fee_at_source",
   "id": "fee_at_source-018",
   "left": [
     {
-      "amount": "17400.00",
-      "date": "2026-06-03",
-      "party": "Copperfield Supply Ltd",
-      "ref": "STM-05591"
-    },
-    {
-      "amount": "88.75",
-      "date": "2026-06-16",
-      "party": "Marlowe Consulting Ltd",
-      "ref": "REM-05602"
-    },
-    {
       "amount": "12.60",
-      "date": "2026-06-29",
-      "party": "Ashgrove Logistics Ltd",
-      "ref": "INV-05613"
+      "date": "2026-05-08",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "STM-06516"
     },
     {
       "amount": "1904.40",
-      "date": "2026-03-02",
-      "party": "Pennine Metals Ltd",
-      "ref": "PO-05624"
+      "date": "2026-05-21",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "REM-06527"
+    },
+    {
+      "amount": "1250.00",
+      "date": "2026-06-03",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "INV-06538"
     }
   ],
   "policy": [
@@ -46,28 +40,22 @@
   ],
   "right": [
     {
-      "amount": "17400.00",
-      "date": "2026-06-09",
-      "party": "Copperfield Supply Ltd",
-      "ref": "STM-05591"
-    },
-    {
-      "amount": "88.75",
-      "date": "2026-06-22",
-      "party": "Marlowe Consulting Ltd",
-      "ref": "REM-05602"
-    },
-    {
       "amount": "12.60",
-      "date": "2026-07-02",
-      "party": "Ashgrove Logistics Ltd",
-      "ref": "INV-05613"
+      "date": "2026-05-12",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "STM-06516"
     },
     {
       "amount": "1904.40",
-      "date": "2026-03-05",
-      "party": "Pennine Metals Ltd",
-      "ref": "PO-05624"
+      "date": "2026-05-26",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "REM-06527"
+    },
+    {
+      "amount": "1250.00",
+      "date": "2026-06-09",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "INV-06538"
     }
   ]
 }

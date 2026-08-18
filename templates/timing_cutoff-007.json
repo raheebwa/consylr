@@ -3,35 +3,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 082."
+      "text": "Remittance advice, batch 097."
     }
   ],
   "family": "timing_cutoff",
   "id": "timing_cutoff-007",
   "left": [
     {
-      "amount": "17400.00",
-      "date": "2026-04-14",
-      "party": "Copperfield Supply Ltd",
-      "ref": "CN-07034"
-    },
-    {
-      "amount": "88.75",
+      "amount": "925.50",
       "date": "2026-04-27",
-      "party": "Marlowe Consulting Ltd",
-      "ref": "STM-07045"
+      "party": "Copperfield Supply Ltd",
+      "ref": "CN-07589"
     },
     {
-      "amount": "12.60",
+      "amount": "42150.00",
       "date": "2026-05-08",
-      "party": "Ashgrove Logistics Ltd",
-      "ref": "REM-07056"
+      "party": "Marlowe Consulting Ltd",
+      "ref": "STM-07600"
     },
     {
-      "amount": "1904.40",
+      "amount": "755.00",
       "date": "2026-05-21",
-      "party": "Pennine Metals Ltd",
-      "ref": "INV-07067"
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "REM-07611"
     }
   ],
   "policy": [
@@ -46,28 +40,22 @@
   ],
   "right": [
     {
-      "amount": "17400.00",
-      "date": "2026-04-17",
-      "party": "Copperfield Supply Ltd",
-      "ref": "CN-07034"
-    },
-    {
-      "amount": "88.75",
+      "amount": "925.50",
       "date": "2026-05-04",
-      "party": "Marlowe Consulting Ltd",
-      "ref": "STM-07045"
+      "party": "Copperfield Supply Ltd",
+      "ref": "CN-07589"
     },
     {
-      "amount": "12.60",
+      "amount": "42150.00",
       "date": "2026-05-12",
-      "party": "Ashgrove Logistics Ltd",
-      "ref": "REM-07056"
+      "party": "Marlowe Consulting Ltd",
+      "ref": "STM-07600"
     },
     {
-      "amount": "1904.40",
+      "amount": "755.00",
       "date": "2026-05-26",
-      "party": "Pennine Metals Ltd",
-      "ref": "INV-07067"
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "REM-07611"
     }
   ]
 }
