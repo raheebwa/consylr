@@ -57,10 +57,35 @@ def check(cases: Iterable[Mapping[str, str]], plan: Plan) -> list[Violation]:
 
     total = len(rows)
     by_family = Counter(str(r.get("family")) for r in rows)
-    supported = sum(1 for r in rows if r.get("certainty") == "supported")
     abstention = by_family.get(ABSTENTION_FAMILY, 0)
 
+    # The abstention family is the one place the two axes are not independent:
+    # it is *defined* by the packet failing to explain the difference, so a row
+    # in it cannot also be clearly supported. Left uncounted, such a row fills
+    # the supported band and the abstention band at once and a corpus short of
+    # its certainty allocation passes.
+    contradictory = sum(
+        1
+        for r in rows
+        if r.get("family") == ABSTENTION_FAMILY and r.get("certainty") == "supported"
+    )
+    supported = sum(
+        1
+        for r in rows
+        if r.get("certainty") == "supported" and r.get("family") != ABSTENTION_FAMILY
+    )
+
     violations: list[Violation] = []
+
+    if contradictory:
+        violations.append(
+            Violation(
+                "contradictory_certainty",
+                f"{contradictory} of {total} cases are {ABSTENTION_FAMILY} labelled "
+                "'supported'; that family's correct answer is ambiguous or unsupported, "
+                "so the label is a mislabel rather than a corpus choice",
+            )
+        )
 
     lo, hi = plan.supported_share
     got = _share(supported, total)
