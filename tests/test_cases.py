@@ -733,3 +733,21 @@ def test_a_corpus_of_built_cases_can_be_measured_by_the_quota_gate() -> None:
     plan = Plan(families=frozenset(families), family_floor=2)
     codes = [v.code for v in quota_check(rows, plan)]
     assert "supported_share_low" not in codes, "the gate is reading 0% again"
+
+
+def test_a_clean_match_that_deformed_something_is_refused() -> None:
+    # The family whose whole definition is that nothing was deformed. A packet
+    # that differs from its clean self under a `clean_match` answer key is a
+    # correspondence the answer does not describe, and the model is marked wrong
+    # for seeing it.
+    def deforms_anyway(draft: Draft, rng: Random) -> dict[str, Any]:
+        draft.record(draft.pairs[0][1])["amount"] = "1.00"
+        return _finish(draft, _clean(draft))
+
+    original = DEFORMATIONS["clean_match"]
+    DEFORMATIONS["clean_match"] = deforms_anyway
+    try:
+        with pytest.raises(ValueError, match="must deform nothing"):
+            build(a_richer_template("clean_match"), root_seed=ROOT, case_index=0, role="train")
+    finally:
+        DEFORMATIONS["clean_match"] = original

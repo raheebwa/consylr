@@ -149,3 +149,23 @@ def test_prose_that_is_not_prose_is_refused_rather_than_erased() -> None:
     nested = [{"id": "P-1", "text": {"rule": "deduct", "rate": "0.02"}}]
     with pytest.raises(ValueError, match="text"):
         built(other(policy=nested))
+
+
+def test_a_changed_date_is_a_different_scenario() -> None:
+    # A date either side of a cut-off is a whole perturbation family, so a date
+    # dropped from the projection would merge `timing_cutoff` into its clean twin.
+    records = [{**r, "date": "2026-09-09"} for r in template_body()["left"]]
+    assert BASE.structural_fingerprint != other(left=records).structural_fingerprint
+
+
+def test_a_changed_document_is_a_different_scenario() -> None:
+    # The documents a packet carries are evidence the answer may cite.
+    assert (
+        BASE.structural_fingerprint
+        != other(documents=[{"id": "D-9", "text": "x"}]).structural_fingerprint
+    )
+
+
+def test_a_citation_key_the_builder_does_not_know_is_refused() -> None:
+    with pytest.raises(ValueError, match="footnote"):
+        built(other(policy=[{"id": "P-1", "text": "prose", "footnote": "hidden"}]))
