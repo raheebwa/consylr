@@ -2,9 +2,9 @@
 
 ## Supported versions
 
-Nothing has been released. This repository is pre-code: it holds the product definition,
-the decision records and the evidence underneath them. There is no installable artefact, so
-there is no version to support.
+Nothing has been released. The repository holds the product definition, the decision records,
+the evidence underneath them, and the first modules. There is no published artefact, so there
+is no version to support.
 
 | Version | Security fixes |
 |---|---|

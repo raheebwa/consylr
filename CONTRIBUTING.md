@@ -36,14 +36,22 @@ From a clone, at the repository root:
 ```sh
 mise trust
 mise install
-uv pip install -e ".[dev]"
+mise exec -- uv pip install -e ".[dev]"
 ```
 
 [mise](https://mise.jdx.dev) pins the interpreter in `mise.toml`, so a contributor's run and a CI
 run are the same run. `mise trust` is required because a project configuration can set environment
 variables, and the tool will not read one until you say it may.
 
-Then the commands in the table above. CI runs exactly those.
+**`mise exec --` is load-bearing on that third line**, and the recipe fails without it. The
+virtualenv is created when mise resolves the environment, not when it installs tools — so after
+`mise install` alone there is no `.venv`, and `uv pip install` exits with "No virtual environment
+found". If you have mise wired into your shell, the prefix is redundant; if you do not, it is the
+difference between a working checkout and a confusing error. Prefix the commands below the same
+way, or run `mise activate` once.
+
+CI reaches the same state through the mise action, which resolves the environment as part of its
+own setup.
 
 ## Hooks
 
@@ -318,8 +326,8 @@ checklist reads as a met one:
 |---|---|
 | OpenSSF Scorecard `Code-Review` | **Not adopted.** One maintainer. The substitute is stated plainly: every change lands with a linked ADR or RFC. This project does not claim peer review it did not have. |
 | OpenSSF Scorecard `Contributors` (3+ organisations) | **Not adopted.** Not achievable by decision, and not a property of the work. |
-| CI / `CI-Tests` | **Deferred, with a date attached to a condition rather than a calendar:** the workflow lands in the commit that adds the first thing worth running, and it runs the same command this file documents. A workflow over an empty tree is a green tick that means nothing. |
-| `Pinned-Dependencies`, `Token-Permissions` | **Adopted in advance of the workflow they govern.** When CI arrives, actions are pinned to full 40-character commit SHAs — a tag is mutable, so pinning to a tag is pinning to nothing — and `permissions: contents: read` sits at workflow top level with write scopes declared only on the job that needs them. |
+| CI / `CI-Tests` | **Adopted.** The condition was the first thing worth running, and it arrived; `.github/workflows/ci.yml` runs the same commands this file documents. |
+| `Pinned-Dependencies`, `Token-Permissions` | **Adopted, and now enforced.** Every action is pinned to a full 40-character commit SHA — a tag is mutable, so pinning to a tag is pinning to nothing — and `permissions: contents: read` sits at workflow top level. The `check_workflow` hook fails a commit that breaks either. |
 | `Fuzzing` / OSS-Fuzz | **Not adopted.** The surface is local files parsed into an evidence packet. Revisit when the project parses an untrusted binary format. |
 | `Signed-Releases` + SBOM | **Deferred, not declined.** Mandatory at the first tag: build-provenance attestation bound to the workflow run, and an SBOM published beside the artefact. There is nothing to sign before a release exists. |
 | SAST | **Deferred with CI.** Adopted on the condition that findings get fixed rather than annotated away — a run whose findings are waived fails the criterion it claims to meet. |

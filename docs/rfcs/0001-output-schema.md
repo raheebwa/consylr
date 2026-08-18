@@ -71,7 +71,7 @@ Field by field. Every one has to justify its tokens; the rationale column is why
 | `exceptions[].c` | certainty | yes | An exception can be observed but its cause unsupported. |
 | `exceptions[].why` | array of evidence IDs | yes | Usually a policy line. Empty forces `kind: cause_not_established`. |
 | `open[].on` | array of record IDs | yes | What could not be concluded. |
-| `open[].need` | short string | yes | The evidence that would close it. The one free-text field, and §Verification prices it. |
+| `open[].need` | short string, **≤ 120 characters** | yes | The evidence that would close it. The one free-text field; the cap is stated here because "capped" without a number is not a rule a validator can enforce, and an unbounded `need` is the one way a single field can overrun the generation budget the token table assumes. |
 | `open[].why` | array of evidence IDs | **omitted when empty** | The citation establishing that the evidence is *required* — typically the policy line demanding it. This is the control on `need`: with a citation, the requirement comes from the packet; without one, `need` is the model's own reading. Omitted rather than sent empty, so it costs nothing on the entries that have no grounding. |
 | `residue.l` / `.r` | array of record IDs | yes | Records matched to nothing, by the rule in §Residue. **Required even when empty**, so "everything matched" is always an assertion and never a silence. |
 | `do[].act` | `accept` \| `hold` \| `escalate` \| `request` | yes | The disposition a human authorises. |
@@ -86,6 +86,12 @@ out. The rule: abbreviate structure, spell out meaning.
 side, `D-nn` for documents, `P-nn` for policy, with an optional `:Lnn` or `:Lnn-Lnn` line span on
 policy. A reference that does not resolve in the supplied packet is a validation failure, not a
 stylistic problem.
+
+**A line span is a locator inside a policy document, not a separate identifier.** `P-02:L7`
+resolves if and only if the packet carries `P-02`; no packet can pre-enumerate every citable line,
+and a validator that expected it to would reject every correctly-cited policy reference. The
+packet therefore declares three id sets — `records`, `policy`, `documents` — and resolution is
+exact for records and documents, and by base identifier for policy.
 
 ### Residue, and what an `unsupported` match means
 
@@ -146,8 +152,15 @@ The validator adds, and the model may never author:
 The cases worth specifying are the ones where a plausible-looking answer is the wrong answer.
 
 **Empty packet, or one side empty.** Not an error and not an abstention. `matches` empty,
-`exceptions` empty, `residue` listing every supplied record on its side, and `do` a single
-`request`. A packet with nothing to reconcile has a correct answer, and it is not silence.
+`exceptions` empty, `residue` listing every supplied record on its side, **an `open` entry naming
+what would make reconciliation possible**, and a `do` of a single `request`. A packet with nothing
+to reconcile has a correct answer, and it is not silence.
+
+The `open` entry is not decoration, and this specification originally omitted it — which put this
+paragraph in direct conflict with the invariant that a `request` must be covered by an `open`
+entry. The invariant wins, because its reasoning holds exactly here: asking a human for evidence
+without recording what is needed is the dangling disposition that rule exists to prevent, and it
+is *most* likely to happen on the packet where there is nothing else to say.
 
 **Everything ambiguous.** Every `matches[].c` is `ambiguous`, every `do[].act` is `hold`. The
 schema must not require at least one `supported` claim — a packet can legitimately support no
@@ -201,7 +214,8 @@ the measurement the sealed evaluation depends on.
   accepting*; nothing in this schema posts anything.
 - **No silent residue.** `residue` is required even when both sides are empty.
 - **No invented identifiers.** Every ID must resolve in the supplied packet.
-- **No prose where an ID would do.** `need` is the single free-text field, and it is capped.
+- **No prose where an ID would do.** `need` is the single free-text field, capped at 120
+  characters. Long enough for "processor settlement breakdown"; far short of a paragraph.
 
 ## Verification
 
