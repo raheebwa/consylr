@@ -16,10 +16,16 @@ stops producing them. The corpus is then as large as the templates can honestly
 make it, and no larger — a smaller corpus of distinct cases is worth more than a
 padded one, and `corpus.write` refuses the padded one anyway.
 
-The real fix is per-case instantiation: templates carrying drawn amounts,
-references, dates and counterparties rather than fixed ones, which is RFC-0003's
-"randomised into 8,000-15,000 examples" and issue #20. Until that exists,
-distinct cases come from distinct templates and this is what says so.
+Per-case instantiation is the fix, and it now exists: a pattern template
+carries drawn amounts, references, dates and counterparties rather than fixed
+ones, so a template's yield is bounded by its pools rather than by its pair
+count. `limit` is therefore a real ceiling again rather than a formality — the
+pattern set gives thirty distinct cases from thirty asked where the fixed set
+gave three.
+
+None of that relaxes anything below. Distinctness is still established by
+comparing the packets that were actually produced, because a template that
+*should* vary and does not would otherwise pad a corpus exactly as before.
 """
 
 from __future__ import annotations
