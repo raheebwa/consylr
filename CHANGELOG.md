@@ -43,9 +43,37 @@ installing.
   corpus that cannot satisfy its plan is refused before it is built rather than after.
 - Planted-failure tests on both gates: an over-budget prompt the check must reject, and an
   unsatisfiable plan the build must refuse. A gate that cannot fail is not a gate.
+- `consylr.templates` — scenario templates as data files with a stable id, and the two notions
+  of identity the grouped split rests on. Content identity, with the declared id excluded, so
+  that one scenario committed under two ids is reported as the alias it is. Structural identity,
+  taken over everything a paraphrase may not touch, so that two templates one rewording apart
+  are reported as one scenario.
+- `consylr.split` — the grouped split. Roles are separated by scenario template and never by
+  row, the assignment draw is keyed on structural identity so an alias cannot straddle the
+  boundary, and a corpus is checked against templates re-read from disk rather than against the
+  identities the corpus records about itself.
+- `consylr.violation` — one violation type for every gate, so that rejections from the schema,
+  the budget, the quota and the split can be reported as one list.
+- A rejection may name the case it came from, which RFC-0003 requires of a corpus-wide audit.
+
+### Changed
+
+- `packet_over_budget` is now `prompt_over_budget`, and `Budget` carries a `template_overhead`.
+  RFC-0003 sizes the packet and asserts on the rendered prompt; those are different strings, and
+  the cap now applies to the rendered one with the wrapper declared rather than assumed away.
 
 ### Fixed
 
+- The quota checker counted the certainty allocation and family coverage over the same rows
+  without a cross-check, so a `cause_not_established` case labelled `supported` satisfied both
+  at once and a corpus fifteen points short of its supported floor passed clean. That family's
+  correct answer is ambiguous or unsupported, so such a row is a mislabel; it is now reported
+  and excluded from the supported count.
+- The packet cap was enforced against the rendered prompt, so a generator honouring the packet
+  size RFC-0003 states had every case rejected.
+- No threshold in either gate was held by a test. Both edges of every band are pinned now: the
+  limit, which passes, and one case past it, which does not.
+- A prompt overrunning the context reported a negative remainder rather than an overrun.
 - The illustrative example in RFC-0001 violated the residue rule that RFC defines: a record
   named in `open` and in no match is residue, and the example omitted it from `residue`.
   Found by executing the examples rather than by reading them.
