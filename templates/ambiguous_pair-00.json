@@ -1,0 +1,56 @@
+{
+  "documents": [
+    {
+      "id": "D-1",
+      "text": "Remittance advice, batch 065."
+    }
+  ],
+  "family": "ambiguous_pair",
+  "id": "ambiguous_pair-00",
+  "left": [
+    {
+      "amount": "42150.00",
+      "date": "2026-03-02",
+      "party": "Eastvale Trading Ltd",
+      "ref": "INV-4845"
+    },
+    {
+      "amount": "480.00",
+      "date": "2026-03-11",
+      "party": "Westbrook Services Ltd",
+      "ref": "INV-4852"
+    },
+    {
+      "amount": "1250.00",
+      "date": "2026-03-19",
+      "party": "Harbourline Freight Ltd",
+      "ref": "INV-4859"
+    }
+  ],
+  "policy": [
+    {
+      "id": "P-1",
+      "text": "Invoices settle at face value unless a deduction is stated in this schedule."
+    }
+  ],
+  "right": [
+    {
+      "amount": "42150.00",
+      "date": "2026-03-05",
+      "party": "Eastvale Trading Ltd",
+      "ref": "INV-4845"
+    },
+    {
+      "amount": "480.00",
+      "date": "2026-03-13",
+      "party": "Westbrook Services Ltd",
+      "ref": "INV-4852"
+    },
+    {
+      "amount": "1250.00",
+      "date": "2026-03-24",
+      "party": "Harbourline Freight Ltd",
+      "ref": "INV-4859"
+    }
+  ]
+}
