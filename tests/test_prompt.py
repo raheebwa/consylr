@@ -7,12 +7,15 @@ corpus binds to a specific one.
 """
 
 import hashlib
+import json
 import os
 from pathlib import Path
+from typing import Any
 
 import pytest
 
 from consylr.prompt import BUDGET, DIGEST, OVERHEAD_TOKENS, TEMPLATE, render
+from consylr.schema import validate
 from tests.support import template_body
 
 PACKET = {"records": [{"id": "A-001", "ref": "INV-1"}], "policy": [], "documents": []}
@@ -100,24 +103,84 @@ def test_a_real_packet_leaves_room_to_answer_in() -> None:
     assert len(rendered) / 4 < BUDGET.prompt_max
 
 
-TOKENISER = os.environ.get("CONSYLR_TOKENISER")
+TOKENISER = os.environ.get("CONSYLR_TOKENISER", "")
 
 
-@pytest.mark.skipif(not TOKENISER, reason="frozen tokeniser not configured")
+@pytest.mark.skipif(not TOKENISER, reason="CONSYLR_TOKENISER not set")
 def test_the_pinned_overhead_is_what_the_frozen_tokeniser_counts() -> None:
     """The one number here that a heuristic cannot supply.
 
     It was measured three times while the template was drafted, and twice went
     *up* when the text was shortened — which is exactly why RFC-0003 refuses a
     character or word estimate at the boundary. Skipped where the tokeniser is
-    absent rather than approximated, because an approximate check here would be
-    worse than none: it would report agreement it had not established.
-    """
-    from tokenizers import Tokenizer  # type: ignore[import-not-found]
+    absent rather than approximated: an approximate check here would report
+    agreement it had not established.
 
-    tok = Tokenizer.from_file(TOKENISER)
+    **A skip is not a pass, and this one skips almost everywhere.** CI has no
+    copy of the frozen model, so nothing there re-measures the pin — which means
+    `OVERHEAD_TOKENS` could be any number and the suite would stay green. Closing
+    that needs the tokeniser fetched at setup with its own digest pinned, the
+    way RFC-0003 already describes for the generator, and it is tracked rather
+    than assumed away. Until then this runs for whoever has the model:
+
+        CONSYLR_TOKENISER=/path/to/tokenizer.json python -m pytest tests/test_prompt.py
+    """
+    tokenizers = pytest.importorskip("tokenizers")
+
+    tok = tokenizers.Tokenizer.from_file(TOKENISER)
     measured = len(tok.encode(TEMPLATE.replace("{packet}", "")).ids)
     assert measured == OVERHEAD_TOKENS, (
         f"the template costs {measured} tokens, not the pinned {OVERHEAD_TOKENS}; "
         "the budget and every corpus built against it are stale"
     )
+
+
+# --- the example is the one thing a 4B model will pattern-match ---------------
+
+
+def example_from(template: str) -> dict[str, Any]:
+    """The worked example, parsed out of the artefact rather than restated here.
+
+    Restating it would test a copy. `tests/test_rfc_examples.py` already runs
+    this discipline against RFC-0001's examples; the artefact the model actually
+    reads had none of it, which is how an invalid example shipped.
+    """
+    line = next(l for l in template.splitlines() if l.startswith('{"matches"'))
+    parsed: dict[str, Any] = json.loads(line)
+    return parsed
+
+
+def packet_for_the_example() -> dict[str, Any]:
+    """A packet consistent with the artefact's own legend.
+
+    `A-*` is the left side and `B-*` the right, so every identifier the example
+    cites has to be one of those or a policy line.
+    """
+    return {
+        "records": [{"id": "A-001"}, {"id": "A-002"}, {"id": "B-001"}],
+        "policy": [{"id": "P-1"}, {"id": "P-2"}],
+        "documents": [],
+    }
+
+
+def test_the_worked_example_is_valid_against_the_validator_that_grades_it() -> None:
+    """The example put a record in `open` and declared residue empty.
+
+    That is the silent-residue failure the schema exists to prevent, taught by
+    the single example the model is shown — so a model copying it faithfully
+    fails the check the corpus grades it with.
+    """
+    violations = validate(example_from(TEMPLATE), packet_for_the_example())
+    assert violations == [], [f"{v.code}: {v.detail}" for v in violations]
+
+
+def test_the_worked_example_uses_only_shapes_the_answer_keys_use() -> None:
+    """A field the keys never carry is a field the model is taught to get wrong.
+
+    `open[].why` is legitimate under RFC-0001 and omitted when empty, and no
+    deformation emits it — so showing it in the only example diverges the model
+    from the key on every abstention case.
+    """
+    example = example_from(TEMPLATE)
+    for entry in example.get("open", []):
+        assert "why" not in entry, "no answer key carries open[].why"
