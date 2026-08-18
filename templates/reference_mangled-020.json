@@ -1,0 +1,44 @@
+{
+  "documents": [
+    {
+      "id": "D-1",
+      "text": "Remittance advice, batch 120."
+    }
+  ],
+  "family": "reference_mangled",
+  "id": "reference_mangled-020",
+  "left": [
+    {
+      "amount": "12.60",
+      "date": "2026-06-03",
+      "party": "Northwind Ltd",
+      "ref": "INV-08440"
+    },
+    {
+      "amount": "1904.40",
+      "date": "2026-06-16",
+      "party": "Southgate Ltd",
+      "ref": "PO-08451"
+    }
+  ],
+  "policy": [
+    {
+      "id": "P-1",
+      "text": "Invoices settle at face value unless a deduction is stated in this schedule."
+    }
+  ],
+  "right": [
+    {
+      "amount": "12.60",
+      "date": "2026-06-09",
+      "party": "Northwind Ltd",
+      "ref": "INV-08440"
+    },
+    {
+      "amount": "1904.40",
+      "date": "2026-06-22",
+      "party": "Southgate Ltd",
+      "ref": "PO-08451"
+    }
+  ]
+}

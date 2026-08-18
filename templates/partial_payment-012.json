@@ -1,0 +1,80 @@
+{
+  "documents": [
+    {
+      "id": "D-1",
+      "text": "Remittance advice, batch 162."
+    }
+  ],
+  "family": "partial_payment",
+  "id": "partial_payment-012",
+  "left": [
+    {
+      "amount": "925.50",
+      "date": "2026-03-19",
+      "party": "Northwind Ltd",
+      "ref": "CN-09994"
+    },
+    {
+      "amount": "42150.00",
+      "date": "2026-04-02",
+      "party": "Southgate Ltd",
+      "ref": "STM-10005"
+    },
+    {
+      "amount": "755.00",
+      "date": "2026-04-14",
+      "party": "Eastvale Trading Ltd",
+      "ref": "REM-10016"
+    },
+    {
+      "amount": "63.15",
+      "date": "2026-04-27",
+      "party": "Westbrook Services Ltd",
+      "ref": "INV-10027"
+    },
+    {
+      "amount": "17400.00",
+      "date": "2026-05-08",
+      "party": "Harbourline Freight Ltd",
+      "ref": "PO-10038"
+    }
+  ],
+  "policy": [
+    {
+      "id": "P-1",
+      "text": "Invoices settle at face value unless a deduction is stated in this schedule."
+    }
+  ],
+  "right": [
+    {
+      "amount": "925.50",
+      "date": "2026-03-24",
+      "party": "Northwind Ltd",
+      "ref": "CN-09994"
+    },
+    {
+      "amount": "42150.00",
+      "date": "2026-04-06",
+      "party": "Southgate Ltd",
+      "ref": "STM-10005"
+    },
+    {
+      "amount": "755.00",
+      "date": "2026-04-17",
+      "party": "Eastvale Trading Ltd",
+      "ref": "REM-10016"
+    },
+    {
+      "amount": "63.15",
+      "date": "2026-05-04",
+      "party": "Westbrook Services Ltd",
+      "ref": "INV-10027"
+    },
+    {
+      "amount": "17400.00",
+      "date": "2026-05-12",
+      "party": "Harbourline Freight Ltd",
+      "ref": "PO-10038"
+    }
+  ]
+}

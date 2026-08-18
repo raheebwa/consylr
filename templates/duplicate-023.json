@@ -1,0 +1,68 @@
+{
+  "documents": [
+    {
+      "id": "D-1",
+      "text": "Remittance advice, batch 223."
+    }
+  ],
+  "family": "duplicate",
+  "id": "duplicate-023",
+  "left": [
+    {
+      "amount": "1250.00",
+      "date": "2026-06-16",
+      "party": "Copperfield Supply Ltd",
+      "ref": "STM-12251"
+    },
+    {
+      "amount": "6300.00",
+      "date": "2026-06-29",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "REM-12262"
+    },
+    {
+      "amount": "3075.25",
+      "date": "2026-03-02",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "INV-12273"
+    },
+    {
+      "amount": "29840.00",
+      "date": "2026-03-11",
+      "party": "Pennine Metals Ltd",
+      "ref": "PO-12284"
+    }
+  ],
+  "policy": [
+    {
+      "id": "P-1",
+      "text": "Invoices settle at face value unless a deduction is stated in this schedule."
+    }
+  ],
+  "right": [
+    {
+      "amount": "1250.00",
+      "date": "2026-06-22",
+      "party": "Copperfield Supply Ltd",
+      "ref": "STM-12251"
+    },
+    {
+      "amount": "6300.00",
+      "date": "2026-07-02",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "REM-12262"
+    },
+    {
+      "amount": "3075.25",
+      "date": "2026-03-05",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "INV-12273"
+    },
+    {
+      "amount": "29840.00",
+      "date": "2026-03-13",
+      "party": "Pennine Metals Ltd",
+      "ref": "PO-12284"
+    }
+  ]
+}

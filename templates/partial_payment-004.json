@@ -1,0 +1,56 @@
+{
+  "documents": [
+    {
+      "id": "D-1",
+      "text": "Remittance advice, batch 154."
+    }
+  ],
+  "family": "partial_payment",
+  "id": "partial_payment-004",
+  "left": [
+    {
+      "amount": "63.15",
+      "date": "2026-03-02",
+      "party": "Copperfield Supply Ltd",
+      "ref": "REM-09698"
+    },
+    {
+      "amount": "17400.00",
+      "date": "2026-03-11",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "INV-09709"
+    },
+    {
+      "amount": "88.75",
+      "date": "2026-03-19",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "PO-09720"
+    }
+  ],
+  "policy": [
+    {
+      "id": "P-1",
+      "text": "Invoices settle at face value unless a deduction is stated in this schedule."
+    }
+  ],
+  "right": [
+    {
+      "amount": "63.15",
+      "date": "2026-03-05",
+      "party": "Copperfield Supply Ltd",
+      "ref": "REM-09698"
+    },
+    {
+      "amount": "17400.00",
+      "date": "2026-03-13",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "INV-09709"
+    },
+    {
+      "amount": "88.75",
+      "date": "2026-03-24",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "PO-09720"
+    }
+  ]
+}

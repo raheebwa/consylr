@@ -1,0 +1,85 @@
+{
+  "cause": "P-2",
+  "documents": [
+    {
+      "id": "D-1",
+      "text": "Remittance advice, batch 077."
+    }
+  ],
+  "family": "timing_cutoff",
+  "id": "timing_cutoff-002",
+  "left": [
+    {
+      "amount": "42150.00",
+      "date": "2026-03-02",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "CN-06849"
+    },
+    {
+      "amount": "755.00",
+      "date": "2026-03-11",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "STM-06860"
+    },
+    {
+      "amount": "63.15",
+      "date": "2026-03-19",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "REM-06871"
+    },
+    {
+      "amount": "17400.00",
+      "date": "2026-04-02",
+      "party": "Vantage Print Ltd",
+      "ref": "INV-06882"
+    },
+    {
+      "amount": "88.75",
+      "date": "2026-04-14",
+      "party": "Wexford Agriculture Ltd",
+      "ref": "PO-06893"
+    }
+  ],
+  "policy": [
+    {
+      "id": "P-1",
+      "text": "Invoices settle at face value unless a deduction is stated in this schedule."
+    },
+    {
+      "id": "P-2",
+      "text": "The period closes on the last business day; a later value date falls after."
+    }
+  ],
+  "right": [
+    {
+      "amount": "42150.00",
+      "date": "2026-03-05",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "CN-06849"
+    },
+    {
+      "amount": "755.00",
+      "date": "2026-03-13",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "STM-06860"
+    },
+    {
+      "amount": "63.15",
+      "date": "2026-03-24",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "REM-06871"
+    },
+    {
+      "amount": "17400.00",
+      "date": "2026-04-06",
+      "party": "Vantage Print Ltd",
+      "ref": "INV-06882"
+    },
+    {
+      "amount": "88.75",
+      "date": "2026-04-17",
+      "party": "Wexford Agriculture Ltd",
+      "ref": "PO-06893"
+    }
+  ]
+}

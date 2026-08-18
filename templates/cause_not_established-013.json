@@ -1,0 +1,68 @@
+{
+  "documents": [
+    {
+      "id": "D-1",
+      "text": "Remittance advice, batch 288."
+    }
+  ],
+  "family": "cause_not_established",
+  "id": "cause_not_established-013",
+  "left": [
+    {
+      "amount": "1250.00",
+      "date": "2026-05-08",
+      "party": "Northwind Ltd",
+      "ref": "STM-14656"
+    },
+    {
+      "amount": "6300.00",
+      "date": "2026-05-21",
+      "party": "Southgate Ltd",
+      "ref": "REM-14667"
+    },
+    {
+      "amount": "3075.25",
+      "date": "2026-06-03",
+      "party": "Eastvale Trading Ltd",
+      "ref": "INV-14678"
+    },
+    {
+      "amount": "29840.00",
+      "date": "2026-06-16",
+      "party": "Westbrook Services Ltd",
+      "ref": "PO-14689"
+    }
+  ],
+  "policy": [
+    {
+      "id": "P-1",
+      "text": "Invoices settle at face value unless a deduction is stated in this schedule."
+    }
+  ],
+  "right": [
+    {
+      "amount": "1250.00",
+      "date": "2026-05-12",
+      "party": "Northwind Ltd",
+      "ref": "STM-14656"
+    },
+    {
+      "amount": "6300.00",
+      "date": "2026-05-26",
+      "party": "Southgate Ltd",
+      "ref": "REM-14667"
+    },
+    {
+      "amount": "3075.25",
+      "date": "2026-06-09",
+      "party": "Eastvale Trading Ltd",
+      "ref": "INV-14678"
+    },
+    {
+      "amount": "29840.00",
+      "date": "2026-06-22",
+      "party": "Westbrook Services Ltd",
+      "ref": "PO-14689"
+    }
+  ]
+}

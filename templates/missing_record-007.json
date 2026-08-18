@@ -1,0 +1,80 @@
+{
+  "documents": [
+    {
+      "id": "D-1",
+      "text": "Remittance advice, batch 257."
+    }
+  ],
+  "family": "missing_record",
+  "id": "missing_record-007",
+  "left": [
+    {
+      "amount": "88.75",
+      "date": "2026-03-11",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "CN-13509"
+    },
+    {
+      "amount": "12.60",
+      "date": "2026-03-19",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "STM-13520"
+    },
+    {
+      "amount": "1904.40",
+      "date": "2026-04-02",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "REM-13531"
+    },
+    {
+      "amount": "1250.00",
+      "date": "2026-04-14",
+      "party": "Vantage Print Ltd",
+      "ref": "INV-13542"
+    },
+    {
+      "amount": "6300.00",
+      "date": "2026-04-27",
+      "party": "Wexford Agriculture Ltd",
+      "ref": "PO-13553"
+    }
+  ],
+  "policy": [
+    {
+      "id": "P-1",
+      "text": "Invoices settle at face value unless a deduction is stated in this schedule."
+    }
+  ],
+  "right": [
+    {
+      "amount": "88.75",
+      "date": "2026-03-13",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "CN-13509"
+    },
+    {
+      "amount": "12.60",
+      "date": "2026-03-24",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "STM-13520"
+    },
+    {
+      "amount": "1904.40",
+      "date": "2026-04-06",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "REM-13531"
+    },
+    {
+      "amount": "1250.00",
+      "date": "2026-04-17",
+      "party": "Vantage Print Ltd",
+      "ref": "INV-13542"
+    },
+    {
+      "amount": "6300.00",
+      "date": "2026-05-04",
+      "party": "Wexford Agriculture Ltd",
+      "ref": "PO-13553"
+    }
+  ]
+}

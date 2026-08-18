@@ -1,0 +1,92 @@
+{
+  "documents": [
+    {
+      "id": "D-1",
+      "text": "Remittance advice, batch 211."
+    }
+  ],
+  "family": "duplicate",
+  "id": "duplicate-011",
+  "left": [
+    {
+      "amount": "12.60",
+      "date": "2026-05-08",
+      "party": "Copperfield Supply Ltd",
+      "ref": "PO-11807"
+    },
+    {
+      "amount": "1904.40",
+      "date": "2026-05-21",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "CN-11818"
+    },
+    {
+      "amount": "1250.00",
+      "date": "2026-06-03",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "STM-11829"
+    },
+    {
+      "amount": "6300.00",
+      "date": "2026-06-16",
+      "party": "Pennine Metals Ltd",
+      "ref": "REM-11840"
+    },
+    {
+      "amount": "3075.25",
+      "date": "2026-06-29",
+      "party": "Quayside Packaging Ltd",
+      "ref": "INV-11851"
+    },
+    {
+      "amount": "29840.00",
+      "date": "2026-03-02",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "PO-11862"
+    }
+  ],
+  "policy": [
+    {
+      "id": "P-1",
+      "text": "Invoices settle at face value unless a deduction is stated in this schedule."
+    }
+  ],
+  "right": [
+    {
+      "amount": "12.60",
+      "date": "2026-05-12",
+      "party": "Copperfield Supply Ltd",
+      "ref": "PO-11807"
+    },
+    {
+      "amount": "1904.40",
+      "date": "2026-05-26",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "CN-11818"
+    },
+    {
+      "amount": "1250.00",
+      "date": "2026-06-09",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "STM-11829"
+    },
+    {
+      "amount": "6300.00",
+      "date": "2026-06-22",
+      "party": "Pennine Metals Ltd",
+      "ref": "REM-11840"
+    },
+    {
+      "amount": "3075.25",
+      "date": "2026-07-02",
+      "party": "Quayside Packaging Ltd",
+      "ref": "INV-11851"
+    },
+    {
+      "amount": "29840.00",
+      "date": "2026-03-05",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "PO-11862"
+    }
+  ]
+}

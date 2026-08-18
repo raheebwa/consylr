@@ -34,11 +34,40 @@ PARTIES = [
     "Harbourline Freight Ltd",
     "Copperfield Supply Ltd",
     "Marlowe Consulting Ltd",
+    "Ashgrove Logistics Ltd",
+    "Pennine Metals Ltd",
+    "Quayside Packaging Ltd",
+    "Ravensworth Utilities Ltd",
+    "Thornbury Chemicals Ltd",
+    "Ullswater Textiles Ltd",
+    "Vantage Print Ltd",
+    "Wexford Agriculture Ltd",
 ]
 
 #: Amounts spread across three orders of magnitude, so a proportional cut is
 #: observable at the small end and a batched total is plausible at the large.
-AMOUNTS = ["480.00", "1250.00", "17400.00", "925.50", "6300.00", "88.75", "42150.00"]
+#: Co-prime in count with the party and date lists, so positions do not fall into
+#: step and repeat a scenario under a different name.
+AMOUNTS = [
+    "480.00",
+    "1250.00",
+    "17400.00",
+    "925.50",
+    "6300.00",
+    "88.75",
+    "42150.00",
+    "3075.25",
+    "12.60",
+    "755.00",
+    "29840.00",
+    "1904.40",
+    "63.15",
+]
+
+#: Reference shapes, documented rather than incidental: a reconciliation sees
+#: invoices, purchase orders, credit notes and statements, and a mangled
+#: reference has to be mangled from something with structure.
+REF_PREFIXES = ["INV", "PO", "CN", "STM", "REM"]
 
 DATES = [
     ("2026-03-02", "2026-03-05"),
@@ -46,6 +75,12 @@ DATES = [
     ("2026-03-19", "2026-03-24"),
     ("2026-04-02", "2026-04-06"),
     ("2026-04-14", "2026-04-17"),
+    ("2026-04-27", "2026-05-04"),
+    ("2026-05-08", "2026-05-12"),
+    ("2026-05-21", "2026-05-26"),
+    ("2026-06-03", "2026-06-09"),
+    ("2026-06-16", "2026-06-22"),
+    ("2026-06-29", "2026-07-02"),
 ]
 
 #: One cause-bearing line per family that asserts a cause, worded so the lint in
@@ -77,9 +112,12 @@ FAMILIES = [
     "ambiguous_pair",
 ]
 
-#: Five scenarios per family. Enough that a per-family metric is a number rather
-#: than an anecdote, and that the grouped split has something to hold back.
-PER_FAMILY = 5
+#: Twenty-five scenarios per family. Five was enough for a per-family metric and
+#: nowhere near enough for a corpus: a deformation's only variety is which pair
+#: it picks, so a template yields at most as many distinct cases as it has pairs.
+#: Distinct cases come from distinct templates until #20's per-case
+#: instantiation exists, which is why this number is the corpus size lever.
+PER_FAMILY = 25
 
 
 def records(seed: int, pairs: int) -> tuple[list[dict[str, str]], list[dict[str, str]]]:
@@ -90,11 +128,11 @@ def records(seed: int, pairs: int) -> tuple[list[dict[str, str]], list[dict[str,
     """
     left, right = [], []
     for i in range(pairs):
-        n = seed * 13 + i * 7
-        ref = f"INV-{4000 + n:04d}"
-        party = PARTIES[(seed + i) % len(PARTIES)]
-        amount = AMOUNTS[(seed * 3 + i) % len(AMOUNTS)]
-        raised, settled = DATES[(seed + i) % len(DATES)]
+        n = seed * 37 + i * 11
+        ref = f"{REF_PREFIXES[(seed + i) % len(REF_PREFIXES)]}-{4000 + n:05d}"
+        party = PARTIES[(seed * 5 + i) % len(PARTIES)]
+        amount = AMOUNTS[(seed * 7 + i * 3) % len(AMOUNTS)]
+        raised, settled = DATES[(seed * 3 + i) % len(DATES)]
         left.append({"ref": ref, "party": party, "date": raised, "amount": amount})
         right.append({"ref": ref, "party": party, "date": settled, "amount": amount})
     return left, right
@@ -105,12 +143,12 @@ def template(family: str, index: int) -> dict[str, object]:
     # `batched_vs_itemised` folds two pairs into one, so it needs at least two;
     # the rest vary between three and five so a packet is a real reconciliation
     # rather than a single comparison.
-    pairs = 2 + ((seed + index) % 4)
+    pairs = 2 + ((seed * 3 + index) % 5)
     left, right = records(seed, pairs)
 
     policy: list[dict[str, str]] = [{"id": "P-1", "text": BASE_POLICY}]
     body: dict[str, object] = {
-        "id": f"{family}-{index:02d}",
+        "id": f"{family}-{index:03d}",
         "family": family,
         "left": left,
         "right": right,
