@@ -92,25 +92,21 @@ def test_an_aliased_template_cannot_be_split_across_roles() -> None:
         assert roles["alias-of-000"] == roles["t-000"], f"seed {seed}"
 
 
-@pytest.mark.parametrize(
-    ("field", "value"),
-    [("party", "Northwind Limited"), ("policy_text", "Face value settles invoices.")],
-)
-def test_a_reworded_scenario_cannot_be_split_across_roles(field: str, value: str) -> None:
-    """One scenario, committed twice, one paraphrase apart, in the real shape.
+def test_a_scenario_committed_twice_cannot_be_split_across_roles() -> None:
+    """Aliasing, which is the case identity has to close by construction.
 
-    RFC-0003 permits a paraphrase to rewrite free-text surface fields and forbids
-    it touching a label, a number, a reference or a correspondence decision. In
-    the shape the generator consumes those fields are a record's counterparty and
-    a policy or document's text — so rewording either must not make one scenario
-    into two.
+    A rewording is deliberately *not* this case: RFC-0003 keeps paraphrase off
+    and never paraphrases the sealed set, so two templates a rewording apart
+    emit different packets and are different scenarios. Making them collide cost
+    false merges of packets that differed materially.
+
+    Checked over many seeds: at any single seed two independent draws agree about
+    seven times in ten, so one passing seed is no evidence at all.
     """
-    original = a_template(id="t-001")
-    reworded = a_template(id="t-002", **{field: value})
-    assert original.fingerprint != reworded.fingerprint
+    original, alias = a_template(id="t-001"), a_template(id="t-002")
     for seed in range(40):
-        roles = partition([original, reworded], holdout_share=0.5, seed=seed)
-        assert roles["t-001"] == roles["t-002"], f"{field} leaked at seed {seed}"
+        roles = partition([original, alias], holdout_share=0.5, seed=seed)
+        assert roles["t-001"] == roles["t-002"], f"leaked at seed {seed}"
 
 
 def test_a_share_equal_to_a_template_s_own_draw_leaves_it_in_train() -> None:
@@ -210,11 +206,10 @@ def test_one_scenario_under_two_ids_in_two_roles_is_reported() -> None:
     assert "t-001" in v.detail and "t-002" in v.detail
 
 
-def test_a_reworded_scenario_in_two_roles_is_reported() -> None:
-    original = a_template(id="t-001")
-    reworded = a_template(id="t-002", party="Northwind Limited")
-    cases = [case(original, TRAIN), case(reworded, HOLDOUT)]
-    assert "scenario_in_two_roles" in [x.code for x in check(cases, [original, reworded])]
+def test_a_scenario_under_two_ids_in_two_roles_is_reported_on_audit() -> None:
+    original, alias = a_template(id="t-001"), a_template(id="t-002")
+    cases = [case(original, TRAIN), case(alias, HOLDOUT)]
+    assert "scenario_in_two_roles" in [x.code for x in check(cases, [original, alias])]
 
 
 def test_a_template_whose_content_changed_since_the_build_is_reported() -> None:
