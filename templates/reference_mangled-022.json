@@ -25,18 +25,6 @@
       "date": "2026-04-27",
       "party": "Ullswater Textiles Ltd",
       "ref": "REM-08536"
-    },
-    {
-      "amount": "88.75",
-      "date": "2026-05-08",
-      "party": "Vantage Print Ltd",
-      "ref": "INV-08547"
-    },
-    {
-      "amount": "12.60",
-      "date": "2026-05-21",
-      "party": "Wexford Agriculture Ltd",
-      "ref": "PO-08558"
     }
   ],
   "policy": [
@@ -63,18 +51,6 @@
       "date": "2026-05-04",
       "party": "Ullswater Textiles Ltd",
       "ref": "REM-08536"
-    },
-    {
-      "amount": "88.75",
-      "date": "2026-05-12",
-      "party": "Vantage Print Ltd",
-      "ref": "INV-08547"
-    },
-    {
-      "amount": "12.60",
-      "date": "2026-05-26",
-      "party": "Wexford Agriculture Ltd",
-      "ref": "PO-08558"
     }
   ]
 }

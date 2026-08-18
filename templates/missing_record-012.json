@@ -25,18 +25,6 @@
       "date": "2026-05-21",
       "party": "Ashgrove Logistics Ltd",
       "ref": "REM-13716"
-    },
-    {
-      "amount": "29840.00",
-      "date": "2026-06-03",
-      "party": "Pennine Metals Ltd",
-      "ref": "INV-13727"
-    },
-    {
-      "amount": "480.00",
-      "date": "2026-06-16",
-      "party": "Quayside Packaging Ltd",
-      "ref": "PO-13738"
     }
   ],
   "policy": [
@@ -63,18 +51,6 @@
       "date": "2026-05-26",
       "party": "Ashgrove Logistics Ltd",
       "ref": "REM-13716"
-    },
-    {
-      "amount": "29840.00",
-      "date": "2026-06-09",
-      "party": "Pennine Metals Ltd",
-      "ref": "INV-13727"
-    },
-    {
-      "amount": "480.00",
-      "date": "2026-06-22",
-      "party": "Quayside Packaging Ltd",
-      "ref": "PO-13738"
     }
   ]
 }

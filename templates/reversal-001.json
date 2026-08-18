@@ -31,18 +31,6 @@
       "date": "2026-06-29",
       "party": "Pennine Metals Ltd",
       "ref": "REM-12395"
-    },
-    {
-      "amount": "12.60",
-      "date": "2026-03-02",
-      "party": "Quayside Packaging Ltd",
-      "ref": "INV-12406"
-    },
-    {
-      "amount": "1904.40",
-      "date": "2026-03-11",
-      "party": "Ravensworth Utilities Ltd",
-      "ref": "PO-12417"
     }
   ],
   "policy": [
@@ -75,18 +63,6 @@
       "date": "2026-07-02",
       "party": "Pennine Metals Ltd",
       "ref": "REM-12395"
-    },
-    {
-      "amount": "12.60",
-      "date": "2026-03-05",
-      "party": "Quayside Packaging Ltd",
-      "ref": "INV-12406"
-    },
-    {
-      "amount": "1904.40",
-      "date": "2026-03-13",
-      "party": "Ravensworth Utilities Ltd",
-      "ref": "PO-12417"
     }
   ]
 }

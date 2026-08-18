@@ -25,12 +25,6 @@
       "date": "2026-03-02",
       "party": "Eastvale Trading Ltd",
       "ref": "INV-10238"
-    },
-    {
-      "amount": "17400.00",
-      "date": "2026-03-11",
-      "party": "Westbrook Services Ltd",
-      "ref": "PO-10249"
     }
   ],
   "policy": [
@@ -57,12 +51,6 @@
       "date": "2026-03-05",
       "party": "Eastvale Trading Ltd",
       "ref": "INV-10238"
-    },
-    {
-      "amount": "17400.00",
-      "date": "2026-03-13",
-      "party": "Westbrook Services Ltd",
-      "ref": "PO-10249"
     }
   ]
 }

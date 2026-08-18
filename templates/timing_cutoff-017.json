@@ -32,12 +32,6 @@
       "date": "2026-04-14",
       "party": "Vantage Print Ltd",
       "ref": "INV-07437"
-    },
-    {
-      "amount": "42150.00",
-      "date": "2026-04-27",
-      "party": "Wexford Agriculture Ltd",
-      "ref": "PO-07448"
     }
   ],
   "policy": [
@@ -74,12 +68,6 @@
       "date": "2026-04-17",
       "party": "Vantage Print Ltd",
       "ref": "INV-07437"
-    },
-    {
-      "amount": "42150.00",
-      "date": "2026-05-04",
-      "party": "Wexford Agriculture Ltd",
-      "ref": "PO-07448"
     }
   ]
 }

@@ -19,6 +19,12 @@
       "date": "2026-05-21",
       "party": "Marlowe Consulting Ltd",
       "ref": "PO-15481"
+    },
+    {
+      "amount": "88.75",
+      "date": "2026-06-03",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "CN-15492"
     }
   ],
   "policy": [
@@ -39,6 +45,12 @@
       "date": "2026-05-26",
       "party": "Marlowe Consulting Ltd",
       "ref": "PO-15481"
+    },
+    {
+      "amount": "88.75",
+      "date": "2026-06-09",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "CN-15492"
     }
   ]
 }

@@ -26,24 +26,6 @@
       "date": "2026-06-16",
       "party": "Ashgrove Logistics Ltd",
       "ref": "STM-06279"
-    },
-    {
-      "amount": "3075.25",
-      "date": "2026-06-29",
-      "party": "Pennine Metals Ltd",
-      "ref": "REM-06290"
-    },
-    {
-      "amount": "29840.00",
-      "date": "2026-03-02",
-      "party": "Quayside Packaging Ltd",
-      "ref": "INV-06301"
-    },
-    {
-      "amount": "480.00",
-      "date": "2026-03-11",
-      "party": "Ravensworth Utilities Ltd",
-      "ref": "PO-06312"
     }
   ],
   "policy": [
@@ -74,24 +56,6 @@
       "date": "2026-06-22",
       "party": "Ashgrove Logistics Ltd",
       "ref": "STM-06279"
-    },
-    {
-      "amount": "3075.25",
-      "date": "2026-07-02",
-      "party": "Pennine Metals Ltd",
-      "ref": "REM-06290"
-    },
-    {
-      "amount": "29840.00",
-      "date": "2026-03-05",
-      "party": "Quayside Packaging Ltd",
-      "ref": "INV-06301"
-    },
-    {
-      "amount": "480.00",
-      "date": "2026-03-13",
-      "party": "Ravensworth Utilities Ltd",
-      "ref": "PO-06312"
     }
   ]
 }

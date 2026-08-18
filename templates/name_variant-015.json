@@ -19,6 +19,18 @@
       "date": "2026-04-02",
       "party": "Thornbury Chemicals Ltd",
       "ref": "PO-09191"
+    },
+    {
+      "amount": "1904.40",
+      "date": "2026-04-14",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "CN-09202"
+    },
+    {
+      "amount": "1250.00",
+      "date": "2026-04-27",
+      "party": "Vantage Print Ltd",
+      "ref": "STM-09213"
     }
   ],
   "policy": [
@@ -39,6 +51,18 @@
       "date": "2026-04-06",
       "party": "Thornbury Chemicals Ltd",
       "ref": "PO-09191"
+    },
+    {
+      "amount": "1904.40",
+      "date": "2026-04-17",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "CN-09202"
+    },
+    {
+      "amount": "1250.00",
+      "date": "2026-05-04",
+      "party": "Vantage Print Ltd",
+      "ref": "STM-09213"
     }
   ]
 }

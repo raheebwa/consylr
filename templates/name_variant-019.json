@@ -25,6 +25,12 @@
       "date": "2026-04-27",
       "party": "Eastvale Trading Ltd",
       "ref": "PO-09350"
+    },
+    {
+      "amount": "925.50",
+      "date": "2026-05-08",
+      "party": "Westbrook Services Ltd",
+      "ref": "CN-09361"
     }
   ],
   "policy": [
@@ -51,6 +57,12 @@
       "date": "2026-05-04",
       "party": "Eastvale Trading Ltd",
       "ref": "PO-09350"
+    },
+    {
+      "amount": "925.50",
+      "date": "2026-05-12",
+      "party": "Westbrook Services Ltd",
+      "ref": "CN-09361"
     }
   ]
 }

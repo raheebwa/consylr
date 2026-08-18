@@ -25,12 +25,6 @@
       "date": "2026-05-21",
       "party": "Ashgrove Logistics Ltd",
       "ref": "INV-10053"
-    },
-    {
-      "amount": "42150.00",
-      "date": "2026-06-03",
-      "party": "Pennine Metals Ltd",
-      "ref": "PO-10064"
     }
   ],
   "policy": [
@@ -57,12 +51,6 @@
       "date": "2026-05-26",
       "party": "Ashgrove Logistics Ltd",
       "ref": "INV-10053"
-    },
-    {
-      "amount": "42150.00",
-      "date": "2026-06-09",
-      "party": "Pennine Metals Ltd",
-      "ref": "PO-10064"
     }
   ]
 }

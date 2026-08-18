@@ -25,24 +25,6 @@
       "date": "2026-04-27",
       "party": "Eastvale Trading Ltd",
       "ref": "STM-08129"
-    },
-    {
-      "amount": "42150.00",
-      "date": "2026-05-08",
-      "party": "Westbrook Services Ltd",
-      "ref": "REM-08140"
-    },
-    {
-      "amount": "755.00",
-      "date": "2026-05-21",
-      "party": "Harbourline Freight Ltd",
-      "ref": "INV-08151"
-    },
-    {
-      "amount": "63.15",
-      "date": "2026-06-03",
-      "party": "Copperfield Supply Ltd",
-      "ref": "PO-08162"
     }
   ],
   "policy": [
@@ -69,24 +51,6 @@
       "date": "2026-05-04",
       "party": "Eastvale Trading Ltd",
       "ref": "STM-08129"
-    },
-    {
-      "amount": "42150.00",
-      "date": "2026-05-12",
-      "party": "Westbrook Services Ltd",
-      "ref": "REM-08140"
-    },
-    {
-      "amount": "755.00",
-      "date": "2026-05-26",
-      "party": "Harbourline Freight Ltd",
-      "ref": "INV-08151"
-    },
-    {
-      "amount": "63.15",
-      "date": "2026-06-09",
-      "party": "Copperfield Supply Ltd",
-      "ref": "PO-08162"
     }
   ]
 }

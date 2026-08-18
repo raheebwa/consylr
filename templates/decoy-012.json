@@ -25,18 +25,6 @@
       "date": "2026-04-02",
       "party": "Eastvale Trading Ltd",
       "ref": "REM-15566"
-    },
-    {
-      "amount": "755.00",
-      "date": "2026-04-14",
-      "party": "Westbrook Services Ltd",
-      "ref": "INV-15577"
-    },
-    {
-      "amount": "63.15",
-      "date": "2026-04-27",
-      "party": "Harbourline Freight Ltd",
-      "ref": "PO-15588"
     }
   ],
   "policy": [
@@ -63,18 +51,6 @@
       "date": "2026-04-06",
       "party": "Eastvale Trading Ltd",
       "ref": "REM-15566"
-    },
-    {
-      "amount": "755.00",
-      "date": "2026-04-17",
-      "party": "Westbrook Services Ltd",
-      "ref": "INV-15577"
-    },
-    {
-      "amount": "63.15",
-      "date": "2026-05-04",
-      "party": "Harbourline Freight Ltd",
-      "ref": "PO-15588"
     }
   ]
 }

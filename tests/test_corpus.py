@@ -19,7 +19,7 @@ from typing import Any
 
 import pytest
 
-from consylr.corpus import check, write
+from consylr.corpus import check, content_digest, write
 from consylr.templates import Template
 from tests.support import PerCharacter, a_template, built, template_body
 
@@ -178,3 +178,39 @@ def test_distinct_packets_in_one_corpus_pass() -> None:
         a_template(id="t-002", amount="900.00"), "train", (0,)
     )
     assert [v.code for v in check(rows)] == []
+
+
+# --- a corpus that can change between runs is not an exam --------------------
+
+
+def test_the_content_digest_covers_every_packet(tmp_path: Path) -> None:
+    """What #23 asserts before it scores anything.
+
+    An exam that can silently change between runs is not an exam, and the seed
+    alone does not establish that the set on disk is the set the numbers were
+    computed on — a file edited afterwards still has the seed in its metadata.
+    """
+    rows = [
+        built(a_template(id=f"t-{i:03d}", amount=f"{100 + i}.00"), case_index=0, role="holdout")
+        for i in range(4)
+    ]
+    write(tmp_path, rows)
+    before = content_digest(tmp_path)
+
+    assert before == content_digest(tmp_path), "the digest moved without the corpus moving"
+
+    edited = next(tmp_path.iterdir()) / "packet.json"
+    edited.write_text(edited.read_text().replace("100.00", "999.00"), encoding="utf-8")
+    assert content_digest(tmp_path) != before
+
+
+def test_the_content_digest_does_not_depend_on_the_order_files_are_read(tmp_path: Path) -> None:
+    rows = [
+        built(a_template(id=f"t-{i:03d}", amount=f"{100 + i}.00"), case_index=0, role="holdout")
+        for i in range(3)
+    ]
+    write(tmp_path, rows)
+    first = content_digest(tmp_path)
+    for case_dir in tmp_path.iterdir():
+        case_dir.touch()
+    assert content_digest(tmp_path) == first

@@ -31,12 +31,6 @@
       "date": "2026-06-29",
       "party": "Pennine Metals Ltd",
       "ref": "INV-14837"
-    },
-    {
-      "amount": "17400.00",
-      "date": "2026-03-02",
-      "party": "Quayside Packaging Ltd",
-      "ref": "PO-14848"
     }
   ],
   "policy": [
@@ -69,12 +63,6 @@
       "date": "2026-07-02",
       "party": "Pennine Metals Ltd",
       "ref": "INV-14837"
-    },
-    {
-      "amount": "17400.00",
-      "date": "2026-03-05",
-      "party": "Quayside Packaging Ltd",
-      "ref": "PO-14848"
     }
   ]
 }

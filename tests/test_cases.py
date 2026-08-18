@@ -61,6 +61,7 @@ def a_template(id: str = "t-001", family: str = "clean_match", **over: object) -
                 "amount": "1000.00",
             },
             {"ref": "INV-1002", "party": "Southgate Ltd", "date": "2026-03-05", "amount": "250.00"},
+            {"ref": "INV-1003", "party": "Eastvale Ltd", "date": "2026-03-06", "amount": "75.00"},
         ],
         "right": [
             {
@@ -70,6 +71,7 @@ def a_template(id: str = "t-001", family: str = "clean_match", **over: object) -
                 "amount": "1000.00",
             },
             {"ref": "INV-1002", "party": "Southgate Ltd", "date": "2026-03-07", "amount": "250.00"},
+            {"ref": "INV-1003", "party": "Eastvale Ltd", "date": "2026-03-09", "amount": "75.00"},
         ],
         "policy": [{"id": "P-1", "text": "Invoices settle at face value unless a fee is stated."}],
     }
@@ -143,7 +145,7 @@ def test_every_record_gets_a_side_prefixed_identifier() -> None:
 
 def test_a_clean_match_expects_one_supported_match_per_pair() -> None:
     case = build(a_template(), root_seed=ROOT, case_index=0, role="train")
-    assert len(case.expected["matches"]) == 2
+    assert len(case.expected["matches"]) == 3
     assert all(m["c"] == "supported" for m in case.expected["matches"])
     assert "exceptions" not in case.expected or case.expected["exceptions"] == []
 
@@ -550,7 +552,7 @@ def test_an_amount_that_cannot_carry_a_cut_is_refused_rather_than_asserted(amoun
 def test_money_rounds_half_up_rather_than_to_even() -> None:
     # 2% of 12.25 is 0.2450. Banker's rounding gives 0.24; money gives 0.25.
     case = build(
-        a_richer_template("fee_at_source", amount="12.25", pairs=1),
+        a_richer_template("fee_at_source", amount="12.25", pairs=3),
         root_seed=ROOT,
         case_index=0,
         role="train",
@@ -798,13 +800,13 @@ def test_two_families_that_emit_the_same_packet_cannot_both_be_right() -> None:
     is exactly the "cause the packet does not support" the artefact forbids.
     """
     fee = build(
-        with_policy("fee_at_source", FEE_POLICY, pairs=1),
+        with_policy("fee_at_source", FEE_POLICY, pairs=3),
         root_seed=ROOT,
         case_index=0,
         role="train",
     )
     tax = build(
-        with_policy("withholding", TAX_POLICY, pairs=1), root_seed=ROOT, case_index=0, role="train"
+        with_policy("withholding", TAX_POLICY, pairs=3), root_seed=ROOT, case_index=0, role="train"
     )
     assert fee.packet != tax.packet, "the two families are indistinguishable in the packet"
 
@@ -816,7 +818,7 @@ def test_the_exception_cites_the_line_that_names_the_cause(
     family: str, policy: list[dict[str, str]]
 ) -> None:
     # Every warrant-citing exception cited `policy[0]` whatever that line said.
-    case = build(with_policy(family, policy, pairs=1), root_seed=ROOT, case_index=0, role="train")
+    case = build(with_policy(family, policy, pairs=3), root_seed=ROOT, case_index=0, role="train")
     exception = next(e for e in case.expected["exceptions"] if e["kind"] == family)
     cited = {p["id"] for p in case.packet["policy"] if p["id"] in exception["why"]}
     assert cited, "the exception cites no policy line at all"
@@ -830,11 +832,11 @@ def test_a_template_whose_policy_cannot_support_its_family_is_refused(family: st
     # carries" as a property the build enforces, not an intention.
     bland = [{"id": "P-1", "text": "Invoices settle at face value."}]
     with pytest.raises(ValueError, match=family):
-        build(with_policy(family, bland, pairs=1), root_seed=ROOT, case_index=0, role="train")
+        build(with_policy(family, bland, pairs=3), root_seed=ROOT, case_index=0, role="train")
 
 
 def test_a_template_declaring_a_cause_line_that_does_not_exist_is_refused() -> None:
-    body = dict(with_policy("fee_at_source", FEE_POLICY, pairs=1).body)
+    body = dict(with_policy("fee_at_source", FEE_POLICY, pairs=3).body)
     body["cause"] = "P-9"
     with pytest.raises(ValueError, match="P-9"):
         build(Template.from_mapping(body), root_seed=ROOT, case_index=0, role="train")
@@ -889,7 +891,7 @@ def test_a_clean_pair_cites_its_own_records_not_the_deformed_pair_s_policy() -> 
 def test_a_word_inside_another_word_does_not_declare_a_cause(family: str, text: str) -> None:
     # Bare substring matching accepted "Coffee" as a fee and "syntax" as a tax.
     with pytest.raises(ValueError, match="says nothing about it"):
-        build(with_policy(family, [{"id": "P-1", "text": text}], pairs=1), root_seed=ROOT)
+        build(with_policy(family, [{"id": "P-1", "text": text}], pairs=3), root_seed=ROOT)
 
 
 @pytest.mark.parametrize(
@@ -902,7 +904,7 @@ def test_a_word_inside_another_word_does_not_declare_a_cause(family: str, text: 
 def test_a_line_denying_the_cause_does_not_declare_it(family: str, text: str) -> None:
     # The answer key would assert a deduction the packet expressly denies.
     with pytest.raises(ValueError, match="denies"):
-        build(with_policy(family, [{"id": "P-1", "text": text}], pairs=1), root_seed=ROOT)
+        build(with_policy(family, [{"id": "P-1", "text": text}], pairs=3), root_seed=ROOT)
 
 
 def test_an_invisible_character_does_not_hide_a_genuine_cause() -> None:
@@ -911,7 +913,7 @@ def test_an_invisible_character_does_not_hide_a_genuine_cause() -> None:
     # diff. `templates._text` exists for exactly this and was applied to every
     # identity comparison and to nothing here.
     poisoned = [{"id": "P-1", "text": "A settlement f\u200bee is deducted at source."}]
-    case = build(with_policy("fee_at_source", poisoned, pairs=1), root_seed=ROOT)
+    case = build(with_policy("fee_at_source", poisoned, pairs=3), root_seed=ROOT)
     assert case.violations == []
 
 
@@ -935,3 +937,32 @@ def test_the_exception_cites_the_declared_cause_not_the_first_policy_line() -> N
     case = build(Template.from_mapping(body), root_seed=ROOT)
     exception = next(e for e in case.expected["exceptions"] if e["kind"] == "fee_at_source")
     assert exception["why"] == ["P-2"], "the exception cites the first line, not the declared cause"
+
+
+# --- the packet has a size the competition specifies -------------------------
+
+
+@pytest.mark.parametrize("pairs", [1, 2])
+def test_a_packet_below_the_gate_one_floor_is_reported(pairs: int) -> None:
+    """*[competition constraint — ADTC profiler]* 5–10 records per Gate 1 packet.
+
+    Nothing enforced it. The first exam built from these templates had 101 of
+    206 packets outside the range — 28 under and 73 over — because a template's
+    pair count was chosen freely and deformations add and remove records on top
+    of it. A packet outside the range tests a shape the competition does not
+    specify, which is a measurement of something else.
+    """
+    case = build(a_richer_template("clean_match", pairs=pairs), root_seed=ROOT)
+    assert "packet_too_small" in [v.code for v in case.violations]
+
+
+def test_a_packet_above_the_gate_one_ceiling_is_reported() -> None:
+    case = build(a_richer_template("clean_match", pairs=8), root_seed=ROOT)
+    assert "packet_too_large" in [v.code for v in case.violations]
+
+
+@pytest.mark.parametrize("pairs", [3, 4, 5])
+def test_a_packet_inside_the_range_is_not_reported(pairs: int) -> None:
+    case = build(a_richer_template("clean_match", pairs=pairs), root_seed=ROOT)
+    codes = [v.code for v in case.violations]
+    assert "packet_too_small" not in codes and "packet_too_large" not in codes

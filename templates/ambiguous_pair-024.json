@@ -25,6 +25,12 @@
       "date": "2026-04-14",
       "party": "Ashgrove Logistics Ltd",
       "ref": "PO-16935"
+    },
+    {
+      "amount": "12.60",
+      "date": "2026-04-27",
+      "party": "Pennine Metals Ltd",
+      "ref": "CN-16946"
     }
   ],
   "policy": [
@@ -51,6 +57,12 @@
       "date": "2026-04-17",
       "party": "Ashgrove Logistics Ltd",
       "ref": "PO-16935"
+    },
+    {
+      "amount": "12.60",
+      "date": "2026-05-04",
+      "party": "Pennine Metals Ltd",
+      "ref": "CN-16946"
     }
   ]
 }

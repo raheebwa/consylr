@@ -20,6 +20,18 @@
       "date": "2026-05-21",
       "party": "Southgate Ltd",
       "ref": "PO-07341"
+    },
+    {
+      "amount": "63.15",
+      "date": "2026-06-03",
+      "party": "Eastvale Trading Ltd",
+      "ref": "CN-07352"
+    },
+    {
+      "amount": "17400.00",
+      "date": "2026-06-16",
+      "party": "Westbrook Services Ltd",
+      "ref": "STM-07363"
     }
   ],
   "policy": [
@@ -44,6 +56,18 @@
       "date": "2026-05-26",
       "party": "Southgate Ltd",
       "ref": "PO-07341"
+    },
+    {
+      "amount": "63.15",
+      "date": "2026-06-09",
+      "party": "Eastvale Trading Ltd",
+      "ref": "CN-07352"
+    },
+    {
+      "amount": "17400.00",
+      "date": "2026-06-22",
+      "party": "Westbrook Services Ltd",
+      "ref": "STM-07363"
     }
   ]
 }

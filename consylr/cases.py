@@ -110,6 +110,14 @@ class Draft:
         return next(r for r in (*self.a, *self.b) if r["id"] == rid)
 
 
+#: *[competition constraint — ADTC profiler]* A Gate 1 packet holds five to ten
+#: records. Nothing enforced it, and the first exam built here had 101 of 206
+#: packets outside the range — a template's pair count was chosen freely and
+#: deformations add and remove records on top of it. A packet outside the range
+#: measures a shape the competition does not specify.
+PACKET_RECORDS = (5, 10)
+
+
 #: Every deformation that reduces an amount takes this share of it, never less
 #: than a cent, and never so much that nothing is left to observe.
 CUT_RATE = Decimal("0.02")
@@ -646,6 +654,25 @@ def build(
     }
 
     violations = schema.validate(expected, packet)
+
+    held = len(packet["records"])
+    smallest, largest = PACKET_RECORDS
+    if held < smallest:
+        violations.append(
+            Violation(
+                "packet_too_small",
+                f"{held} records; a Gate 1 packet holds {smallest} to {largest}",
+                template.id,
+            )
+        )
+    elif held > largest:
+        violations.append(
+            Violation(
+                "packet_too_large",
+                f"{held} records; a Gate 1 packet holds {smallest} to {largest}",
+                template.id,
+            )
+        )
 
     # Neither `tokeniser` nor `render` has a default, and that is the point. Both
     # were optional, so the ordinary path enforced nothing: a packet six times
