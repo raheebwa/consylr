@@ -169,3 +169,69 @@ def test_a_changed_document_is_a_different_scenario() -> None:
 def test_a_citation_key_the_builder_does_not_know_is_refused() -> None:
     with pytest.raises(ValueError, match="footnote"):
         built(other(policy=[{"id": "P-1", "text": "prose", "footnote": "hidden"}]))
+
+
+# --- identity is what build() emits, not what the template says --------------
+
+
+def missing_record_pair() -> tuple[Template, Template]:
+    """Two templates whose right-hand records differ and whose packets do not.
+
+    `missing_record` deletes a right-hand record, so everything about it is
+    invisible in the packet and in the answer — and was load-bearing in a
+    fingerprint taken over the template.
+    """
+    body = template_body(family="missing_record", pairs=2)
+    alpha = Template.from_mapping({**body, "id": "t-alpha"})
+    other_right = [
+        {"ref": "ZZZZ-9999", "party": "Totally Other Co", "date": "1999-01-01", "amount": "42.00"},
+        body["right"][1],
+    ]
+    beta = Template.from_mapping({**body, "id": "t-beta", "right": other_right})
+    return alpha, beta
+
+
+def test_two_templates_that_emit_the_same_case_are_one_scenario() -> None:
+    alpha, beta = missing_record_pair()
+    assert built(alpha).packet == built(beta).packet
+    assert built(alpha).expected == built(beta).expected
+    assert alpha.body["right"] != beta.body["right"]
+    same_scenario(alpha, beta)
+
+
+def test_content_a_deformation_overwrites_is_not_a_scenario() -> None:
+    # `timing_cutoff` overwrites the date with a constant, so the date it
+    # overwrote cannot be seen in the packet and must not decide the split.
+    body = template_body(family="timing_cutoff", pairs=2)
+    a = Template.from_mapping({**body, "id": "t-001"})
+    moved = [{**r, "date": "1998-07-04"} for r in body["right"]]
+    b = Template.from_mapping({**body, "id": "t-002", "right": moved})
+    if built(a).packet == built(b).packet:
+        same_scenario(a, b)
+
+
+def test_two_templates_that_emit_different_cases_are_different_scenarios() -> None:
+    a = Template.from_mapping(template_body(id="t-001"))
+    b = Template.from_mapping(template_body(id="t-002", amount="900.00"))
+    assert built(a).packet != built(b).packet
+    assert a.scenario != b.scenario
+
+
+def test_the_scenario_is_the_same_whatever_the_corpus_seed_is() -> None:
+    # Identity has to be stable across corpora. If it moved with the root seed,
+    # the same template would change identity between builds and every leak
+    # check would be relative to the corpus that happened to be built.
+    a = Template.from_mapping(template_body(id="t-001"))
+    first = a.scenario
+    built(a, root_seed=999_999)
+    assert a.scenario == first
+
+
+def test_the_scenario_probes_more_than_one_case() -> None:
+    # Two different templates coinciding at one probe index is unlikely; at
+    # three it is negligible. The failure mode of a single probe is a silent
+    # merge of distinct scenarios, which is the property being exterminated —
+    # so this is collision insurance, not ceremony.
+    from consylr.identity import PROBE_INDICES
+
+    assert len(PROBE_INDICES) >= 3
