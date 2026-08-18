@@ -110,6 +110,69 @@ whole file and answers "has this template changed since the corpus was built" �
 edit is worth reporting. The **projection** digest answers "is this the same scenario" and is what
 the split, the alias check and the near-duplicate check use.
 
+### Pattern templates, and the boundary they do not cross
+
+A template as described above declares a *value* where a record needs one, and
+that caps what it can produce: a template yields as many distinct cases as its
+deformation can distinguish — three for most families, exactly one for the three
+whose deformation ignores the case index. That is why the first training corpus
+stopped at 903 cases against the 8,000-15,000 above, and why it was annotated
+rather than padded. Padding means duplicates, and the writer refuses them.
+
+A **pattern template** declares a *pool* where a fixed template declares a value,
+and the case's seed selects within it. The scenario is the pattern; a case is one
+draw from it.
+
+**Pattern templates are training-only, and the separation is structural.** They
+live in their own directory, `templates-train/`. The exam loads `templates/` and
+nothing else; no code path assembles both into one partition. The frozen set is
+therefore not protected by anyone remembering not to edit it — the boundary is
+that the two sets are never read together.
+
+This scopes the identity machinery above rather than amending it. **Exam identity
+is out of scope for a pattern template**: it cannot take a role in the exam
+partition, so the question a projection digest answers — did this scenario cross
+the boundary — does not arise for it. Within training, the split is by template
+id exactly as before.
+
+What guards the boundary is the check that cannot be reasoned around: **the corpus
+writer's exhaustive byte comparison of every training packet against all of the
+sealed set's**, together with its refusal of a duplicate or a contradictory
+answer within the corpus. An instantiated packet that coincided with an exam
+packet is caught by comparing what exists, not by an argument about identity.
+
+**The pool is declared in the template body, and the seed only selects within
+it. This is a requirement, not an implementation note.** `identity.scenario()`
+probes every template under one constant id, so a value derived from the seed
+alone would be identical across every pattern template and collapse them all into
+a single scenario. Because the pool is in the body — and the body is what the
+probe hashes — two templates differ exactly when their patterns differ, and
+identity reads the pattern while normalising the variation beneath it. An
+implementation drawing from anything other than the declared pool is wrong by
+construction.
+
+Two consequences follow, and both are load-bearing.
+
+**Resolution happens inside the builder.** A pattern resolved by its caller is a
+pattern some caller will forget to resolve, and the failure is silent rather than
+loud: the closed-world check reads a record's keys and not the types of its
+values, so a pool on a prose field builds clean and reaches the rendered prompt
+as a literal list. Resolving where the case is built also gives the probe a
+canonical draw for free, which is what makes the paragraph above true.
+
+**The draw is keyed by the pool's contents, not by the side the record sits on.**
+Two records declaring the same pool at the same position resolve alike, which is
+how a clean correspondence survives instantiation — one invoice and its
+settlement still carry one amount. A template wanting the two sides to differ, as
+a raised date differs from a settled one, declares two pools and gets two draws.
+Drawing per side breaks every clean pair while the answer key goes on asserting
+correspondence.
+
+A case records both identities: the pattern's digest, which is the authored
+artefact drift detection watches, and the resolved body's, which is what the case
+actually was. With only the second, which pattern produced a case is an
+archaeology rather than a lookup.
+
 ### The prompt template is a frozen artefact
 
 The budget is asserted on the **rendered prompt**, so a corpus cannot be generated without the
