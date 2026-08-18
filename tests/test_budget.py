@@ -125,3 +125,26 @@ def test_a_prompt_that_overruns_the_context_says_so_rather_than_reporting_a_nega
     budget = Budget(context=1000, packet_max=900, output_reserve=100).validate()
     v = next(x for x in check("x" * 1200, TOK, budget) if x.code == "headroom_lost")
     assert "overruns" in v.detail and "200" in v.detail
+
+
+# --- the boundaries themselves ------------------------------------------------
+
+
+def test_a_prompt_exactly_at_the_cap_passes() -> None:
+    # The planted failure sits at cap + 1 and is one-sided: nothing asserted that
+    # the documented cap itself is legal, so tightening the comparison to `>=`
+    # would reject every prompt at the limit and no test would notice.
+    assert check("x" * DEFAULT.prompt_max, TOK, DEFAULT) == []
+
+
+def test_a_prompt_leaving_exactly_the_reserve_passes() -> None:
+    budget = Budget(context=1000, packet_max=400, output_reserve=600).validate()
+    assert check("x" * 400, TOK, budget) == []
+
+
+def test_a_prompt_one_token_into_the_reserve_fails() -> None:
+    budget = Budget(context=1000, packet_max=400, output_reserve=600).validate()
+    assert [v.code for v in check("x" * 401, TOK, budget)] == [
+        "prompt_over_budget",
+        "headroom_lost",
+    ]
