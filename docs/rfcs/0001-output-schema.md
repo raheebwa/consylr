@@ -51,7 +51,7 @@ is nothing for the model to get wrong arithmetically. It cites; the validator ca
   "open": [
     {"on": ["A-019"], "need": "settlement breakdown", "why": ["P-02:L11"]}
   ],
-  "residue": {"l": [], "r": ["B-011"]},
+  "residue": {"l": ["A-019"], "r": ["B-011"]},
   "do": [
     {"act": "accept", "on": ["A-017", "B-004"]},
     {"act": "hold", "on": ["A-019"]}
@@ -170,7 +170,7 @@ truncate output when the window is exceeded. It reserves the generation budget f
 ```python
 budget = _N_CTX - max_gen - 1
 if len(tokens) > budget:
-    tokens = tokens[-budget:]   # left-truncate, keep recent context
+    tokens = tokens[-budget:]  # left-truncate, keep recent context
 ```
 
 So an over-budget packet still produces well-formed JSON and a healthy parse rate, while the

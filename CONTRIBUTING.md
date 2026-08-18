@@ -15,20 +15,35 @@ blocked.
 
 ## The state of this repository, stated plainly
 
-**There is no code yet, and therefore no test suite and no test command.** This section will
-be wrong the moment that changes, and it is written so the change is visible rather than
-silent.
+**There is code now.** This section said there was none, and was written so the change would be
+visible rather than silent — this is that change.
 
 | Thing you might look for | Where it stands |
 |---|---|
-| Test command | **`bash tests/hooks/run.sh`** — the hook rules carry tests, so this exists before any product code does. It grows to cover the product's own tests as they land; CI will run this same command. |
-| CI workflow | **Deliberately absent.** A workflow that runs nothing is a green tick that means nothing. It arrives in the commit that adds the first thing worth running. |
-| Package manifest | Not yet. Python is the expected language; the manifest lands with the first module. |
+| Test command | **`python -m pytest`** for the package, and **`bash tests/hooks/run.sh`** for the hook rules. CI runs both, plus `ruff check`, `ruff format --check` and `mypy`. |
+| CI workflow | **Present** — `.github/workflows/ci.yml`, added with the first module, running the same commands documented here. |
+| Package manifest | **Present** — `pyproject.toml`, PEP 639 licence expression, `requires-python` lower bound only. |
 | Benchmarks | None published. No figure has been measured yet, and none is quoted anywhere as though it had been. |
 
 Until then, contributions are documents — decision records, designs, corrections to the
 evidence layer — plus the hooks that enforce the conventions below. Both have rules, and both
 are covered by the test command above.
+
+## Working on the code
+
+From a clone, at the repository root:
+
+```sh
+mise trust
+mise install
+uv pip install -e ".[dev]"
+```
+
+[mise](https://mise.jdx.dev) pins the interpreter in `mise.toml`, so a contributor's run and a CI
+run are the same run. `mise trust` is required because a project configuration can set environment
+variables, and the tool will not read one until you say it may.
+
+Then the commands in the table above. CI runs exactly those.
 
 ## Hooks
 

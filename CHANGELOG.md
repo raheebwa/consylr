@@ -16,8 +16,29 @@ project, and the two are not the same document.
 
 ## [Unreleased]
 
-Nothing released yet. The repository is pre-code: it holds the product definition, the
-decision records and the evidence they rest on. The first version heading appears when
-there is something installable to version.
+Nothing released yet. The first version heading appears when there is something worth
+installing.
+
+### Added
+
+- `consylr.schema` — validation of model output against RFC-0001. The same validator is
+  intended to ship in the product and to validate the training corpus, so that a corpus is
+  not checked by a second implementation that only tests itself. It reports every violation
+  rather than raising on the first.
+- The residue rule as an executable check: a record is residue if and only if it appears in
+  no match whose certainty is `supported` or `ambiguous`.
+- Cross-output coherence checks: a `request` disposition must be covered by an `open` entry,
+  and every disposed identifier must appear elsewhere in the output.
+- Refusal of uncalibrated numeric certainty anywhere in an output.
+- A test that executes every JSON example in RFC-0001 against the validator, so the
+  specification and the code cannot drift apart silently.
+- `pyproject.toml` with a PEP 639 licence expression, and `mise.toml` pinning the interpreter.
+- Continuous integration, running the same commands `CONTRIBUTING.md` documents.
+
+### Fixed
+
+- The illustrative example in RFC-0001 violated the residue rule that RFC defines: a record
+  named in `open` and in no match is residue, and the example omitted it from `residue`.
+  Found by executing the examples rather than by reading them.
 
 [Unreleased]: https://github.com/raheebwa/consylr/commits/main

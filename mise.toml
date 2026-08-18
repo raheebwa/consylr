@@ -1,0 +1,8 @@
+# Toolchain for this repository. Pinned so a contributor's run and a CI run are
+# the same run.
+[env]
+_.python.venv = { path = ".venv", create = true }
+
+[tools]
+python = "3.13"
+uv = "latest"

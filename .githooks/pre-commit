@@ -54,10 +54,14 @@ if [ -f "$root/pyproject.toml" ]; then
     printf 'pre-commit: not on PATH:%s\n  Run: pip install -e ".[dev]"\n' "$missing" >&2
     rc=1
   else
-    ruff check "$root"          || rc=1
-    ruff format --check "$root" || rc=1
-    mypy "$root"                || rc=1
-    pytest -q "$root"           || rc=1
+    # Exactly the commands CONTRIBUTING.md documents, run the way it documents
+    # them. `pytest <path>` and `python -m pytest` differ in what lands on
+    # sys.path, so a hook that invokes the undocumented form can fail where the
+    # documented one passes — which teaches people to distrust the hook.
+    ( cd "$root" && python -m ruff check . )          || rc=1
+    ( cd "$root" && python -m ruff format --check . ) || rc=1
+    ( cd "$root" && python -m mypy )                  || rc=1
+    ( cd "$root" && python -m pytest )                || rc=1
   fi
 fi
 

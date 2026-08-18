@@ -1,0 +1,41 @@
+name: ci
+
+# Runs the same commands CONTRIBUTING.md tells a human to run. If the two ever
+# diverge, the documented one is correct and this file is the bug.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Least privilege at the top level; a job that needs more declares it itself.
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      # Actions are pinned to full commit SHAs. A tag is mutable, so pinning to
+      # a tag is pinning to nothing. Dependabot rewrites the SHA and the comment
+      # together.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: jdx/mise-action@3c2e0cf82a5b2e5249f0d3635a4d83d0ae861518 # v4.2.5
+
+      - name: install
+        run: uv pip install -e ".[dev]"
+
+      - name: hook rules
+        run: bash tests/hooks/run.sh
+
+      - name: lint
+        run: python -m ruff check .
+
+      - name: format
+        run: python -m ruff format --check .
+
+      - name: types
+        run: python -m mypy
+
+      - name: tests
+        run: python -m pytest
