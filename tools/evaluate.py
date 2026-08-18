@@ -38,7 +38,7 @@ from pathlib import Path
 
 from consylr import prompt
 from consylr.corpus import content_digest
-from consylr.score import Answer, score
+from consylr.score import Answer, record, score
 
 #: RFC-0001 sizes the answer at well inside the harness's 256-token default
 #: reservation. Generating far beyond it would measure a model rambling rather
@@ -119,25 +119,15 @@ def main() -> int:
     out = exam.parent / f"eval-{exam.name}-{model_name.split('/')[-1]}{suffix}.json"
     out.write_text(
         json.dumps(
-            {
-                "exam": exam.name,
-                "exam_digest": digest,
-                "prompt_digest": prompt.DIGEST,
-                "model": model_name,
-                "mode": "scaffolded-reference" if scaffold else "profiler",
-                "packets": len(cases),
-                "parse_rate": report.parse_rate,
-                "schema_valid": report.schema_valid,
-                "exact_match": report.exact_match,
-                "correspondence_f1": report.correspondence_f1,
-                "citation_resolution": report.citation_resolution,
-                "correct_abstention": report.correct_abstention,
-                "false_abstention": report.false_abstention,
-                "per_family": {
-                    f: {"exact": t.exact_match, "f1": t.correspondence_f1, "n": t.asked}
-                    for f, t in report.per_family.items()
-                },
-            },
+            record(
+                answers,
+                report,
+                exam=exam.name,
+                model=model_name,
+                mode="scaffolded-reference" if scaffold else "profiler",
+                exam_digest=digest,
+                prompt_digest=prompt.DIGEST,
+            ),
             indent=2,
         ),
         encoding="utf-8",
