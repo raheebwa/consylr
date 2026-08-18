@@ -2,7 +2,7 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 147."
+      "text": "Remittance advice, batch 119."
     }
   ],
   "family": "batched_vs_itemised",
@@ -19,27 +19,27 @@
         "42.05"
       ],
       "date": [
-        "2026-03-19",
-        "2026-04-02",
-        "2026-04-14",
-        "2026-04-27",
-        "2026-05-08",
-        "2026-05-21"
+        "2026-06-29",
+        "2026-07-13",
+        "2026-01-08",
+        "2026-01-21",
+        "2026-02-03",
+        "2026-02-17"
       ],
       "party": [
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
         "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd"
+        "Eastvale Trading Ltd"
       ],
       "ref": [
-        "CN-15439",
-        "STM-15446",
-        "REM-15453",
-        "INV-15460",
-        "PO-15467"
+        "REM-14403",
+        "INV-14410",
+        "PO-14417",
+        "CN-14424",
+        "STM-14431"
       ]
     },
     {
@@ -53,27 +53,27 @@
         "88.75"
       ],
       "date": [
-        "2026-04-02",
-        "2026-04-14",
-        "2026-04-27",
-        "2026-05-08",
-        "2026-05-21",
-        "2026-06-03"
+        "2026-07-13",
+        "2026-01-08",
+        "2026-01-21",
+        "2026-02-03",
+        "2026-02-17",
+        "2026-03-02"
       ],
       "party": [
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd",
         "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd"
+        "Westbrook Services Ltd"
       ],
       "ref": [
-        "STM-15450",
-        "REM-15457",
-        "INV-15464",
-        "PO-15471",
-        "CN-15478"
+        "INV-14414",
+        "PO-14421",
+        "CN-14428",
+        "STM-14435",
+        "REM-14442"
       ]
     },
     {
@@ -87,27 +87,27 @@
         "480.00"
       ],
       "date": [
-        "2026-04-14",
-        "2026-04-27",
-        "2026-05-08",
-        "2026-05-21",
-        "2026-06-03",
-        "2026-06-16"
+        "2026-01-08",
+        "2026-01-21",
+        "2026-02-03",
+        "2026-02-17",
+        "2026-03-02",
+        "2026-03-11"
       ],
       "party": [
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd",
+        "Eastvale Trading Ltd",
         "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd"
+        "Harbourline Freight Ltd"
       ],
       "ref": [
-        "REM-15461",
-        "INV-15468",
-        "PO-15475",
-        "CN-15482",
-        "STM-15489"
+        "PO-14425",
+        "CN-14432",
+        "STM-14439",
+        "REM-14446",
+        "INV-14453"
       ]
     }
   ],
@@ -129,27 +129,27 @@
         "42.05"
       ],
       "date": [
-        "2026-03-24",
-        "2026-04-06",
-        "2026-04-17",
-        "2026-05-04",
-        "2026-05-12",
-        "2026-05-26"
+        "2026-07-02",
+        "2026-07-20",
+        "2026-01-13",
+        "2026-01-27",
+        "2026-02-09",
+        "2026-02-24"
       ],
       "party": [
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
         "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd"
+        "Eastvale Trading Ltd"
       ],
       "ref": [
-        "CN-15439",
-        "STM-15446",
-        "REM-15453",
-        "INV-15460",
-        "PO-15467"
+        "REM-14403",
+        "INV-14410",
+        "PO-14417",
+        "CN-14424",
+        "STM-14431"
       ]
     },
     {
@@ -163,27 +163,27 @@
         "88.75"
       ],
       "date": [
-        "2026-04-06",
-        "2026-04-17",
-        "2026-05-04",
-        "2026-05-12",
-        "2026-05-26",
-        "2026-06-09"
+        "2026-07-20",
+        "2026-01-13",
+        "2026-01-27",
+        "2026-02-09",
+        "2026-02-24",
+        "2026-03-05"
       ],
       "party": [
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd",
         "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd"
+        "Westbrook Services Ltd"
       ],
       "ref": [
-        "STM-15450",
-        "REM-15457",
-        "INV-15464",
-        "PO-15471",
-        "CN-15478"
+        "INV-14414",
+        "PO-14421",
+        "CN-14428",
+        "STM-14435",
+        "REM-14442"
       ]
     },
     {
@@ -197,27 +197,27 @@
         "480.00"
       ],
       "date": [
-        "2026-04-17",
-        "2026-05-04",
-        "2026-05-12",
-        "2026-05-26",
-        "2026-06-09",
-        "2026-06-22"
+        "2026-01-13",
+        "2026-01-27",
+        "2026-02-09",
+        "2026-02-24",
+        "2026-03-05",
+        "2026-03-13"
       ],
       "party": [
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd",
+        "Eastvale Trading Ltd",
         "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd"
+        "Harbourline Freight Ltd"
       ],
       "ref": [
-        "REM-15461",
-        "INV-15468",
-        "PO-15475",
-        "CN-15482",
-        "STM-15489"
+        "PO-14425",
+        "CN-14432",
+        "STM-14439",
+        "REM-14446",
+        "INV-14453"
       ]
     }
   ]
