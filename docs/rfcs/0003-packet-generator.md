@@ -110,6 +110,44 @@ whole file and answers "has this template changed since the corpus was built" �
 edit is worth reporting. The **projection** digest answers "is this the same scenario" and is what
 the split, the alias check and the near-duplicate check use.
 
+### The prompt template is a frozen artefact
+
+The budget is asserted on the **rendered prompt**, so a corpus cannot be generated without the
+template that renders it. That dependency was invisible while the budget check was optional, and
+it is not a nuisance — it is the same relationship the corpus already has with the tokeniser, and
+it gets the same treatment.
+
+**The template is pinned, versioned, and referenced by digest.** It is frozen before the sealed
+set is built, its SHA-256 is recorded in every corpus's configuration beside the tokeniser's, and
+a corpus whose recorded template digest does not match the frozen artefact **fails audit**. The
+corpus is versioned with its configuration already; the template joins it.
+
+**One artefact, rendered by everything.** The CLI, the training-data emission, the sealed set, and
+the profiler run all render through it. The profiler applies **no chat template of its own**, so
+this file is the model's entire interface — and four surfaces rendering three ways would be the
+four-mode trap, self-inflicted. Nothing may render a prompt any other way.
+
+**Changing it invalidates the corpus.** Every budget assertion is re-asserted over the whole
+corpus and the sealed set is re-validated or rebuilt. This is stated here so that a "small wording
+tweak" is visibly a corpus-invalidating event rather than a tidy-up: the model was trained on one
+interface and a changed one is a different interface, whatever the diff looks like.
+
+**Ordering: what the model cannot afford to lose goes last.** The harness left-truncates the
+prompt, so the *earliest* tokens are the ones at risk. The packet therefore comes first and the
+instructions last, which also puts the instructions closest to generation where adherence is
+best.
+
+That ordering is a deliberate trade and worth naming. If a prompt ever exceeded the window,
+instructions-first would fail *loudly* — the model would lose the schema and emit something
+unparseable, which the parse rate would show. Instructions-last fails *quietly*: well-formed JSON
+about evidence that was truncated away. The trade is only acceptable because the budget assertion
+runs **at inference as well as at build**, so the truncation case does not arise; a CLI that
+skipped the check would turn this ordering from an optimisation into a liability.
+
+**The template's own tokens count.** It sits inside the ~1,200-token allowance, not beside it —
+which is what `template_overhead` in the budget records, and why the packet allowance is the
+remainder rather than the whole.
+
 ### Configuration
 
 One file, versioned with the corpus it produced. It carries the quota plan, the family list, the

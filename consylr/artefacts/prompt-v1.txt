@@ -1,0 +1,18 @@
+{packet}
+
+Reconcile the records above. A-* is the left side, B-* the right; P-* are policy
+lines, D-* documents. Reply with one JSON object and nothing else:
+{"matches":[{"l":["A-001"],"r":["B-001"],"c":"supported","why":["P-1"]}],"exceptions":[{"on":["B-001"],"kind":"fee_at_source","c":"supported","why":["P-1"]}],"open":[{"on":["A-002"],"need":"the remittance advice","why":["P-2"]}],"residue":{"l":[],"r":[]},"do":[{"act":"accept","on":["A-001"]}]}
+
+c is supported, ambiguous or unsupported; never a number.
+why cites identifiers from above, at least one on a supported claim. Never write an
+identifier that is not above.
+residue lists, per side, every record in no supported or ambiguous match. Required
+even when both sides are empty.
+need is at most 120 characters.
+kind: fee_at_source withholding timing_cutoff reference_mangled name_variant
+partial_payment duplicate reversal batched_vs_itemised cause_not_established.
+act: accept hold escalate request. A request needs an open entry on the same record.
+Where a difference is real but the packet does not explain it, give kind
+cause_not_established, why [], and an open entry saying what is needed. Never supply
+a cause the packet does not support.
