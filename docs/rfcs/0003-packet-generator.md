@@ -137,12 +137,31 @@ prompt, so the *earliest* tokens are the ones at risk. The packet therefore come
 instructions last, which also puts the instructions closest to generation where adherence is
 best.
 
-That ordering is a deliberate trade and worth naming. If a prompt ever exceeded the window,
-instructions-first would fail *loudly* — the model would lose the schema and emit something
-unparseable, which the parse rate would show. Instructions-last fails *quietly*: well-formed JSON
-about evidence that was truncated away. The trade is only acceptable because the budget assertion
-runs **at inference as well as at build**, so the truncation case does not arise; a CLI that
-skipped the check would turn this ordering from an optimisation into a liability.
+That ordering is a deliberate trade with three consequences, and all three are named here rather
+than only the one that motivated it.
+
+**It fails quietly rather than loudly.** If a prompt ever exceeded the window, instructions-first
+would lose the schema and emit something unparseable, which the parse rate would show.
+Instructions-last emits well-formed JSON about evidence that was truncated away. That is only
+acceptable because the budget assertion runs **at inference as well as at build**, so the
+truncation case does not arise; a CLI that skipped the check would turn this ordering from an
+optimisation into a liability.
+
+**It puts the instructions closest to generation**, where instruction-following is strongest. That
+is the gain being bought.
+
+**And it ends the prompt in instruction register**, which was discovered by measurement rather
+than reasoning. An untuned model's most natural continuation of a document that ends in
+instructions is *more instructions*: asked to reconcile a packet, the base model wrote further
+rules in the same voice — "A record with no counterpart at all is not an exception: leave it out
+of every match…" — rather than answering. It scored zero on every metric, and not because it could
+not produce JSON.
+
+A fine-tune learns the transition, so this is a property of the base rather than a defect in the
+template. It is recorded because it shapes how a baseline must be read: the honest comparison is
+three-way — what the base cannot format, what it can do once an answer cue is supplied, and what
+the fine-tune does in the mode the profiler actually runs. Reporting only the first invites the
+question of whether the training taught reconciliation or merely taught JSON.
 
 **The template's own tokens count.** It sits inside the ~1,200-token allowance, not beside it —
 which is what `template_overhead` in the budget records, and why the packet allowance is the
