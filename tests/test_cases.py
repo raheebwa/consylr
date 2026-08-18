@@ -913,3 +913,25 @@ def test_an_invisible_character_does_not_hide_a_genuine_cause() -> None:
     poisoned = [{"id": "P-1", "text": "A settlement f\u200bee is deducted at source."}]
     case = build(with_policy("fee_at_source", poisoned, pairs=1), root_seed=ROOT)
     assert case.violations == []
+
+
+def test_the_exception_cites_the_declared_cause_not_the_first_policy_line() -> None:
+    """The falsifying test this round's headline fix did not have.
+
+    Every citation test passed a single-line policy, so `cause` and `policy[0]`
+    were always the same line — and mutating `Draft.warrant` to ignore `cause`
+    entirely, reverting the fix and restoring the fee-versus-withholding
+    contradiction, left the whole suite green. A fix whose revert nothing
+    catches is a fix on trust.
+    """
+    policy = [
+        {"id": "P-1", "text": "Invoices settle at face value unless stated otherwise."},
+        {"id": "P-2", "text": "A settlement fee is deducted at source."},
+    ]
+    body = dict(a_richer_template("fee_at_source", pairs=2).body)
+    body["policy"] = policy
+    body["cause"] = "P-2"
+
+    case = build(Template.from_mapping(body), root_seed=ROOT)
+    exception = next(e for e in case.expected["exceptions"] if e["kind"] == "fee_at_source")
+    assert exception["why"] == ["P-2"], "the exception cites the first line, not the declared cause"
