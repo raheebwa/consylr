@@ -2,7 +2,7 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 152."
+      "text": "Remittance advice, batch 124."
     }
   ],
   "family": "batched_vs_itemised",
@@ -19,27 +19,27 @@
         "755.00"
       ],
       "date": [
-        "2026-01-08",
-        "2026-01-21",
-        "2026-02-03",
-        "2026-02-17",
-        "2026-03-02",
-        "2026-03-11"
+        "2026-04-14",
+        "2026-04-27",
+        "2026-05-08",
+        "2026-05-21",
+        "2026-06-03",
+        "2026-06-16"
       ],
       "party": [
+        "Ullswater Textiles Ltd",
+        "Vantage Print Ltd",
+        "Wexford Agriculture Ltd",
+        "Bramfield Haulage Ltd",
         "Calderstone Foods Ltd",
-        "Dunmore Electrical Ltd",
-        "Elmsworth Joinery Ltd",
-        "Fenwick Instruments Ltd",
-        "Northwind Ltd",
-        "Southgate Ltd"
+        "Dunmore Electrical Ltd"
       ],
       "ref": [
-        "CN-15624",
-        "STM-15631",
-        "REM-15638",
-        "INV-15645",
-        "PO-15652"
+        "REM-14588",
+        "INV-14595",
+        "PO-14602",
+        "CN-14609",
+        "STM-14616"
       ]
     },
     {
@@ -53,27 +53,27 @@
         "1250.00"
       ],
       "date": [
-        "2026-01-21",
-        "2026-02-03",
-        "2026-02-17",
-        "2026-03-02",
-        "2026-03-11",
-        "2026-03-19"
+        "2026-04-27",
+        "2026-05-08",
+        "2026-05-21",
+        "2026-06-03",
+        "2026-06-16",
+        "2026-06-29"
       ],
       "party": [
+        "Vantage Print Ltd",
+        "Wexford Agriculture Ltd",
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
         "Dunmore Electrical Ltd",
-        "Elmsworth Joinery Ltd",
-        "Fenwick Instruments Ltd",
-        "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd"
+        "Elmsworth Joinery Ltd"
       ],
       "ref": [
-        "STM-15635",
-        "REM-15642",
-        "INV-15649",
-        "PO-15656",
-        "CN-15663"
+        "INV-14599",
+        "PO-14606",
+        "CN-14613",
+        "STM-14620",
+        "REM-14627"
       ]
     },
     {
@@ -87,27 +87,27 @@
         "3075.25"
       ],
       "date": [
-        "2026-02-03",
-        "2026-02-17",
-        "2026-03-02",
-        "2026-03-11",
-        "2026-03-19",
-        "2026-04-02"
+        "2026-05-08",
+        "2026-05-21",
+        "2026-06-03",
+        "2026-06-16",
+        "2026-06-29",
+        "2026-07-13"
       ],
       "party": [
+        "Wexford Agriculture Ltd",
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
         "Elmsworth Joinery Ltd",
-        "Fenwick Instruments Ltd",
-        "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd"
+        "Fenwick Instruments Ltd"
       ],
       "ref": [
-        "REM-15646",
-        "INV-15653",
-        "PO-15660",
-        "CN-15667",
-        "STM-15674"
+        "PO-14610",
+        "CN-14617",
+        "STM-14624",
+        "REM-14631",
+        "INV-14638"
       ]
     }
   ],
@@ -129,27 +129,27 @@
         "755.00"
       ],
       "date": [
-        "2026-01-13",
-        "2026-01-27",
-        "2026-02-09",
-        "2026-02-24",
-        "2026-03-05",
-        "2026-03-13"
+        "2026-04-17",
+        "2026-05-04",
+        "2026-05-12",
+        "2026-05-26",
+        "2026-06-09",
+        "2026-06-22"
       ],
       "party": [
+        "Ullswater Textiles Ltd",
+        "Vantage Print Ltd",
+        "Wexford Agriculture Ltd",
+        "Bramfield Haulage Ltd",
         "Calderstone Foods Ltd",
-        "Dunmore Electrical Ltd",
-        "Elmsworth Joinery Ltd",
-        "Fenwick Instruments Ltd",
-        "Northwind Ltd",
-        "Southgate Ltd"
+        "Dunmore Electrical Ltd"
       ],
       "ref": [
-        "CN-15624",
-        "STM-15631",
-        "REM-15638",
-        "INV-15645",
-        "PO-15652"
+        "REM-14588",
+        "INV-14595",
+        "PO-14602",
+        "CN-14609",
+        "STM-14616"
       ]
     },
     {
@@ -163,27 +163,27 @@
         "1250.00"
       ],
       "date": [
-        "2026-01-27",
-        "2026-02-09",
-        "2026-02-24",
-        "2026-03-05",
-        "2026-03-13",
-        "2026-03-24"
+        "2026-05-04",
+        "2026-05-12",
+        "2026-05-26",
+        "2026-06-09",
+        "2026-06-22",
+        "2026-07-02"
       ],
       "party": [
+        "Vantage Print Ltd",
+        "Wexford Agriculture Ltd",
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
         "Dunmore Electrical Ltd",
-        "Elmsworth Joinery Ltd",
-        "Fenwick Instruments Ltd",
-        "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd"
+        "Elmsworth Joinery Ltd"
       ],
       "ref": [
-        "STM-15635",
-        "REM-15642",
-        "INV-15649",
-        "PO-15656",
-        "CN-15663"
+        "INV-14599",
+        "PO-14606",
+        "CN-14613",
+        "STM-14620",
+        "REM-14627"
       ]
     },
     {
@@ -197,27 +197,27 @@
         "3075.25"
       ],
       "date": [
-        "2026-02-09",
-        "2026-02-24",
-        "2026-03-05",
-        "2026-03-13",
-        "2026-03-24",
-        "2026-04-06"
+        "2026-05-12",
+        "2026-05-26",
+        "2026-06-09",
+        "2026-06-22",
+        "2026-07-02",
+        "2026-07-20"
       ],
       "party": [
+        "Wexford Agriculture Ltd",
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
         "Elmsworth Joinery Ltd",
-        "Fenwick Instruments Ltd",
-        "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd"
+        "Fenwick Instruments Ltd"
       ],
       "ref": [
-        "REM-15646",
-        "INV-15653",
-        "PO-15660",
-        "CN-15667",
-        "STM-15674"
+        "PO-14610",
+        "CN-14617",
+        "STM-14624",
+        "REM-14631",
+        "INV-14638"
       ]
     }
   ]
