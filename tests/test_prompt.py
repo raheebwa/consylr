@@ -253,18 +253,35 @@ def test_the_artefact_says_what_to_do_when_a_counterpart_is_absent() -> None:
     assert "residue" in lowered
 
 
-@pytest.mark.parametrize("value", sorted(KINDS | CERTAINTIES | ACTS))
-def test_removing_an_enumeration_value_from_the_artefact_is_caught(value: str) -> None:
-    """The previous check was an unanchored whole-file substring scan.
+def declared(label: str) -> set[str]:
+    """The values the artefact enumerates under `label:`, and only there.
 
-    So deleting `hold` from the act list still passed, because "hold" occurs
-    inside "withholding" — and `hold` is an act the answer keys do emit.
-    Deleting nine of the fourteen kinds passed too, on incidental occurrences in
-    the worked example. A test satisfied by an accident cannot fail for the thing
-    it was written to catch.
+    Bounded to the sentence, because the enumeration is a sentence — an
+    unanchored scan of the whole file could not fail for any value that also
+    occurs elsewhere, which is nine of the fourteen kinds.
     """
-    words = set(re.findall(r"[a-z_]+", TEMPLATE.lower()))
-    assert value in words
+    sentence = TEMPLATE.split(f"\n{label}:", 1)[1].split(".")[0]
+    return set(re.findall(r"[a-z_]{3,}", sentence))
+
+
+@pytest.mark.parametrize(("label", "expected"), [("kind", KINDS), ("act", ACTS)])
+def test_the_artefact_enumerates_exactly_what_the_validator_accepts(
+    label: str, expected: frozenset[str]
+) -> None:
+    """Anchored to the line that declares them, not scanned over the whole file.
+
+    A whole-file scan could not fail: deleting `hold` from the act list passed
+    because "hold" occurs inside "withholding", and deleting nine of the
+    fourteen kinds passed on incidental occurrences in the worked example.
+    Anchoring also catches the reverse — an act the artefact offers that no
+    answer key ever emits is a value the model is invited to be wrong with.
+    """
+    assert declared(label) == set(expected)
+
+
+def test_the_artefact_names_every_certainty_the_validator_accepts() -> None:
+    line = next(line for line in TEMPLATE.splitlines() if line.startswith("c is "))
+    assert set(re.findall(r"[a-z]{5,}", line)) >= set(CERTAINTIES)
 
 
 def test_the_digest_covers_the_string_that_is_rendered() -> None:
