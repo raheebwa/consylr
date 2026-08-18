@@ -183,3 +183,48 @@ def test_a_case_with_no_recorded_fingerprint_is_reported_not_trusted() -> None:
 
 def test_an_empty_corpus_is_a_failure_not_a_vacuous_pass() -> None:
     assert check([], many(3)) != []
+
+
+# --- the leak, constructed end to end -----------------------------------------
+
+
+def test_one_scenario_reworded_cannot_be_split_however_it_is_spelled() -> None:
+    """Two commits of one scenario, one paraphrase apart, in the real shape.
+
+    RFC-0003 permits a paraphrase to rewrite free-text surface fields and forbids
+    it touching a label, a number, a reference or a correspondence decision. In
+    the shape the generator consumes, the paraphrasable fields are a record's
+    counterparty and a policy or document's text — so rewording either must not
+    make one scenario into two.
+
+    Checked over many seeds: two independent draws agree most of the time, so a
+    single passing seed is no evidence that the two were treated as one.
+    """
+    from tests.support import a_template as real
+
+    for surface in ("party", "policy_text"):
+        original = real("t-001")
+        reworded = real(
+            "t-002",
+            **{
+                surface: "Northwind Limited"
+                if surface == "party"
+                else "Face value settles invoices absent a stated deduction."
+            },
+        )
+        assert original.fingerprint != reworded.fingerprint, surface
+        assert original.structural_fingerprint == reworded.structural_fingerprint, surface
+        for seed in range(40):
+            roles = partition([original, reworded], holdout_share=0.5, seed=seed)
+            assert roles["t-001"] == roles["t-002"], f"{surface} leaked at seed {seed}"
+
+
+def test_a_reworded_scenario_that_did_reach_two_roles_is_reported() -> None:
+    """The audit path, for a corpus this machine did not build."""
+    from tests.support import a_template as real
+
+    original = real("t-001")
+    reworded = real("t-002", party="Northwind Limited")
+    cases = [case(original, "train"), case(reworded, "holdout")]
+    codes = [v.code for v in check(cases, [original, reworded])]
+    assert "scenario_in_two_roles" in codes
