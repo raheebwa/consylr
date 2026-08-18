@@ -36,7 +36,7 @@ REQUIRED = ("id", "family", "left", "right", "policy")
 #: scenario became two and the split had no way to know. Refusing the unknown
 #: makes the classification complete by construction, which is the same
 #: principle the ground truth already rests on.
-BODY_FIELDS = frozenset({"id", "family", "left", "right", "policy", "documents"})
+BODY_FIELDS = frozenset({"id", "family", "left", "right", "policy", "documents", "cause"})
 RECORD_FIELDS = frozenset({"ref", "party", "date", "amount"})
 CITATION_FIELDS = frozenset({"id", "text"})
 

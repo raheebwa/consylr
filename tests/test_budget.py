@@ -9,7 +9,13 @@ it never saw while the output stays well-formed and the parse rate looks healthy
 
 import pytest
 
-from consylr.budget import DEFAULT, Budget, check
+from consylr.budget import Budget, check
+
+#: These tests are about the arithmetic, not about any particular template, so
+#: they state the budget they mean. There is no shared default to borrow: a
+#: budget is a claim about a specific wrapper, and one that assumed no wrapper
+#: was wrong in both directions at once.
+DEFAULT = Budget(context=2048, packet_max=1200, output_reserve=600)
 
 
 class FakeTokeniser:

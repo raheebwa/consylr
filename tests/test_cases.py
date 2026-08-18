@@ -26,7 +26,7 @@ from consylr.cases import (
 from consylr.cases import build as _build
 from consylr.prompt import render as prompt_render
 from consylr.templates import Template
-from tests.support import FAKE_BUDGET, PerCharacter
+from tests.support import CAUSE_LINES, FAKE_BUDGET, PerCharacter
 
 
 def build(template: Template, **over: Any) -> Case:
@@ -71,6 +71,8 @@ def a_template(id: str = "t-001", family: str = "clean_match", **over: object) -
         ],
         "policy": [{"id": "P-1", "text": "Invoices settle at face value unless a fee is stated."}],
     }
+    if family in CAUSE_LINES:
+        body["cause"] = "P-2"
     body.update(over)
     return Template.from_mapping(body)
 
@@ -198,10 +200,12 @@ def a_richer_template(family: str, pairs: int = 4, amount: str = "500.00") -> Te
         ],
         "policy": [
             {"id": "P-1", "text": "Invoices settle at face value unless a deduction is stated."},
-            {"id": "P-2", "text": "Settlement fees are deducted at source."},
+            {"id": "P-2", "text": CAUSE_LINES.get(family, "Amounts settle in full.")},
         ],
         "documents": [{"id": "D-1", "text": "Remittance advice for March 2026."}],
     }
+    if family in CAUSE_LINES:
+        body["cause"] = "P-2"
     return Template.from_mapping(body)
 
 
@@ -461,7 +465,11 @@ def numeric_template(family: str, amount: object = 1000, pairs: int = 4) -> Temp
                 }
                 for i in range(pairs)
             ],
-            "policy": [{"id": "P-1", "text": "Invoices settle at face value."}],
+            "policy": [
+                {"id": "P-1", "text": "Invoices settle at face value."},
+                {"id": "P-2", "text": CAUSE_LINES.get(family, "Amounts settle in full.")},
+            ],
+            **({"cause": "P-2"} if family in CAUSE_LINES else {}),
         }
     )
 
@@ -770,6 +778,7 @@ def test_a_clean_match_that_deformed_something_is_refused() -> None:
 def with_policy(family: str, policy: list[dict[str, str]], **over: Any) -> Template:
     body = dict(a_richer_template(family, **over).body)
     body["policy"] = policy
+    body["cause"] = policy[0]["id"]
     return Template.from_mapping(body)
 
 
