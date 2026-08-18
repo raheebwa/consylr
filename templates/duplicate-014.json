@@ -2,29 +2,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 214."
+      "text": "Remittance advice, batch 234."
     }
   ],
   "family": "duplicate",
   "id": "duplicate-014",
   "left": [
     {
+      "amount": "480.00",
+      "date": "2026-06-16",
+      "party": "Northwind Ltd",
+      "ref": "REM-12658"
+    },
+    {
       "amount": "925.50",
-      "date": "2026-04-14",
-      "party": "Copperfield Supply Ltd",
-      "ref": "REM-11918"
+      "date": "2026-06-29",
+      "party": "Southgate Ltd",
+      "ref": "INV-12669"
     },
     {
       "amount": "42150.00",
-      "date": "2026-04-27",
-      "party": "Marlowe Consulting Ltd",
-      "ref": "INV-11929"
-    },
-    {
-      "amount": "755.00",
-      "date": "2026-05-08",
-      "party": "Ashgrove Logistics Ltd",
-      "ref": "PO-11940"
+      "date": "2026-03-02",
+      "party": "Eastvale Trading Ltd",
+      "ref": "PO-12680"
     }
   ],
   "policy": [
@@ -35,22 +35,22 @@
   ],
   "right": [
     {
+      "amount": "480.00",
+      "date": "2026-06-22",
+      "party": "Northwind Ltd",
+      "ref": "REM-12658"
+    },
+    {
       "amount": "925.50",
-      "date": "2026-04-17",
-      "party": "Copperfield Supply Ltd",
-      "ref": "REM-11918"
+      "date": "2026-07-02",
+      "party": "Southgate Ltd",
+      "ref": "INV-12669"
     },
     {
       "amount": "42150.00",
-      "date": "2026-05-04",
-      "party": "Marlowe Consulting Ltd",
-      "ref": "INV-11929"
-    },
-    {
-      "amount": "755.00",
-      "date": "2026-05-12",
-      "party": "Ashgrove Logistics Ltd",
-      "ref": "PO-11940"
+      "date": "2026-03-05",
+      "party": "Eastvale Trading Ltd",
+      "ref": "PO-12680"
     }
   ]
 }

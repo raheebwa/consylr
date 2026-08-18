@@ -3,35 +3,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 083."
+      "text": "Remittance advice, batch 098."
     }
   ],
   "family": "timing_cutoff",
   "id": "timing_cutoff-008",
   "left": [
     {
-      "amount": "755.00",
-      "date": "2026-05-21",
-      "party": "Ravensworth Utilities Ltd",
-      "ref": "STM-07071"
-    },
-    {
-      "amount": "63.15",
+      "amount": "29840.00",
       "date": "2026-06-03",
-      "party": "Thornbury Chemicals Ltd",
-      "ref": "REM-07082"
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "STM-07626"
     },
     {
-      "amount": "17400.00",
+      "amount": "480.00",
       "date": "2026-06-16",
-      "party": "Ullswater Textiles Ltd",
-      "ref": "INV-07093"
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "REM-07637"
     },
     {
-      "amount": "88.75",
+      "amount": "925.50",
       "date": "2026-06-29",
-      "party": "Vantage Print Ltd",
-      "ref": "PO-07104"
+      "party": "Ullswater Textiles Ltd",
+      "ref": "INV-07648"
     }
   ],
   "policy": [
@@ -46,28 +40,22 @@
   ],
   "right": [
     {
-      "amount": "755.00",
-      "date": "2026-05-26",
-      "party": "Ravensworth Utilities Ltd",
-      "ref": "STM-07071"
-    },
-    {
-      "amount": "63.15",
+      "amount": "29840.00",
       "date": "2026-06-09",
-      "party": "Thornbury Chemicals Ltd",
-      "ref": "REM-07082"
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "STM-07626"
     },
     {
-      "amount": "17400.00",
+      "amount": "480.00",
       "date": "2026-06-22",
-      "party": "Ullswater Textiles Ltd",
-      "ref": "INV-07093"
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "REM-07637"
     },
     {
-      "amount": "88.75",
+      "amount": "925.50",
       "date": "2026-07-02",
-      "party": "Vantage Print Ltd",
-      "ref": "PO-07104"
+      "party": "Ullswater Textiles Ltd",
+      "ref": "INV-07648"
     }
   ]
 }

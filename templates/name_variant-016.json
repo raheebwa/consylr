@@ -2,35 +2,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 141."
+      "text": "Remittance advice, batch 146."
     }
   ],
   "family": "name_variant",
   "id": "name_variant-016",
   "left": [
     {
-      "amount": "63.15",
-      "date": "2026-04-27",
-      "party": "Northwind Ltd",
-      "ref": "PO-09217"
-    },
-    {
-      "amount": "17400.00",
-      "date": "2026-05-08",
-      "party": "Southgate Ltd",
-      "ref": "CN-09228"
-    },
-    {
-      "amount": "88.75",
-      "date": "2026-05-21",
-      "party": "Eastvale Trading Ltd",
-      "ref": "STM-09239"
-    },
-    {
       "amount": "12.60",
-      "date": "2026-06-03",
-      "party": "Westbrook Services Ltd",
-      "ref": "REM-09250"
+      "date": "2026-06-16",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "PO-09402"
+    },
+    {
+      "amount": "1904.40",
+      "date": "2026-06-29",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "CN-09413"
+    },
+    {
+      "amount": "1250.00",
+      "date": "2026-03-02",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "STM-09424"
     }
   ],
   "policy": [
@@ -41,28 +35,22 @@
   ],
   "right": [
     {
-      "amount": "63.15",
-      "date": "2026-05-04",
-      "party": "Northwind Ltd",
-      "ref": "PO-09217"
-    },
-    {
-      "amount": "17400.00",
-      "date": "2026-05-12",
-      "party": "Southgate Ltd",
-      "ref": "CN-09228"
-    },
-    {
-      "amount": "88.75",
-      "date": "2026-05-26",
-      "party": "Eastvale Trading Ltd",
-      "ref": "STM-09239"
-    },
-    {
       "amount": "12.60",
-      "date": "2026-06-09",
-      "party": "Westbrook Services Ltd",
-      "ref": "REM-09250"
+      "date": "2026-06-22",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "PO-09402"
+    },
+    {
+      "amount": "1904.40",
+      "date": "2026-07-02",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "CN-09413"
+    },
+    {
+      "amount": "1250.00",
+      "date": "2026-03-05",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "STM-09424"
     }
   ]
 }

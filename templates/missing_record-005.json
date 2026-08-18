@@ -2,29 +2,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 255."
+      "text": "Remittance advice, batch 265."
     }
   ],
   "family": "missing_record",
   "id": "missing_record-005",
   "left": [
     {
-      "amount": "6300.00",
-      "date": "2026-05-08",
-      "party": "Northwind Ltd",
-      "ref": "INV-13435"
+      "amount": "755.00",
+      "date": "2026-04-02",
+      "party": "Copperfield Supply Ltd",
+      "ref": "INV-13805"
     },
     {
-      "amount": "3075.25",
-      "date": "2026-05-21",
-      "party": "Southgate Ltd",
-      "ref": "PO-13446"
+      "amount": "63.15",
+      "date": "2026-04-14",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "PO-13816"
     },
     {
-      "amount": "29840.00",
-      "date": "2026-06-03",
-      "party": "Eastvale Trading Ltd",
-      "ref": "CN-13457"
+      "amount": "17400.00",
+      "date": "2026-04-27",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "CN-13827"
     }
   ],
   "policy": [
@@ -35,22 +35,22 @@
   ],
   "right": [
     {
-      "amount": "6300.00",
-      "date": "2026-05-12",
-      "party": "Northwind Ltd",
-      "ref": "INV-13435"
+      "amount": "755.00",
+      "date": "2026-04-06",
+      "party": "Copperfield Supply Ltd",
+      "ref": "INV-13805"
     },
     {
-      "amount": "3075.25",
-      "date": "2026-05-26",
-      "party": "Southgate Ltd",
-      "ref": "PO-13446"
+      "amount": "63.15",
+      "date": "2026-04-17",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "PO-13816"
     },
     {
-      "amount": "29840.00",
-      "date": "2026-06-09",
-      "party": "Eastvale Trading Ltd",
-      "ref": "CN-13457"
+      "amount": "17400.00",
+      "date": "2026-05-04",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "CN-13827"
     }
   ]
 }

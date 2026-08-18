@@ -2,35 +2,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 137."
+      "text": "Remittance advice, batch 142."
     }
   ],
   "family": "name_variant",
   "id": "name_variant-012",
   "left": [
     {
-      "amount": "29840.00",
-      "date": "2026-04-14",
-      "party": "Ravensworth Utilities Ltd",
-      "ref": "CN-09069"
-    },
-    {
-      "amount": "480.00",
-      "date": "2026-04-27",
-      "party": "Thornbury Chemicals Ltd",
-      "ref": "STM-09080"
-    },
-    {
-      "amount": "925.50",
-      "date": "2026-05-08",
-      "party": "Ullswater Textiles Ltd",
-      "ref": "REM-09091"
-    },
-    {
       "amount": "42150.00",
-      "date": "2026-05-21",
-      "party": "Vantage Print Ltd",
-      "ref": "INV-09102"
+      "date": "2026-06-03",
+      "party": "Copperfield Supply Ltd",
+      "ref": "CN-09254"
+    },
+    {
+      "amount": "755.00",
+      "date": "2026-06-16",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "STM-09265"
+    },
+    {
+      "amount": "63.15",
+      "date": "2026-06-29",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "REM-09276"
     }
   ],
   "policy": [
@@ -41,28 +35,22 @@
   ],
   "right": [
     {
-      "amount": "29840.00",
-      "date": "2026-04-17",
-      "party": "Ravensworth Utilities Ltd",
-      "ref": "CN-09069"
-    },
-    {
-      "amount": "480.00",
-      "date": "2026-05-04",
-      "party": "Thornbury Chemicals Ltd",
-      "ref": "STM-09080"
-    },
-    {
-      "amount": "925.50",
-      "date": "2026-05-12",
-      "party": "Ullswater Textiles Ltd",
-      "ref": "REM-09091"
-    },
-    {
       "amount": "42150.00",
-      "date": "2026-05-26",
-      "party": "Vantage Print Ltd",
-      "ref": "INV-09102"
+      "date": "2026-06-09",
+      "party": "Copperfield Supply Ltd",
+      "ref": "CN-09254"
+    },
+    {
+      "amount": "755.00",
+      "date": "2026-06-22",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "STM-09265"
+    },
+    {
+      "amount": "63.15",
+      "date": "2026-07-02",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "REM-09276"
     }
   ]
 }

@@ -2,35 +2,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 284."
+      "text": "Remittance advice, batch 289."
     }
   ],
   "family": "cause_not_established",
   "id": "cause_not_established-009",
   "left": [
     {
-      "amount": "63.15",
-      "date": "2026-04-27",
-      "party": "Ravensworth Utilities Ltd",
-      "ref": "REM-14508"
-    },
-    {
-      "amount": "17400.00",
-      "date": "2026-05-08",
-      "party": "Thornbury Chemicals Ltd",
-      "ref": "INV-14519"
-    },
-    {
-      "amount": "88.75",
-      "date": "2026-05-21",
-      "party": "Ullswater Textiles Ltd",
-      "ref": "PO-14530"
-    },
-    {
       "amount": "12.60",
-      "date": "2026-06-03",
-      "party": "Vantage Print Ltd",
-      "ref": "CN-14541"
+      "date": "2026-06-16",
+      "party": "Copperfield Supply Ltd",
+      "ref": "REM-14693"
+    },
+    {
+      "amount": "1904.40",
+      "date": "2026-06-29",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "INV-14704"
+    },
+    {
+      "amount": "1250.00",
+      "date": "2026-03-02",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "PO-14715"
     }
   ],
   "policy": [
@@ -41,28 +35,22 @@
   ],
   "right": [
     {
-      "amount": "63.15",
-      "date": "2026-05-04",
-      "party": "Ravensworth Utilities Ltd",
-      "ref": "REM-14508"
-    },
-    {
-      "amount": "17400.00",
-      "date": "2026-05-12",
-      "party": "Thornbury Chemicals Ltd",
-      "ref": "INV-14519"
-    },
-    {
-      "amount": "88.75",
-      "date": "2026-05-26",
-      "party": "Ullswater Textiles Ltd",
-      "ref": "PO-14530"
-    },
-    {
       "amount": "12.60",
-      "date": "2026-06-09",
-      "party": "Vantage Print Ltd",
-      "ref": "CN-14541"
+      "date": "2026-06-22",
+      "party": "Copperfield Supply Ltd",
+      "ref": "REM-14693"
+    },
+    {
+      "amount": "1904.40",
+      "date": "2026-07-02",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "INV-14704"
+    },
+    {
+      "amount": "1250.00",
+      "date": "2026-03-05",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "PO-14715"
     }
   ]
 }

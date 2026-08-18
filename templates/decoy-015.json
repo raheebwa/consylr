@@ -2,29 +2,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 315."
+      "text": "Remittance advice, batch 335."
     }
   ],
   "family": "decoy",
   "id": "decoy-015",
   "left": [
     {
+      "amount": "88.75",
+      "date": "2026-04-14",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "INV-16395"
+    },
+    {
       "amount": "12.60",
-      "date": "2026-06-29",
-      "party": "Northwind Ltd",
-      "ref": "INV-15655"
+      "date": "2026-04-27",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "PO-16406"
     },
     {
       "amount": "1904.40",
-      "date": "2026-03-02",
-      "party": "Southgate Ltd",
-      "ref": "PO-15666"
-    },
-    {
-      "amount": "1250.00",
-      "date": "2026-03-11",
-      "party": "Eastvale Trading Ltd",
-      "ref": "CN-15677"
+      "date": "2026-05-08",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "CN-16417"
     }
   ],
   "policy": [
@@ -35,22 +35,22 @@
   ],
   "right": [
     {
+      "amount": "88.75",
+      "date": "2026-04-17",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "INV-16395"
+    },
+    {
       "amount": "12.60",
-      "date": "2026-07-02",
-      "party": "Northwind Ltd",
-      "ref": "INV-15655"
+      "date": "2026-05-04",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "PO-16406"
     },
     {
       "amount": "1904.40",
-      "date": "2026-03-05",
-      "party": "Southgate Ltd",
-      "ref": "PO-15666"
-    },
-    {
-      "amount": "1250.00",
-      "date": "2026-03-13",
-      "party": "Eastvale Trading Ltd",
-      "ref": "CN-15677"
+      "date": "2026-05-12",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "CN-16417"
     }
   ]
 }

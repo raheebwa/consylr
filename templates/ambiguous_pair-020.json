@@ -2,35 +2,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 345."
+      "text": "Remittance advice, batch 460."
     }
   ],
   "family": "ambiguous_pair",
   "id": "ambiguous_pair-020",
   "left": [
     {
-      "amount": "29840.00",
-      "date": "2026-03-11",
-      "party": "Northwind Ltd",
-      "ref": "INV-16765"
+      "amount": "755.00",
+      "date": "2026-04-27",
+      "party": "Copperfield Supply Ltd",
+      "ref": "INV-21020"
     },
     {
-      "amount": "480.00",
-      "date": "2026-03-19",
-      "party": "Southgate Ltd",
-      "ref": "PO-16776"
+      "amount": "63.15",
+      "date": "2026-05-08",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "PO-21031"
     },
     {
-      "amount": "925.50",
-      "date": "2026-04-02",
-      "party": "Eastvale Trading Ltd",
-      "ref": "CN-16787"
-    },
-    {
-      "amount": "42150.00",
-      "date": "2026-04-14",
-      "party": "Westbrook Services Ltd",
-      "ref": "STM-16798"
+      "amount": "17400.00",
+      "date": "2026-05-21",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "CN-21042"
     }
   ],
   "policy": [
@@ -41,28 +35,22 @@
   ],
   "right": [
     {
-      "amount": "29840.00",
-      "date": "2026-03-13",
-      "party": "Northwind Ltd",
-      "ref": "INV-16765"
+      "amount": "755.00",
+      "date": "2026-05-04",
+      "party": "Copperfield Supply Ltd",
+      "ref": "INV-21020"
     },
     {
-      "amount": "480.00",
-      "date": "2026-03-24",
-      "party": "Southgate Ltd",
-      "ref": "PO-16776"
+      "amount": "63.15",
+      "date": "2026-05-12",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "PO-21031"
     },
     {
-      "amount": "925.50",
-      "date": "2026-04-06",
-      "party": "Eastvale Trading Ltd",
-      "ref": "CN-16787"
-    },
-    {
-      "amount": "42150.00",
-      "date": "2026-04-17",
-      "party": "Westbrook Services Ltd",
-      "ref": "STM-16798"
+      "amount": "17400.00",
+      "date": "2026-05-26",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "CN-21042"
     }
   ]
 }

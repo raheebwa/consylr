@@ -112,12 +112,31 @@ FAMILIES = [
     "ambiguous_pair",
 ]
 
-#: Twenty-five scenarios per family. Five was enough for a per-family metric and
-#: nowhere near enough for a corpus: a deformation's only variety is which pair
-#: it picks, so a template yields at most as many distinct cases as it has pairs.
-#: Distinct cases come from distinct templates until #20's per-case
-#: instantiation exists, which is why this number is the corpus size lever.
-PER_FAMILY = 25
+#: Scenarios per family, deliberately unequal.
+#:
+#: RFC-0002 puts clearly-supported cases at 40-50% of the training mix and
+#: `cause_not_established` at 10-15%. Eleven of the fourteen families produce a
+#: clearly-supported answer, so an equal split gives 80% supported — nearly
+#: double the band. A corpus that meets the quota needs a template set weighted
+#: toward the cases the model finds hard, which is the quota's whole point: a
+#: model trained on a mix that is four-fifths clean learns that most things
+#: reconcile.
+#:
+#: `decoy` gets the most because its deformation ignores the case index, so each
+#: of its templates yields exactly one distinct case where others yield three.
+#: `clean_match`, `batched_vs_itemised` and `decoy` yield exactly one distinct
+#: case per template, because their deformations do not draw on the generator.
+#: They therefore need enough templates to supply the exam AND the training
+#: floor separately — twenty gave six training cases against a floor of twenty,
+#: and the quota gate refused the corpus.
+PER_FAMILY = {
+    "clean_match": 50,
+    "batched_vs_itemised": 50,
+    "cause_not_established": 40,
+    "ambiguous_pair": 100,
+    "decoy": 120,
+}
+DEFAULT_PER_FAMILY = 20
 
 
 def records(seed: int, pairs: int) -> tuple[list[dict[str, str]], list[dict[str, str]]]:
@@ -138,8 +157,12 @@ def records(seed: int, pairs: int) -> tuple[list[dict[str, str]], list[dict[str,
     return left, right
 
 
+def count_for(family: str) -> int:
+    return PER_FAMILY.get(family, DEFAULT_PER_FAMILY)
+
+
 def template(family: str, index: int) -> dict[str, object]:
-    seed = FAMILIES.index(family) * PER_FAMILY + index
+    seed = sum(count_for(f) for f in FAMILIES[: FAMILIES.index(family)]) + index
     # Three or four correspondence units, which is six or eight records before
     # the deformation runs. A Gate 1 packet holds five to ten
     # *[competition constraint — ADTC profiler]*, and deformations move the count:
@@ -172,7 +195,7 @@ def main() -> None:
 
     written = 0
     for family in FAMILIES:
-        for index in range(PER_FAMILY):
+        for index in range(count_for(family)):
             body = template(family, index)
             path = OUT / f"{body['id']}.json"
             path.write_text(json.dumps(body, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -181,11 +204,11 @@ def main() -> None:
     total = sum(
         Decimal(r["amount"])
         for f in FAMILIES
-        for i in range(PER_FAMILY)
+        for i in range(count_for(f))
         for r in template(f, i)["left"]
     )  # type: ignore[union-attr,index]
     print(f"{written} templates in {OUT}")
-    print(f"{len(FAMILIES)} families x {PER_FAMILY}; left-side total {total}")
+    print(f"{len(FAMILIES)} families, weighted for the quota; left-side total {total}")
 
 
 if __name__ == "__main__":

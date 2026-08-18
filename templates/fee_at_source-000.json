@@ -3,35 +3,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 025."
+      "text": "Remittance advice, batch 050."
     }
   ],
   "family": "fee_at_source",
   "id": "fee_at_source-000",
   "left": [
     {
-      "amount": "42150.00",
-      "date": "2026-06-16",
-      "party": "Copperfield Supply Ltd",
-      "ref": "INV-04925"
-    },
-    {
-      "amount": "755.00",
-      "date": "2026-06-29",
-      "party": "Marlowe Consulting Ltd",
-      "ref": "PO-04936"
-    },
-    {
       "amount": "63.15",
-      "date": "2026-03-02",
-      "party": "Ashgrove Logistics Ltd",
-      "ref": "CN-04947"
+      "date": "2026-05-21",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "INV-05850"
     },
     {
       "amount": "17400.00",
-      "date": "2026-03-11",
-      "party": "Pennine Metals Ltd",
-      "ref": "STM-04958"
+      "date": "2026-06-03",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "PO-05861"
+    },
+    {
+      "amount": "88.75",
+      "date": "2026-06-16",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "CN-05872"
     }
   ],
   "policy": [
@@ -46,28 +40,22 @@
   ],
   "right": [
     {
-      "amount": "42150.00",
-      "date": "2026-06-22",
-      "party": "Copperfield Supply Ltd",
-      "ref": "INV-04925"
-    },
-    {
-      "amount": "755.00",
-      "date": "2026-07-02",
-      "party": "Marlowe Consulting Ltd",
-      "ref": "PO-04936"
-    },
-    {
       "amount": "63.15",
-      "date": "2026-03-05",
-      "party": "Ashgrove Logistics Ltd",
-      "ref": "CN-04947"
+      "date": "2026-05-26",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "INV-05850"
     },
     {
       "amount": "17400.00",
-      "date": "2026-03-13",
-      "party": "Pennine Metals Ltd",
-      "ref": "STM-04958"
+      "date": "2026-06-09",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "PO-05861"
+    },
+    {
+      "amount": "88.75",
+      "date": "2026-06-22",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "CN-05872"
     }
   ]
 }

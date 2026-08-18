@@ -2,35 +2,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 197."
+      "text": "Remittance advice, batch 192."
     }
   ],
   "family": "batched_vs_itemised",
   "id": "batched_vs_itemised-022",
   "left": [
     {
-      "amount": "1250.00",
-      "date": "2026-06-03",
-      "party": "Ravensworth Utilities Ltd",
-      "ref": "CN-11289"
+      "amount": "88.75",
+      "date": "2026-04-14",
+      "party": "Northwind Ltd",
+      "ref": "CN-11104"
     },
     {
-      "amount": "6300.00",
-      "date": "2026-06-16",
-      "party": "Thornbury Chemicals Ltd",
-      "ref": "STM-11300"
+      "amount": "12.60",
+      "date": "2026-04-27",
+      "party": "Southgate Ltd",
+      "ref": "STM-11115"
     },
     {
-      "amount": "3075.25",
-      "date": "2026-06-29",
-      "party": "Ullswater Textiles Ltd",
-      "ref": "REM-11311"
-    },
-    {
-      "amount": "29840.00",
-      "date": "2026-03-02",
-      "party": "Vantage Print Ltd",
-      "ref": "INV-11322"
+      "amount": "1904.40",
+      "date": "2026-05-08",
+      "party": "Eastvale Trading Ltd",
+      "ref": "REM-11126"
     }
   ],
   "policy": [
@@ -41,28 +35,22 @@
   ],
   "right": [
     {
-      "amount": "1250.00",
-      "date": "2026-06-09",
-      "party": "Ravensworth Utilities Ltd",
-      "ref": "CN-11289"
+      "amount": "88.75",
+      "date": "2026-04-17",
+      "party": "Northwind Ltd",
+      "ref": "CN-11104"
     },
     {
-      "amount": "6300.00",
-      "date": "2026-06-22",
-      "party": "Thornbury Chemicals Ltd",
-      "ref": "STM-11300"
+      "amount": "12.60",
+      "date": "2026-05-04",
+      "party": "Southgate Ltd",
+      "ref": "STM-11115"
     },
     {
-      "amount": "3075.25",
-      "date": "2026-07-02",
-      "party": "Ullswater Textiles Ltd",
-      "ref": "REM-11311"
-    },
-    {
-      "amount": "29840.00",
-      "date": "2026-03-05",
-      "party": "Vantage Print Ltd",
-      "ref": "INV-11322"
+      "amount": "1904.40",
+      "date": "2026-05-12",
+      "party": "Eastvale Trading Ltd",
+      "ref": "REM-11126"
     }
   ]
 }

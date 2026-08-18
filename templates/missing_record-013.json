@@ -2,29 +2,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 263."
+      "text": "Remittance advice, batch 273."
     }
   ],
   "family": "missing_record",
   "id": "missing_record-013",
   "left": [
     {
-      "amount": "12.60",
-      "date": "2026-06-03",
-      "party": "Ravensworth Utilities Ltd",
-      "ref": "STM-13731"
+      "amount": "480.00",
+      "date": "2026-04-27",
+      "party": "Northwind Ltd",
+      "ref": "STM-14101"
     },
     {
-      "amount": "1904.40",
-      "date": "2026-06-16",
-      "party": "Thornbury Chemicals Ltd",
-      "ref": "REM-13742"
+      "amount": "925.50",
+      "date": "2026-05-08",
+      "party": "Southgate Ltd",
+      "ref": "REM-14112"
     },
     {
-      "amount": "1250.00",
-      "date": "2026-06-29",
-      "party": "Ullswater Textiles Ltd",
-      "ref": "INV-13753"
+      "amount": "42150.00",
+      "date": "2026-05-21",
+      "party": "Eastvale Trading Ltd",
+      "ref": "INV-14123"
     }
   ],
   "policy": [
@@ -35,22 +35,22 @@
   ],
   "right": [
     {
-      "amount": "12.60",
-      "date": "2026-06-09",
-      "party": "Ravensworth Utilities Ltd",
-      "ref": "STM-13731"
+      "amount": "480.00",
+      "date": "2026-05-04",
+      "party": "Northwind Ltd",
+      "ref": "STM-14101"
     },
     {
-      "amount": "1904.40",
-      "date": "2026-06-22",
-      "party": "Thornbury Chemicals Ltd",
-      "ref": "REM-13742"
+      "amount": "925.50",
+      "date": "2026-05-12",
+      "party": "Southgate Ltd",
+      "ref": "REM-14112"
     },
     {
-      "amount": "1250.00",
-      "date": "2026-07-02",
-      "party": "Ullswater Textiles Ltd",
-      "ref": "INV-13753"
+      "amount": "42150.00",
+      "date": "2026-05-26",
+      "party": "Eastvale Trading Ltd",
+      "ref": "INV-14123"
     }
   ]
 }

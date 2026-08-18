@@ -3,35 +3,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 075."
+      "text": "Remittance advice, batch 090."
     }
   ],
   "family": "timing_cutoff",
   "id": "timing_cutoff-000",
   "left": [
     {
-      "amount": "88.75",
-      "date": "2026-04-27",
-      "party": "Northwind Ltd",
-      "ref": "INV-06775"
-    },
-    {
-      "amount": "12.60",
+      "amount": "42150.00",
       "date": "2026-05-08",
-      "party": "Southgate Ltd",
-      "ref": "PO-06786"
+      "party": "Northwind Ltd",
+      "ref": "INV-07330"
     },
     {
-      "amount": "1904.40",
+      "amount": "755.00",
       "date": "2026-05-21",
-      "party": "Eastvale Trading Ltd",
-      "ref": "CN-06797"
+      "party": "Southgate Ltd",
+      "ref": "PO-07341"
     },
     {
-      "amount": "1250.00",
+      "amount": "63.15",
       "date": "2026-06-03",
-      "party": "Westbrook Services Ltd",
-      "ref": "STM-06808"
+      "party": "Eastvale Trading Ltd",
+      "ref": "CN-07352"
     }
   ],
   "policy": [
@@ -46,28 +40,22 @@
   ],
   "right": [
     {
-      "amount": "88.75",
-      "date": "2026-05-04",
-      "party": "Northwind Ltd",
-      "ref": "INV-06775"
-    },
-    {
-      "amount": "12.60",
+      "amount": "42150.00",
       "date": "2026-05-12",
-      "party": "Southgate Ltd",
-      "ref": "PO-06786"
+      "party": "Northwind Ltd",
+      "ref": "INV-07330"
     },
     {
-      "amount": "1904.40",
+      "amount": "755.00",
       "date": "2026-05-26",
-      "party": "Eastvale Trading Ltd",
-      "ref": "CN-06797"
+      "party": "Southgate Ltd",
+      "ref": "PO-07341"
     },
     {
-      "amount": "1250.00",
+      "amount": "63.15",
       "date": "2026-06-09",
-      "party": "Westbrook Services Ltd",
-      "ref": "STM-06808"
+      "party": "Eastvale Trading Ltd",
+      "ref": "CN-07352"
     }
   ]
 }

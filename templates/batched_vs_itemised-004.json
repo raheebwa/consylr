@@ -2,35 +2,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 179."
+      "text": "Remittance advice, batch 174."
     }
   ],
   "family": "batched_vs_itemised",
   "id": "batched_vs_itemised-004",
   "left": [
     {
-      "amount": "88.75",
-      "date": "2026-06-16",
-      "party": "Ravensworth Utilities Ltd",
-      "ref": "REM-10623"
+      "amount": "755.00",
+      "date": "2026-04-27",
+      "party": "Northwind Ltd",
+      "ref": "REM-10438"
     },
     {
-      "amount": "12.60",
-      "date": "2026-06-29",
-      "party": "Thornbury Chemicals Ltd",
-      "ref": "INV-10634"
+      "amount": "63.15",
+      "date": "2026-05-08",
+      "party": "Southgate Ltd",
+      "ref": "INV-10449"
     },
     {
-      "amount": "1904.40",
-      "date": "2026-03-02",
-      "party": "Ullswater Textiles Ltd",
-      "ref": "PO-10645"
-    },
-    {
-      "amount": "1250.00",
-      "date": "2026-03-11",
-      "party": "Vantage Print Ltd",
-      "ref": "CN-10656"
+      "amount": "17400.00",
+      "date": "2026-05-21",
+      "party": "Eastvale Trading Ltd",
+      "ref": "PO-10460"
     }
   ],
   "policy": [
@@ -41,28 +35,22 @@
   ],
   "right": [
     {
-      "amount": "88.75",
-      "date": "2026-06-22",
-      "party": "Ravensworth Utilities Ltd",
-      "ref": "REM-10623"
+      "amount": "755.00",
+      "date": "2026-05-04",
+      "party": "Northwind Ltd",
+      "ref": "REM-10438"
     },
     {
-      "amount": "12.60",
-      "date": "2026-07-02",
-      "party": "Thornbury Chemicals Ltd",
-      "ref": "INV-10634"
+      "amount": "63.15",
+      "date": "2026-05-12",
+      "party": "Southgate Ltd",
+      "ref": "INV-10449"
     },
     {
-      "amount": "1904.40",
-      "date": "2026-03-05",
-      "party": "Ullswater Textiles Ltd",
-      "ref": "PO-10645"
-    },
-    {
-      "amount": "1250.00",
-      "date": "2026-03-13",
-      "party": "Vantage Print Ltd",
-      "ref": "CN-10656"
+      "amount": "17400.00",
+      "date": "2026-05-26",
+      "party": "Eastvale Trading Ltd",
+      "ref": "PO-10460"
     }
   ]
 }

@@ -2,35 +2,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 229."
+      "text": "Remittance advice, batch 244."
     }
   ],
   "family": "reversal",
   "id": "reversal-004",
   "left": [
     {
-      "amount": "6300.00",
-      "date": "2026-04-27",
-      "party": "Copperfield Supply Ltd",
-      "ref": "REM-12473"
-    },
-    {
-      "amount": "3075.25",
+      "amount": "88.75",
       "date": "2026-05-08",
-      "party": "Marlowe Consulting Ltd",
-      "ref": "INV-12484"
+      "party": "Copperfield Supply Ltd",
+      "ref": "REM-13028"
     },
     {
-      "amount": "29840.00",
+      "amount": "12.60",
       "date": "2026-05-21",
-      "party": "Ashgrove Logistics Ltd",
-      "ref": "PO-12495"
+      "party": "Marlowe Consulting Ltd",
+      "ref": "INV-13039"
     },
     {
-      "amount": "480.00",
+      "amount": "1904.40",
       "date": "2026-06-03",
-      "party": "Pennine Metals Ltd",
-      "ref": "CN-12506"
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "PO-13050"
     }
   ],
   "policy": [
@@ -41,28 +35,22 @@
   ],
   "right": [
     {
-      "amount": "6300.00",
-      "date": "2026-05-04",
-      "party": "Copperfield Supply Ltd",
-      "ref": "REM-12473"
-    },
-    {
-      "amount": "3075.25",
+      "amount": "88.75",
       "date": "2026-05-12",
-      "party": "Marlowe Consulting Ltd",
-      "ref": "INV-12484"
+      "party": "Copperfield Supply Ltd",
+      "ref": "REM-13028"
     },
     {
-      "amount": "29840.00",
+      "amount": "12.60",
       "date": "2026-05-26",
-      "party": "Ashgrove Logistics Ltd",
-      "ref": "PO-12495"
+      "party": "Marlowe Consulting Ltd",
+      "ref": "INV-13039"
     },
     {
-      "amount": "480.00",
+      "amount": "1904.40",
       "date": "2026-06-09",
-      "party": "Pennine Metals Ltd",
-      "ref": "CN-12506"
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "PO-13050"
     }
   ]
 }

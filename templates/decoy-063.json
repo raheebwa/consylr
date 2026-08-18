@@ -1,0 +1,56 @@
+{
+  "documents": [
+    {
+      "id": "D-1",
+      "text": "Remittance advice, batch 383."
+    }
+  ],
+  "family": "decoy",
+  "id": "decoy-063",
+  "left": [
+    {
+      "amount": "925.50",
+      "date": "2026-04-27",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "STM-18171"
+    },
+    {
+      "amount": "42150.00",
+      "date": "2026-05-08",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "REM-18182"
+    },
+    {
+      "amount": "755.00",
+      "date": "2026-05-21",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "INV-18193"
+    }
+  ],
+  "policy": [
+    {
+      "id": "P-1",
+      "text": "Invoices settle at face value unless a deduction is stated in this schedule."
+    }
+  ],
+  "right": [
+    {
+      "amount": "925.50",
+      "date": "2026-05-04",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "STM-18171"
+    },
+    {
+      "amount": "42150.00",
+      "date": "2026-05-12",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "REM-18182"
+    },
+    {
+      "amount": "755.00",
+      "date": "2026-05-26",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "INV-18193"
+    }
+  ]
+}

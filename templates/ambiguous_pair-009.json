@@ -2,35 +2,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 334."
+      "text": "Remittance advice, batch 449."
     }
   ],
   "family": "ambiguous_pair",
   "id": "ambiguous_pair-009",
   "left": [
     {
-      "amount": "1904.40",
-      "date": "2026-03-11",
-      "party": "Copperfield Supply Ltd",
-      "ref": "REM-16358"
+      "amount": "29840.00",
+      "date": "2026-04-27",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "REM-20613"
     },
     {
-      "amount": "1250.00",
-      "date": "2026-03-19",
-      "party": "Marlowe Consulting Ltd",
-      "ref": "INV-16369"
+      "amount": "480.00",
+      "date": "2026-05-08",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "INV-20624"
     },
     {
-      "amount": "6300.00",
-      "date": "2026-04-02",
-      "party": "Ashgrove Logistics Ltd",
-      "ref": "PO-16380"
-    },
-    {
-      "amount": "3075.25",
-      "date": "2026-04-14",
-      "party": "Pennine Metals Ltd",
-      "ref": "CN-16391"
+      "amount": "925.50",
+      "date": "2026-05-21",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "PO-20635"
     }
   ],
   "policy": [
@@ -41,28 +35,22 @@
   ],
   "right": [
     {
-      "amount": "1904.40",
-      "date": "2026-03-13",
-      "party": "Copperfield Supply Ltd",
-      "ref": "REM-16358"
+      "amount": "29840.00",
+      "date": "2026-05-04",
+      "party": "Ravensworth Utilities Ltd",
+      "ref": "REM-20613"
     },
     {
-      "amount": "1250.00",
-      "date": "2026-03-24",
-      "party": "Marlowe Consulting Ltd",
-      "ref": "INV-16369"
+      "amount": "480.00",
+      "date": "2026-05-12",
+      "party": "Thornbury Chemicals Ltd",
+      "ref": "INV-20624"
     },
     {
-      "amount": "6300.00",
-      "date": "2026-04-06",
-      "party": "Ashgrove Logistics Ltd",
-      "ref": "PO-16380"
-    },
-    {
-      "amount": "3075.25",
-      "date": "2026-04-17",
-      "party": "Pennine Metals Ltd",
-      "ref": "CN-16391"
+      "amount": "925.50",
+      "date": "2026-05-26",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "PO-20635"
     }
   ]
 }

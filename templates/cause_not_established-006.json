@@ -2,35 +2,29 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 281."
+      "text": "Remittance advice, batch 286."
     }
   ],
   "family": "cause_not_established",
   "id": "cause_not_established-006",
   "left": [
     {
-      "amount": "6300.00",
-      "date": "2026-05-21",
-      "party": "Ravensworth Utilities Ltd",
-      "ref": "PO-14397"
-    },
-    {
-      "amount": "3075.25",
-      "date": "2026-06-03",
-      "party": "Thornbury Chemicals Ltd",
-      "ref": "CN-14408"
-    },
-    {
-      "amount": "29840.00",
-      "date": "2026-06-16",
-      "party": "Ullswater Textiles Ltd",
-      "ref": "STM-14419"
-    },
-    {
       "amount": "480.00",
-      "date": "2026-06-29",
-      "party": "Vantage Print Ltd",
-      "ref": "REM-14430"
+      "date": "2026-03-02",
+      "party": "Copperfield Supply Ltd",
+      "ref": "PO-14582"
+    },
+    {
+      "amount": "925.50",
+      "date": "2026-03-11",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "CN-14593"
+    },
+    {
+      "amount": "42150.00",
+      "date": "2026-03-19",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "STM-14604"
     }
   ],
   "policy": [
@@ -41,28 +35,22 @@
   ],
   "right": [
     {
-      "amount": "6300.00",
-      "date": "2026-05-26",
-      "party": "Ravensworth Utilities Ltd",
-      "ref": "PO-14397"
-    },
-    {
-      "amount": "3075.25",
-      "date": "2026-06-09",
-      "party": "Thornbury Chemicals Ltd",
-      "ref": "CN-14408"
-    },
-    {
-      "amount": "29840.00",
-      "date": "2026-06-22",
-      "party": "Ullswater Textiles Ltd",
-      "ref": "STM-14419"
-    },
-    {
       "amount": "480.00",
-      "date": "2026-07-02",
-      "party": "Vantage Print Ltd",
-      "ref": "REM-14430"
+      "date": "2026-03-05",
+      "party": "Copperfield Supply Ltd",
+      "ref": "PO-14582"
+    },
+    {
+      "amount": "925.50",
+      "date": "2026-03-13",
+      "party": "Marlowe Consulting Ltd",
+      "ref": "CN-14593"
+    },
+    {
+      "amount": "42150.00",
+      "date": "2026-03-24",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "STM-14604"
     }
   ]
 }
