@@ -103,17 +103,26 @@ def partition(templates: Iterable[Template], *, holdout_share: float, seed: int)
     return placed
 
 
-def _named(
-    roles_by_id: Mapping[str, set[str]], known: Mapping[str, Template], structure: str
-) -> list[str]:
-    """The template ids emitting one scenario, skipping any that emit none."""
-    out = []
-    for i in sorted(roles_by_id):
-        if i not in known:
+def _scenarios(ids: Iterable[str], known: Mapping[str, Template]) -> dict[str, str]:
+    """Each template's scenario, computed once.
+
+    Once, not once per comparison. Asking for it inside the loop over distinct
+    scenarios made the audit quadratic in the number of templates — at
+    RFC-0003's three to five hundred that is a quarter of a million lookups on
+    the path every corpus runs, and before the results were cached it was that
+    many builds.
+
+    A template that emits no case is absent rather than raising: `identity.check`
+    owns that question, and raising here would end an audit written to count
+    every problem at the first one.
+    """
+    out: dict[str, str] = {}
+    for i in ids:
+        template = known.get(i)
+        if template is None:
             continue
         try:
-            if scenario(known[i]) == structure:
-                out.append(i)
+            out[i] = scenario(template)
         except ValueError:
             continue
     return out
@@ -243,20 +252,15 @@ def check(
                 )
             )
 
+    digests = _scenarios(roles_by_id, known)
     by_structure: dict[str, set[str]] = {}
-    for template_id, roles in roles_by_id.items():
-        template = known.get(template_id)
-        if template is None:
-            continue
-        try:
-            by_structure.setdefault(scenario(template), set()).update(roles)
-        except ValueError:
-            # `identity.check` owns whether a template emits a case at all.
-            # Raising here would end an audit written to count every problem.
-            continue
+    ids_by_structure: dict[str, list[str]] = {}
+    for template_id, digest in digests.items():
+        by_structure.setdefault(digest, set()).update(roles_by_id[template_id])
+        ids_by_structure.setdefault(digest, []).append(template_id)
 
     for structure in sorted(by_structure):
-        ids = _named(roles_by_id, known, structure)
+        ids = sorted(ids_by_structure[structure])
         # `len(ids) > 1` is the whole difference between "one scenario reached
         # both roles" and "one template's own rows did". Without it every
         # ordinary template_in_two_roles cascaded into this higher-severity

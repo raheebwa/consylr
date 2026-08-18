@@ -324,3 +324,31 @@ def test_a_template_that_cannot_be_built_is_reported_not_raised_through() -> Non
     codes = [v.code for v in check([case(good, roles[good.id])], [good, legacy])]
     assert codes, "the audit ran and reported"
     assert "unbuildable_template" in [v.code for v in identity_check([legacy])]
+
+
+def test_the_audit_asks_each_template_for_its_scenario_once(monkeypatch: Any) -> None:
+    """It asked once per comparison, which is quadratic in the corpus.
+
+    At RFC-0003's three to five hundred templates that is a quarter of a million
+    lookups on the path every corpus runs — and before the results were cached,
+    that many builds, each building three cases. Pinned because the shape is
+    invisible at fixture scale: everything here passes either way.
+    """
+    from consylr import identity
+
+    identity._SEEN.clear()
+    calls: list[str] = []
+    original = identity.emitted
+
+    def counted(template: Template) -> list[tuple[str, str]]:
+        calls.append(template.id)
+        return original(template)
+
+    monkeypatch.setattr(identity, "emitted", counted)
+
+    templates = many(30)
+    roles = partition(templates, holdout_share=0.3, seed=3)
+    check(corpus(templates, roles, each=1), templates)
+
+    # Once for the partition and once for the audit; never once per comparison.
+    assert len(calls) <= 2 * len(templates)
