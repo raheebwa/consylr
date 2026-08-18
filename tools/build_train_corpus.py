@@ -3,8 +3,8 @@
 
 A tool rather than an ad-hoc invocation, because a corpus produced by a command
 nobody can re-run is a corpus whose provenance rests on someone's shell history.
-The first training corpus was built that way and the record of how is a
-paragraph in a handoff note.
+The first training corpus was built that way, and reconstructing how took longer
+than writing this did.
 
 **It writes nothing that has not passed the audit.** `corpus.write` runs every
 check before a byte reaches disk and raises otherwise, so a corpus on disk is
