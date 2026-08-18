@@ -31,6 +31,7 @@ import hashlib
 from collections.abc import Iterable, Mapping
 from typing import Any
 
+from consylr.identity import scenario
 from consylr.templates import Template
 from consylr.violation import Violation
 
@@ -38,7 +39,7 @@ TRAIN = "train"
 HOLDOUT = "holdout"
 
 
-def _draw(seed: int, structural_fingerprint: str) -> float:
+def _draw(seed: int, scenario_digest: str) -> float:
     """A template's position in [0, 1), from the seed and its structural identity.
 
     Derived per template rather than from one shared stream: a shared stream
@@ -51,7 +52,7 @@ def _draw(seed: int, structural_fingerprint: str) -> float:
     template outside the interval this docstring claims and make a
     `holdout_share` of 1.0 not quite total.
     """
-    digest = hashlib.sha256(f"{seed}:{structural_fingerprint}".encode()).digest()
+    digest = hashlib.sha256(f"{seed}:{scenario_digest}".encode()).digest()
     return (int.from_bytes(digest[:8], "big") >> 11) / (1 << 53)
 
 
@@ -88,10 +89,7 @@ def partition(templates: Iterable[Template], *, holdout_share: float, seed: int)
             raise ValueError(f"{t.id!r} is declared by more than one template")
         seen.add(t.id)
 
-    return {
-        t.id: HOLDOUT if _draw(seed, t.structural_fingerprint) < holdout_share else TRAIN
-        for t in items
-    }
+    return {t.id: HOLDOUT if _draw(seed, scenario(t)) < holdout_share else TRAIN for t in items}
 
 
 def check(
@@ -222,12 +220,10 @@ def check(
     for template_id, roles in roles_by_id.items():
         template = known.get(template_id)
         if template is not None:
-            by_structure.setdefault(template.structural_fingerprint, set()).update(roles)
+            by_structure.setdefault(scenario(template), set()).update(roles)
 
     for structure in sorted(by_structure):
-        ids = sorted(
-            i for i in roles_by_id if i in known and known[i].structural_fingerprint == structure
-        )
+        ids = sorted(i for i in roles_by_id if i in known and scenario(known[i]) == structure)
         # `len(ids) > 1` is the whole difference between "one scenario reached
         # both roles" and "one template's own rows did". Without it every
         # ordinary template_in_two_roles cascaded into this higher-severity

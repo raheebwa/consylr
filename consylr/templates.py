@@ -26,7 +26,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from consylr import money
 from consylr.violation import Violation
 
 REQUIRED = ("id", "family", "left", "right", "policy")
@@ -40,12 +39,6 @@ REQUIRED = ("id", "family", "left", "right", "policy")
 BODY_FIELDS = frozenset({"id", "family", "left", "right", "policy", "documents"})
 RECORD_FIELDS = frozenset({"ref", "party", "date", "amount"})
 CITATION_FIELDS = frozenset({"id", "text"})
-
-#: What a paraphrase may rewrite, and therefore what identity does not read: the
-#: counterparty as written, and the prose of a policy or document. Stated as the
-#: complement of the projection below rather than as a list to keep in step with
-#: it.
-SURFACE_FIELDS = frozenset({"party", "text"})
 
 
 def _text(value: Any) -> str:
@@ -61,57 +54,6 @@ def _text(value: Any) -> str:
     text = unicodedata.normalize("NFC", str(value))
     text = "".join(c for c in text if unicodedata.category(c) != "Cf")
     return " ".join(text.split())
-
-
-def _record_projection(record: Any) -> list[str]:
-    """What the model can see about one record, in a canonical form."""
-    if not isinstance(record, dict):
-        return [_text(record)]
-    try:
-        amount = money.canonical(record.get("amount", ""))
-    except ValueError:
-        amount = _text(record.get("amount", ""))
-    return [_text(record.get("ref", "")), _text(record.get("date", "")), amount]
-
-
-def _projection(body: Mapping[str, Any]) -> dict[str, Any]:
-    """The scenario, as distinct from the file that describes it.
-
-    Identity reads exactly what the builder reads, in the form the model will
-    see it. Everything else — the declared id, a counterparty's spelling, a
-    policy's prose, the order the records happen to be listed in, the way an
-    amount was typed — is either a label over the scenario or something a
-    paraphrase may rewrite, and none of it makes a second scenario.
-
-    The pairs are sorted, because applying one permutation to both sides
-    preserves every clean pair. `sort_keys` in a JSON dump sorts keys and never
-    arrays, so reversing both lists used to be a different template.
-    """
-
-    def listed(key: str) -> list[Any]:
-        value = body.get(key)
-        return value if isinstance(value, list) else []
-
-    left, right = listed("left"), listed("right")
-    policy, documents = listed("policy"), listed("documents")
-
-    lefts = [_record_projection(r) for r in left]
-    rights = [_record_projection(r) for r in right]
-    pairs = (
-        sorted([left_side, right_side] for left_side, right_side in zip(lefts, rights, strict=True))
-        if len(lefts) == len(rights)
-        else [sorted(lefts), sorted(rights)]
-    )
-
-    def cited(entries: Any) -> list[str]:
-        return sorted(_text(e.get("id", "")) if isinstance(e, dict) else _text(e) for e in entries)
-
-    return {
-        "family": _text(body.get("family", "")),
-        "pairs": pairs,
-        "policy": cited(policy),
-        "documents": cited(documents),
-    }
 
 
 def _digest(body: Any) -> str:
@@ -147,7 +89,6 @@ class Template:
     family: str
     body: Mapping[str, Any]
     fingerprint: str
-    structural_fingerprint: str
 
     @classmethod
     def from_mapping(cls, body: Mapping[str, Any]) -> Template:
@@ -161,11 +102,6 @@ class Template:
             # make two copies of one scenario distinct, which is precisely the
             # aliasing the split has to catch.
             fingerprint=_digest(without_id),
-            # And this one is taken over the scenario rather than the file, so
-            # two templates describing one scenario collide however differently
-            # they are written. Exact identity misses them by construction,
-            # because being written differently is what makes the file differ.
-            structural_fingerprint=_digest(_projection(frozen)),
         )
 
     def __eq__(self, other: object) -> bool:
@@ -306,7 +242,6 @@ def check(templates: Iterable[Template], families: frozenset[str]) -> list[Viola
         violations.extend(shape_violations(t))
 
     by_id: dict[str, list[Template]] = {}
-    by_fingerprint: dict[str, list[Template]] = {}
     for t in items:
         # An id-less template is already reported as a missing field. Grouping it
         # under the empty string would report it a second time as an alias of
@@ -314,7 +249,6 @@ def check(templates: Iterable[Template], families: frozenset[str]) -> list[Viola
         # second naming nothing a reader could act on.
         if t.id:
             by_id.setdefault(t.id, []).append(t)
-        by_fingerprint.setdefault(t.fingerprint, []).append(t)
 
     for missing in sorted({f for t in items for f in REQUIRED if f not in t.body}):
         named = sorted(t.id for t in items if missing not in t.body)
@@ -333,36 +267,6 @@ def check(templates: Iterable[Template], families: frozenset[str]) -> list[Viola
                 "to name one scenario or the split cannot separate on it",
             )
         )
-
-    for ts in sorted(by_fingerprint.values(), key=lambda g: sorted(t.id for t in g)):
-        ids = sorted({t.id for t in ts})
-        if len(ids) > 1:
-            violations.append(
-                Violation(
-                    "aliased_template",
-                    f"{', '.join(repr(i) for i in ids)} are the same scenario under different "
-                    "ids; split on the declared id and one role's cases appear in the other",
-                )
-            )
-
-    by_structure: dict[str, list[Template]] = {}
-    for t in items:
-        by_structure.setdefault(t.structural_fingerprint, []).append(t)
-    for ts in sorted(by_structure.values(), key=lambda g: sorted(t.id for t in g)):
-        ids = sorted({t.id for t in ts})
-        # An exact alias already collides on content, and reporting it again here
-        # would make one defect look like two. The test is whether *this* group is
-        # entirely one exact copy — asking instead whether its ids appear anywhere
-        # in some alias group made the report vanish as copies accumulated, so a
-        # fourth copy of a scenario silenced a defect that three had raised.
-        if len(ids) > 1 and len({t.fingerprint for t in ts}) > 1:
-            violations.append(
-                Violation(
-                    "near_duplicate_template",
-                    f"{', '.join(repr(i) for i in ids)} differ only in wording; a paraphrase "
-                    "cannot change a label, a number or a reference, so these are one scenario",
-                )
-            )
 
     for family in sorted({t.family for t in items} - families):
         named = sorted(t.id for t in items if t.family == family)

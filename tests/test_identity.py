@@ -19,21 +19,29 @@ from typing import Any
 
 import pytest
 
+from consylr.cases import Case, build
+from consylr.cases import _serialise as serialise
+from consylr.identity import PROBE_ID, PROBE_SEED, scenario
+from consylr.identity import check as identity_check
 from consylr.split import partition
 from consylr.templates import Template, check
-from tests.support import FAMILIES, built, template_body
+from tests.support import FAKE_BUDGET, FAMILIES, PerCharacter, built, template_body
 
 
 def other(**over: Any) -> Template:
     return Template.from_mapping(template_body(id="t-002", **over))
 
 
+def a_real(id: str, **over: Any) -> Template:
+    return Template.from_mapping(template_body(id=id, **over))
+
+
 BASE = Template.from_mapping(template_body(id="t-001"))
 
 
 def same_scenario(a: Template, b: Template, seeds: int = 60) -> None:
-    """Identical projection, and therefore never on opposite sides of the split."""
-    assert a.structural_fingerprint == b.structural_fingerprint
+    """One scenario, and therefore never on opposite sides of the split."""
+    assert scenario(a) == scenario(b)
     for seed in range(seeds):
         roles = partition([a, b], holdout_share=0.5, seed=seed)
         assert roles[a.id] == roles[b.id], f"split at seed {seed}"
@@ -120,25 +128,25 @@ def test_reworded_policy_prose_is_not_a_scenario() -> None:
 
 
 def test_a_changed_amount_is_a_different_scenario() -> None:
-    assert BASE.structural_fingerprint != other(amount="900.00").structural_fingerprint
+    assert scenario(BASE) != scenario(other(amount="900.00"))
 
 
 def test_a_changed_record_count_is_a_different_scenario() -> None:
-    assert BASE.structural_fingerprint != other(pairs=2).structural_fingerprint
+    assert scenario(BASE) != scenario(other(pairs=2))
 
 
 def test_a_changed_reference_is_a_different_scenario() -> None:
     records = [{**r, "ref": "PO-9"} for r in template_body()["left"]]
-    assert BASE.structural_fingerprint != other(left=records).structural_fingerprint
+    assert scenario(BASE) != scenario(other(left=records))
 
 
 def test_a_changed_policy_identifier_is_a_different_scenario() -> None:
     renumbered = [{**p, "id": "P-9"} for p in template_body()["policy"]]
-    assert BASE.structural_fingerprint != other(policy=renumbered).structural_fingerprint
+    assert scenario(BASE) != scenario(other(policy=renumbered))
 
 
 def test_a_different_family_is_a_different_scenario() -> None:
-    assert BASE.structural_fingerprint != other(family="fee_at_source").structural_fingerprint
+    assert scenario(BASE) != scenario(other(family="fee_at_source"))
 
 
 def test_prose_that_is_not_prose_is_refused_rather_than_erased() -> None:
@@ -155,15 +163,12 @@ def test_a_changed_date_is_a_different_scenario() -> None:
     # A date either side of a cut-off is a whole perturbation family, so a date
     # dropped from the projection would merge `timing_cutoff` into its clean twin.
     records = [{**r, "date": "2026-09-09"} for r in template_body()["left"]]
-    assert BASE.structural_fingerprint != other(left=records).structural_fingerprint
+    assert scenario(BASE) != scenario(other(left=records))
 
 
 def test_a_changed_document_is_a_different_scenario() -> None:
     # The documents a packet carries are evidence the answer may cite.
-    assert (
-        BASE.structural_fingerprint
-        != other(documents=[{"id": "D-9", "text": "x"}]).structural_fingerprint
-    )
+    assert scenario(BASE) != scenario(other(documents=[{"id": "D-9", "text": "x"}]))
 
 
 def test_a_citation_key_the_builder_does_not_know_is_refused() -> None:
@@ -181,21 +186,38 @@ def missing_record_pair() -> tuple[Template, Template]:
     invisible in the packet and in the answer — and was load-bearing in a
     fingerprint taken over the template.
     """
-    body = template_body(family="missing_record", pairs=2)
+    body = template_body(family="missing_record", pairs=1)
     alpha = Template.from_mapping({**body, "id": "t-alpha"})
     other_right = [
-        {"ref": "ZZZZ-9999", "party": "Totally Other Co", "date": "1999-01-01", "amount": "42.00"},
-        body["right"][1],
+        {"ref": "ZZZZ-9999", "party": "Totally Other Co", "date": "1999-01-01", "amount": "42.00"}
     ]
     beta = Template.from_mapping({**body, "id": "t-beta", "right": other_right})
     return alpha, beta
 
 
+def probe_case(template: Template) -> Case:
+    """What the identity probe sees: the template built under the reserved id.
+
+    The id is normalised because `case_seed` mixes it in, so two copies of one
+    scenario under different ids would otherwise draw differently and emit
+    different cases — which is the aliasing identity has to catch, not report.
+    """
+    return build(
+        Template.from_mapping({**template.body, "id": PROBE_ID}),
+        root_seed=PROBE_SEED,
+        case_index=0,
+        role="train",
+        tokeniser=PerCharacter(),
+        render=serialise,
+        budget=FAKE_BUDGET,
+    )
+
+
 def test_two_templates_that_emit_the_same_case_are_one_scenario() -> None:
     alpha, beta = missing_record_pair()
-    assert built(alpha).packet == built(beta).packet
-    assert built(alpha).expected == built(beta).expected
     assert alpha.body["right"] != beta.body["right"]
+    assert probe_case(alpha).packet == probe_case(beta).packet
+    assert probe_case(alpha).expected == probe_case(beta).expected
     same_scenario(alpha, beta)
 
 
@@ -206,15 +228,15 @@ def test_content_a_deformation_overwrites_is_not_a_scenario() -> None:
     a = Template.from_mapping({**body, "id": "t-001"})
     moved = [{**r, "date": "1998-07-04"} for r in body["right"]]
     b = Template.from_mapping({**body, "id": "t-002", "right": moved})
-    if built(a).packet == built(b).packet:
+    if probe_case(a).packet == probe_case(b).packet:
         same_scenario(a, b)
 
 
 def test_two_templates_that_emit_different_cases_are_different_scenarios() -> None:
     a = Template.from_mapping(template_body(id="t-001"))
     b = Template.from_mapping(template_body(id="t-002", amount="900.00"))
-    assert built(a).packet != built(b).packet
-    assert a.scenario != b.scenario
+    assert probe_case(a).packet != probe_case(b).packet
+    assert scenario(a) != scenario(b)
 
 
 def test_the_scenario_is_the_same_whatever_the_corpus_seed_is() -> None:
@@ -222,9 +244,9 @@ def test_the_scenario_is_the_same_whatever_the_corpus_seed_is() -> None:
     # the same template would change identity between builds and every leak
     # check would be relative to the corpus that happened to be built.
     a = Template.from_mapping(template_body(id="t-001"))
-    first = a.scenario
+    first = scenario(a)
     built(a, root_seed=999_999)
-    assert a.scenario == first
+    assert scenario(a) == first
 
 
 def test_the_scenario_probes_more_than_one_case() -> None:
@@ -235,3 +257,45 @@ def test_the_scenario_probes_more_than_one_case() -> None:
     from consylr.identity import PROBE_INDICES
 
     assert len(PROBE_INDICES) >= 3
+
+
+# --- auditing a set of templates for scenarios held more than once -----------
+
+
+def test_one_file_under_two_ids_is_reported() -> None:
+    v = next(
+        x
+        for x in identity_check([a_real("t-001"), a_real("t-002")])
+        if x.code == "duplicate_scenario"
+    )
+    assert "t-001" in v.detail and "t-002" in v.detail
+    assert "one file under two ids" in v.detail
+
+
+def test_two_files_that_emit_one_case_are_reported_as_what_they_are() -> None:
+    # Not an alias — the files genuinely differ. What they differ about never
+    # reaches a packet, which is the more interesting half of the report.
+    alpha, beta = missing_record_pair()
+    v = next(x for x in identity_check([alpha, beta]) if x.code == "duplicate_scenario")
+    assert "never reaches a packet" in v.detail
+
+
+def test_a_paraphrase_apart_pair_is_reported() -> None:
+    templates = [a_real("t-001"), a_real("t-002", party="Northwind Limited")]
+    assert "duplicate_scenario" in [x.code for x in identity_check(templates)]
+
+
+def test_distinct_scenarios_are_not_reported() -> None:
+    templates = [a_real("t-001"), a_real("t-002", amount="900.00")]
+    assert identity_check(templates) == []
+
+
+def test_a_template_that_cannot_be_built_is_reported_not_crashed_through() -> None:
+    # An unbuildable template has no scenario. Inventing one would let it take a
+    # role in a partition it can never contribute a case to, and raising here
+    # would stop an audit that is meant to count every problem at the first one.
+    unbuildable = Template.from_mapping(
+        template_body(id="t-bad", family="fee_at_source", amount="0.01")
+    )
+    v = next(x for x in identity_check([unbuildable]) if x.code == "unbuildable_template")
+    assert "t-bad" in v.detail
