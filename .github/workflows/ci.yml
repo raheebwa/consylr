@@ -12,9 +12,16 @@ on:
 permissions:
   contents: read
 
+# A superseded push has nothing left to prove, and a hung job should fail rather
+# than occupy a runner until the platform reaps it.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   check:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       # Actions are pinned to full commit SHAs. A tag is mutable, so pinning to
       # a tag is pinning to nothing. Dependabot rewrites the SHA and the comment

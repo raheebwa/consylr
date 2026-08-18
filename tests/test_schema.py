@@ -461,3 +461,17 @@ def test_the_empty_packet_answer_the_rfc_prescribes_validates() -> None:
         "do": [{"act": "request", "on": ["A-001", "A-002"]}],
     }
     assert codes(out, packet) == []
+
+
+def test_a_match_with_its_sides_swapped_is_caught() -> None:
+    # `l` is the left side and `r` the right; the identifier says which a record
+    # is. A match that swaps them validates against every other rule.
+    out = ok(matches=[{"l": ["B-004"], "r": ["A-017"], "c": "supported", "why": ["A-017"]}])
+    assert "wrong_side" in codes(out)
+
+
+def test_a_many_side_match_keeps_every_record_on_its_own_side() -> None:
+    out = ok(matches=[{"l": ["A-021"], "r": ["B-008", "B-009"], "c": "supported",
+                       "why": ["A-021"]}],
+             do=[{"act": "accept", "on": ["A-021", "B-008", "B-009"]}])
+    assert codes(out, P("A-021", "B-008", "B-009")) == []
