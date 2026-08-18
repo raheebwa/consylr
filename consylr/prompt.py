@@ -50,7 +50,7 @@ DIGEST = hashlib.sha256(_PATH.read_bytes()).hexdigest()
 #: three times during drafting, twice going *up* when the text was shortened.
 #: `test_the_pinned_overhead_is_what_the_frozen_tokeniser_counts` re-measures it
 #: wherever the tokeniser is present.
-OVERHEAD_TOKENS = 309
+OVERHEAD_TOKENS = 308
 
 #: Derived rather than declared. RFC-0003 gives the packet "~1,200 tokens", but
 #: the constraint that actually binds is the window: the context, less what is

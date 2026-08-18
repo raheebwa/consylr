@@ -2,7 +2,7 @@
 
 Reconcile the records above. A-* is the left side, B-* the right; P-* are policy
 lines, D-* documents. Reply with one JSON object and nothing else:
-{"matches":[{"l":["A-001"],"r":["B-001"],"c":"supported","why":["P-1"]}],"exceptions":[{"on":["B-001"],"kind":"fee_at_source","c":"supported","why":["P-1"]}],"open":[{"on":["A-002"],"need":"the remittance advice","why":["P-2"]}],"residue":{"l":[],"r":[]},"do":[{"act":"accept","on":["A-001"]}]}
+{"matches":[{"l":["A-001"],"r":["B-001"],"c":"supported","why":["P-1"]}],"exceptions":[{"on":["B-001"],"kind":"fee_at_source","c":"supported","why":["P-1"]}],"open":[{"on":["A-002"],"need":"the remittance advice"}],"residue":{"l":["A-002"],"r":[]},"do":[{"act":"accept","on":["A-001"]}]}
 
 c is supported, ambiguous or unsupported; never a number.
 why cites identifiers from above, at least one on a supported claim. Never write an
