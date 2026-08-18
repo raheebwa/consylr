@@ -55,15 +55,44 @@ installing.
 - `consylr.violation` — one violation type for every gate, so that rejections from the schema,
   the budget, the quota and the split can be reported as one list.
 - A rejection may name the case it came from, which RFC-0003 requires of a corpus-wide audit.
+- `consylr.cases` — one case built from one template by applying a named deformation, so the
+  correct answer is a by-product of the construction rather than a judgement made afterwards.
+  All fourteen families of the frozen taxonomy have one. Every case is put to the validator
+  that ships in the product before it is emitted.
+- `budget.check_packet` — the packet against its own allowance, separate from the rendered
+  prompt against the prompt cap. They are different strings against different caps.
 
 ### Changed
 
 - `packet_over_budget` is now `prompt_over_budget`, and `Budget` carries a `template_overhead`.
   RFC-0003 sizes the packet and asserts on the rendered prompt; those are different strings, and
   the cap now applies to the rendered one with the wrapper declared rather than assumed away.
+- A `Template` is now frozen in more than name: its body is deep-copied and both fingerprints
+  are computed once, and equality covers the content rather than the declared id alone.
+- Loading templates fails on a missing directory, an empty one, or a file that is not a
+  `.json` template, where each previously produced an empty list.
 
 ### Fixed
 
+- The paraphrase-invariant identity the grouped split rests on was computed over field names
+  belonging to no template the generator can build, so it stripped nothing and equalled the
+  exact identity. One scenario committed twice, one rewording apart, was split across the
+  training and evaluation roles with every check passing — the failure that raises measured
+  accuracy rather than lowering it. The identity tests had their own fixture in a shape the
+  builder refuses, which is why they were green; there is now one fixture, in the shape the
+  product consumes, and a test that the fixture is something the generator can build.
+- The near-duplicate report inverted under scale: a fourth copy of one scenario silenced a
+  defect that three had raised.
+- The grouped split accepted any string as a role, including none at all, and both of its leak
+  checks were unreachable on a corpus holding a single role. It also could not distinguish a
+  corpus from its exact inverse, never validated `holdout_share`, and silently collapsed two
+  templates that declared one id.
+- `scenario_in_two_roles` was raised for every template whose own rows straddled the boundary,
+  inflating a leak count with mistakes that were not leaks.
+- The case builder measured the packet against the cap for packet-plus-wrapper, so declaring a
+  template overhead loosened the budget gate by exactly that amount.
+- A template record carrying its own identifier overrode the one the packet assigns by side and
+  position.
 - The quota checker counted the certainty allocation and family coverage over the same rows
   without a cross-check, so a `cause_not_established` case labelled `supported` satisfied both
   at once and a corpus fifteen points short of its supported floor passed clean. That family's
