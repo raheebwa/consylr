@@ -17,7 +17,15 @@ a guess wearing the same shape as a construction.
 And every case is put to the validator that ships in the product before it is
 emitted. "Correct by construction" is a claim about the builder, and a claim
 needs something able to contradict it — so the case faces the same check the
-model's output will face, and a case that fails it is not a case.
+model's output will face.
+
+What it does with the answer is *report*, not raise. A build over thousands of
+cases needs the whole list of what is wrong with it, and a builder that aborted
+on the first bad case could not produce one. `Case.violations` is therefore the
+verdict, and a non-empty verdict is a case the caller must not write — the
+refusal belongs to whoever is assembling the corpus, and it has what it needs to
+make it. A malformed *template*, by contrast, raises here: that is a defect in
+an input, and no amount of reporting makes the case buildable.
 """
 
 from __future__ import annotations
@@ -31,7 +39,7 @@ from random import Random
 from typing import Any
 
 from consylr import schema
-from consylr.budget import DEFAULT, Budget, Tokeniser
+from consylr.budget import DEFAULT, Budget, Tokeniser, check_packet
 from consylr.budget import check as budget_check
 from consylr.templates import Template
 from consylr.violation import Violation
@@ -387,12 +395,16 @@ def _records(body: Mapping[str, Any], key: str, prefix: str) -> list[dict[str, A
             raise ValueError(  # noqa: TRY004
                 f"template {key!r} entry {n} is not a record"
             )
-        out.append({"id": f"{prefix}-{n:03d}", **record})
+        # The generated id last, so a record carrying its own cannot override it.
+        # Identifiers are the packet's, assigned by side and position; a record
+        # supplying one could collide across sides, and every `why` in the
+        # expected output is written against the generated id rather than that.
+        out.append({**record, "id": f"{prefix}-{n:03d}"})
     return out
 
 
-def _render(packet: Mapping[str, Any]) -> str:
-    """The packet as the runtime will send it, for counting only."""
+def _serialise(packet: Mapping[str, Any]) -> str:
+    """The packet as text, for counting only. Not a rendered prompt."""
     return json.dumps(packet, sort_keys=True, separators=(",", ":"))
 
 
@@ -404,8 +416,12 @@ def build(
     role: str,
     tokeniser: Tokeniser | None = None,
     budget: Budget = DEFAULT,
+    render: Callable[[Mapping[str, Any]], str] | None = None,
 ) -> Case:
     """One case, with the answer that is correct for how it was built."""
+    if not template.id:
+        raise ValueError("a template with no id cannot be built; the split separates on it")
+
     deform = DEFORMATIONS.get(template.family)
     if deform is None:
         raise ValueError(f"no deformation for family {template.family!r}")
@@ -442,8 +458,20 @@ def build(
 
     violations = schema.validate(expected, packet)
     if tokeniser is not None:
-        rendered = _render(packet)
-        meta["prompt_tokens"] = len(tokeniser.encode(rendered))
-        violations = violations + budget_check(rendered, tokeniser, budget, case=template.id)
+        # The packet against the packet allowance. `_serialise` is not a rendered
+        # prompt and is not called one: no template has been wrapped round it, so
+        # recording its length as `prompt_tokens` would put a packet count under
+        # a prompt name and let the wrapper be assumed away a second time.
+        serialised = _serialise(packet)
+        meta["packet_tokens"] = len(tokeniser.encode(serialised))
+        violations = violations + check_packet(serialised, tokeniser, budget, case=template.id)
+
+        # The prompt, when there is one. Until a renderer exists this is the
+        # honest state of affairs: the packet cap is enforced, the prompt cap is
+        # not yet enforceable, and nothing claims otherwise.
+        if render is not None:
+            rendered = render(packet)
+            meta["prompt_tokens"] = len(tokeniser.encode(rendered))
+            violations = violations + budget_check(rendered, tokeniser, budget, case=template.id)
 
     return Case(packet=packet, expected=expected, meta=meta, violations=violations)

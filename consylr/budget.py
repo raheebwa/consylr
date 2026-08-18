@@ -76,6 +76,34 @@ class Budget:
 DEFAULT = Budget()
 
 
+def check_packet(
+    packet_text: str,
+    tokeniser: Tokeniser,
+    budget: Budget = DEFAULT,
+    *,
+    case: str | None = None,
+) -> list[Violation]:
+    """The packet against its own allowance, before a template is wrapped round it.
+
+    Separate from `check` because the two measure different strings against
+    different caps, and using one for the other is a mistake that fails safe in
+    neither direction. Measuring the packet against the *prompt* cap turns every
+    declared token of wrapper into an extra token of packet allowance — so the
+    more honestly a caller describes its template, the weaker the gate becomes.
+    """
+    used = len(tokeniser.encode(packet_text))
+    if used > budget.packet_max:
+        return [
+            Violation(
+                "packet_over_budget",
+                f"packet is {used} tokens; the allowance is {budget.packet_max} "
+                f"before the template's {budget.template_overhead} is added",
+                case,
+            )
+        ]
+    return []
+
+
 def check(
     rendered_prompt: str,
     tokeniser: Tokeniser,
