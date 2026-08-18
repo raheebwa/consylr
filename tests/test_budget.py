@@ -196,3 +196,40 @@ def test_a_prompt_that_exactly_fills_the_context_has_not_overrun_it() -> None:
     budget = Budget(context=1000, packet_max=900, output_reserve=100).validate()
     v = next(x for x in check("x" * 1000, TOK, budget) if x.code == "headroom_lost")
     assert "overruns" not in v.detail and "leaving 0" in v.detail
+
+
+# --- a budget is a claim about a specific wrapper -----------------------------
+
+
+def test_a_budget_cannot_be_constructed_without_saying_what_it_budgets() -> None:
+    """Removing the `DEFAULT` name did not remove the default budget.
+
+    `Budget()` still constructed the condemned object bit-for-bit — 2048/1200/0/600
+    — and the test guarding the removal asserted only that an attribute name was
+    absent, so re-adding `DEFAULT = Budget()` left the suite green. A gate that
+    could not fail, in the test written to prevent gates that cannot fail.
+    """
+    with pytest.raises(TypeError):
+        Budget()  # type: ignore[call-arg]
+
+
+@pytest.mark.parametrize(
+    "numbers",
+    [
+        {"context": 2048, "packet_max": -50, "template_overhead": 150, "output_reserve": 0},
+        {"context": 100, "packet_max": 0, "template_overhead": 0, "output_reserve": 100},
+        {"context": -5, "packet_max": 10, "template_overhead": 0, "output_reserve": 0},
+        {"context": 2048, "packet_max": 10, "template_overhead": -100, "output_reserve": 600},
+    ],
+)
+def test_a_budget_whose_numbers_are_not_sizes_is_refused(numbers: dict[str, int]) -> None:
+    """`validate()` could not refuse anything for a derived budget.
+
+    When `packet_max = context - reserve - K` and `template_overhead = K`, the
+    guard `prompt_max + reserve > context` reduces to `context > context`, which
+    is never true — so a packet allowance of minus three thousand validated
+    cleanly, and every case in the corpus then failed with a message blaming the
+    case.
+    """
+    with pytest.raises(ValueError):
+        Budget(**numbers).validate()

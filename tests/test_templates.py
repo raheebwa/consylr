@@ -209,3 +209,24 @@ def test_templates_load_in_a_stable_order(tmp_path: Path) -> None:
             json.dumps(template_body(id=name[0], amount=f"{ord(name[0])}.00"))
         )
     assert [t.id for t in load(tmp_path)] == ["a", "c", "m", "z"]
+
+
+@pytest.mark.parametrize("field", ["ref", "party", "date", "amount"])
+def test_a_record_missing_a_field_the_builder_reads_is_reported(field: str) -> None:
+    """The allowlist checked for keys outside it and never for a missing one.
+
+    So a record short of `ref`, `party` or `amount` was certified clean and then
+    indexed raw by whichever deformation reads it — a `KeyError` escaping an
+    audit written to keep going and count every problem.
+    """
+    body = template_body()
+    body["left"] = [{k: v for k, v in r.items() if k != field} for r in body["left"]]
+    v = next(x for x in check([Template.from_mapping(body)], FAMILIES) if x.code == "missing_field")
+    assert field in v.detail
+
+
+@pytest.mark.parametrize("field", ["id", "text"])
+def test_a_policy_line_missing_a_field_is_reported(field: str) -> None:
+    body = template_body()
+    body["policy"] = [{k: v for k, v in p.items() if k != field} for p in body["policy"]]
+    assert "missing_field" in [x.code for x in check([Template.from_mapping(body)], FAMILIES)]
