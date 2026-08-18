@@ -15,6 +15,7 @@ from typing import Any
 
 import pytest
 
+from consylr.identity import scenario
 from consylr.split import HOLDOUT, TRAIN, _draw, check, partition
 from consylr.templates import Template
 from tests.support import a_template
@@ -118,7 +119,7 @@ def test_a_share_equal_to_a_template_s_own_draw_leaves_it_in_train() -> None:
     # earlier comment here called this an equivalent mutation on the grounds that
     # no digest could be made to land on a given share — which had it backwards.
     t = a_template(id="t-001")
-    share = _draw(7, t.structural_fingerprint)
+    share = _draw(7, scenario(t))
     assert partition([t], holdout_share=share, seed=7) == {"t-001": TRAIN}
 
 
@@ -139,7 +140,7 @@ def test_every_draw_is_a_multiple_of_two_to_the_minus_fifty_three() -> None:
     it is a 2**-53 event. The property that rules it out is checkable directly —
     a 53-bit numerator over 2**53 is exactly representable and strictly below 1.
     """
-    draws = [_draw(s, t.structural_fingerprint) for s in range(20) for t in many(20)]
+    draws = [_draw(s, scenario(t)) for s in range(20) for t in many(20)]
     assert all(0.0 <= d < 1.0 for d in draws)
     assert all((d * (1 << 53)).is_integer() for d in draws)
 

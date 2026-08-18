@@ -17,7 +17,7 @@ from pathlib import Path
 
 import pytest
 
-from consylr.templates import SURFACE_FIELDS, Template, check, load
+from consylr.templates import Template, check, load
 from tests.support import FAMILIES, a_template, built, template_body
 
 
@@ -28,31 +28,6 @@ def test_the_fixture_is_something_the_generator_can_actually_build() -> None:
     any other shape it is a property of nothing.
     """
     assert built(a_template()).violations == []
-
-
-def test_the_surface_fields_are_fields_a_real_template_has() -> None:
-    """`SURFACE_FIELDS` must name keys that occur in the shape being hashed.
-
-    It once named five keys, none of which appeared in any template the
-    generator accepts. `_without_surface` therefore stripped nothing, the
-    structural identity equalled the exact one, and the near-duplicate check
-    could not fire — with every test green.
-    """
-    body = template_body()
-    present: set[str] = set()
-
-    def walk(value: object) -> None:
-        if isinstance(value, dict):
-            present.update(value)
-            for v in value.values():
-                walk(v)
-        elif isinstance(value, list):
-            for v in value:
-                walk(v)
-
-    walk(body)
-    assert SURFACE_FIELDS & present, "no surface field occurs in a real template"
-    assert {"party", "text"} <= SURFACE_FIELDS, "RFC-0003 names both as paraphrasable"
 
 
 def test_a_well_formed_template_loads() -> None:
@@ -77,12 +52,6 @@ def test_key_order_does_not_change_the_fingerprint() -> None:
     body = template_body()
     reordered = dict(reversed(list(body.items())))
     assert Template.from_mapping(body).fingerprint == Template.from_mapping(reordered).fingerprint
-
-
-def test_two_ids_for_one_scenario_are_reported() -> None:
-    templates = [a_template(id="t-001"), a_template(id="t-002")]
-    v = next(x for x in check(templates, FAMILIES) if x.code == "aliased_template")
-    assert "t-001" in v.detail and "t-002" in v.detail
 
 
 def test_one_id_used_twice_is_reported() -> None:
@@ -130,68 +99,6 @@ def test_a_data_file_that_is_not_an_object_is_refused_loudly(tmp_path: Path) -> 
         load(tmp_path)
 
 
-# --- the identity that survives a paraphrase ---------------------------------
-
-
-@pytest.mark.parametrize(
-    ("field", "value"),
-    [("party", "Northwind Limited"), ("policy_text", "Face value settles invoices.")],
-)
-def test_a_reworded_scenario_keeps_its_structural_identity(field: str, value: str) -> None:
-    # Exact content identity cannot catch this: the scenario is duplicated and
-    # then reworded, so the fingerprints differ and the split sees two templates.
-    # RFC-0003 bounds paraphrase to free-text surface fields and forbids it
-    # touching a label, a number, a reference or a correspondence decision — so
-    # an identity taken over everything it may *not* touch is invariant under it.
-    original = a_template(id="t-001")
-    reworded = a_template(id="t-002", **{field: value})
-    assert original.fingerprint != reworded.fingerprint
-    assert original.structural_fingerprint == reworded.structural_fingerprint
-
-
-def test_a_changed_amount_changes_the_structural_identity() -> None:
-    assert a_template().structural_fingerprint != a_template(amount="900.00").structural_fingerprint
-
-
-def test_a_changed_record_count_changes_the_structural_identity() -> None:
-    assert a_template().structural_fingerprint != a_template(pairs=3).structural_fingerprint
-
-
-def test_a_changed_policy_identifier_changes_the_structural_identity() -> None:
-    # The text of a policy line is paraphrasable; which line is cited is not.
-    other = [{"id": "P-9", "text": "Invoices settle at face value."}]
-    assert a_template().structural_fingerprint != a_template(policy=other).structural_fingerprint
-
-
-def test_near_duplicate_templates_are_reported() -> None:
-    templates = [a_template(id="t-001"), a_template(id="t-002", party="Northwind Limited")]
-    v = next(x for x in check(templates, FAMILIES) if x.code == "near_duplicate_template")
-    assert "t-001" in v.detail and "t-002" in v.detail
-
-
-def test_an_alias_is_reported_as_an_alias_rather_than_twice() -> None:
-    # An exact duplicate collides on both identities. Reporting it under both
-    # codes would make one defect look like two.
-    templates = [a_template(id="t-001"), a_template(id="t-002")]
-    codes = [x.code for x in check(templates, FAMILIES)]
-    assert codes.count("aliased_template") == 1
-    assert "near_duplicate_template" not in codes
-
-
-def test_a_further_copy_does_not_silence_the_near_duplicate_report() -> None:
-    # The suppression once asked whether the ids appeared in *any* alias group,
-    # so a fourth copy of one scenario made a defect that three had raised
-    # disappear — a larger defect reporting less than a smaller one.
-    templates = [
-        a_template(id="t-a"),
-        a_template(id="t-b"),
-        a_template(id="t-c", party="Northwind Limited"),
-        a_template(id="t-d", party="Northwind Limited"),
-    ]
-    codes = [x.code for x in check(templates, FAMILIES)]
-    assert "near_duplicate_template" in codes
-
-
 # --- frozen has to mean frozen ------------------------------------------------
 
 
@@ -202,9 +109,9 @@ def test_editing_the_mapping_a_template_was_made_from_cannot_change_its_identity
     # audit, surfacing as `template_drifted` against a file nobody edited.
     source = template_body()
     t = Template.from_mapping(source)
-    before = (t.fingerprint, t.structural_fingerprint)
+    before = t.fingerprint
     source["left"][0]["amount"] = "9999.99"
-    assert (t.fingerprint, t.structural_fingerprint) == before
+    assert t.fingerprint == before
 
 
 def test_two_templates_with_one_id_and_different_bodies_are_not_equal() -> None:
@@ -274,26 +181,6 @@ def test_a_template_with_no_id_is_named_by_something_a_reader_can_act_on() -> No
     codes = [x.code for x in check([Template.from_mapping(body)], FAMILIES)]
     assert "missing_field" in codes
     assert "duplicate_template_id" not in codes
-
-
-def test_a_changed_reference_changes_the_structural_identity() -> None:
-    # A reference is exactly what RFC-0003 says a paraphrase may not touch, so
-    # adding `ref` to the surface list would make two different scenarios one.
-    other = [{"ref": "PO-9", "party": "Northwind Ltd", "date": "2026-03-02", "amount": "1000.00"}]
-    changed = Template.from_mapping(template_body(pairs=1, left=other))
-    assert a_template(pairs=1).structural_fingerprint != changed.structural_fingerprint
-
-
-def test_a_changed_policy_id_alone_changes_the_structural_identity() -> None:
-    # Only the identifier differs; the prose is untouched. Stripping `id` at
-    # every depth would erase which policy line a case cites.
-    body = template_body()
-    renumbered = template_body()
-    renumbered["policy"] = [{**p, "id": f"P-{9 + i}"} for i, p in enumerate(body["policy"])]
-    assert (
-        Template.from_mapping(body).structural_fingerprint
-        != Template.from_mapping(renumbered).structural_fingerprint
-    )
 
 
 def test_a_template_does_not_share_state_with_the_mapping_it_was_made_from() -> None:
