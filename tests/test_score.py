@@ -143,3 +143,28 @@ def test_a_run_record_still_carries_the_metrics_it_always_did() -> None:
     for key in ("parse_rate", "correspondence_f1", "correct_abstention", "false_abstention"):
         assert key in kept, f"{key} is no longer recorded"
     assert kept["mode"] == "profiler" and kept["packets"] == 1
+
+
+def test_a_run_record_names_the_artefact_that_produced_it() -> None:
+    """Provenance the file must carry, or a number cannot be attributed.
+
+    The tuned model is the base plus an adapter, so a result file that names
+    only the base names something that did not produce it. The existing baseline
+    file on disk already demonstrates the cost of this: it lacks a `mode` field,
+    was written by code held in memory, and cannot be told apart from a
+    scaffolded run without re-running it.
+    """
+    answers = [answer(json.dumps(CLEAN), CLEAN)]
+
+    kept = record(
+        answers,
+        score(answers),
+        exam="sealed-v4",
+        model="base",
+        mode="profiler",
+        adapter="adapters-v1",
+        exam_digest="abc",
+    )
+
+    assert kept["adapter"] == "adapters-v1"
+    assert kept["exam_digest"] == "abc"
