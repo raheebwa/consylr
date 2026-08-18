@@ -39,10 +39,10 @@ from decimal import ROUND_HALF_UP, Decimal
 from random import Random
 from typing import Any
 
-from consylr import schema
+from consylr import money, schema
 from consylr.budget import DEFAULT, Budget, Tokeniser, check_packet
 from consylr.budget import check as budget_check
-from consylr.templates import Template
+from consylr.templates import Template, shape_violations
 from consylr.violation import Violation
 
 
@@ -97,52 +97,17 @@ class Draft:
         return next(r for r in (*self.a, *self.b) if r["id"] == rid)
 
 
-CENT = Decimal("0.01")
-
-#: Every deformation that reduces an amount takes this share of it, and never
-#: less than a cent. A proportional cut alone quantised to zero on small
-#: amounts, which produced a packet that was a clean match beneath an answer key
-#: asserting an exception on it.
+#: Every deformation that reduces an amount takes this share of it, never less
+#: than a cent, and never so much that nothing is left to observe.
 CUT_RATE = Decimal("0.02")
 
 #: What `cause_not_established` removes: a share, because a fixed sum turned a
-#: small obligation negative and a large one barely moved.
+#: small obligation negative and moved a large one barely at all.
 SHORTFALL_RATE = Decimal("0.075")
 
-
-def _money(value: Any) -> Decimal:
-    return Decimal(str(value))
-
-
-def _amount(value: Any) -> str:
-    """One way to write an amount, used for every amount in every packet.
-
-    The single serialisation policy the packet has. A deformation once wrote
-    `str(Decimal)` back into the record it touched while untouched records kept
-    whatever the template had — so the deformed record was the only string-typed
-    amount in the packet and the answer could be read off the JSON types, with no
-    reconciliation at all. Applied to every record at construction, so a clean
-    record and a deformed one are written identically by construction rather than
-    by care.
-    """
-    return str(_money(value).quantize(CENT, rounding=ROUND_HALF_UP))
-
-
-def _reduced_by(amount: Decimal, rate: Decimal, what: str) -> Decimal:
-    """A cut that is a share of the amount, is at least a cent, and is visible.
-
-    Half-up because this is money: two per cent of 12.25 is 0.2450, which
-    banker's rounding takes to 0.24. Refused rather than clamped when the amount
-    cannot carry it, because a cut that leaves the record unchanged is an
-    exception asserted about nothing.
-    """
-    cut = max(CENT, (amount * rate).quantize(CENT, rounding=ROUND_HALF_UP))
-    if cut >= amount:
-        raise ValueError(
-            f"an amount of {amount} cannot carry a {what}: the cut would be {cut}, "
-            "which leaves nothing to observe"
-        )
-    return cut
+_money = money.parse
+_amount = money.canonical
+_reduced_by = money.reduced_by
 
 
 def _supported(left: Sequence[str], right: Sequence[str], why: Sequence[str]) -> dict[str, Any]:
@@ -260,7 +225,7 @@ def _partial_payment(draft: Draft, rng: Random) -> dict[str, Any]:
     left, right = rng.choice(draft.pairs)
     record = draft.record(right)
     whole = _money(record["amount"])
-    first = (whole / 2).quantize(CENT, rounding=ROUND_HALF_UP)
+    first = (whole / 2).quantize(money.CENT, rounding=ROUND_HALF_UP)
     if not 0 < first < whole:
         raise ValueError(f"an amount of {whole} cannot be split into two observable parts")
     record["amount"] = _amount(first)
@@ -520,6 +485,13 @@ def build(
     """One case, with the answer that is correct for how it was built."""
     if not template.id:
         raise ValueError("a template with no id cannot be built; the split separates on it")
+
+    # One definition of what a template is, shared with the audit. A key the
+    # builder does not read still changed what counted as this scenario, so the
+    # closed world is enforced here rather than tolerated and reported later.
+    malformed = shape_violations(template)
+    if malformed:
+        raise ValueError("; ".join(v.detail for v in malformed))
 
     deform = DEFORMATIONS.get(template.family)
     if deform is None:

@@ -79,9 +79,7 @@ def test_the_way_an_amount_is_written_is_not_a_scenario(amount: object) -> None:
     same_scenario(BASE, other(amount=amount))
 
 
-@pytest.mark.parametrize(
-    "ref", ["INV-2000​", " INV-2000 ", "INV-2000\t", "INV-2000 "]
-)
+@pytest.mark.parametrize("ref", ["INV-2000\u200b", " INV-2000 ", "INV-2000\t", "INV-2000 "])
 def test_invisible_characters_in_a_reference_are_not_a_scenario(ref: str) -> None:
     # A zero-width space is unreviewable in a diff and in a rendered packet, so a
     # corpus could be poisoned with no visible edit.
@@ -122,13 +120,12 @@ def test_reworded_policy_prose_is_not_a_scenario() -> None:
 # --- and the mirror: a real difference must stay a difference ----------------
 
 
-@pytest.mark.parametrize(
-    ("field", "value"),
-    [("amount", "900.00"), ("pairs", 2)],
-)
-def test_a_difference_the_model_can_see_is_a_different_scenario(field: str, value: object) -> None:
-    changed = Template.from_mapping(template_body(id="t-002", **{field: value}))
-    assert BASE.structural_fingerprint != changed.structural_fingerprint
+def test_a_changed_amount_is_a_different_scenario() -> None:
+    assert BASE.structural_fingerprint != other(amount="900.00").structural_fingerprint
+
+
+def test_a_changed_record_count_is_a_different_scenario() -> None:
+    assert BASE.structural_fingerprint != other(pairs=2).structural_fingerprint
 
 
 def test_a_changed_reference_is_a_different_scenario() -> None:

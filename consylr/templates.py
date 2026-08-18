@@ -19,41 +19,99 @@ from __future__ import annotations
 
 import hashlib
 import json
+import unicodedata
 from collections.abc import Iterable, Mapping
 from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from consylr import money
 from consylr.violation import Violation
 
 REQUIRED = ("id", "family", "left", "right", "policy")
 
-#: The fields a paraphrase is permitted to rewrite (RFC-0003): free-text surface
-#: only — a counterparty as written, and the prose of a policy or document. Never
-#: a label, a number, a reference or a correspondence decision, so an identity
-#: taken over the complement is invariant under paraphrase.
-#:
-#: These are the names that appear in the shape the generator consumes. An
-#: earlier list named fields belonging to no shape the product produces, which
-#: made this whole layer strip nothing while every test passed — so
-#: `test_the_surface_fields_are_fields_a_real_template_has` now holds the
-#: constant to the data model rather than to a fixture.
-SURFACE_FIELDS = frozenset({"party", "text", "description", "memo", "narrative"})
+#: The template is a closed world. A key nobody classified used to reach the
+#: packet through `_records`, or sit in the body unread — and either way it
+#: changed the identity while changing nothing the model could see, so one
+#: scenario became two and the split had no way to know. Refusing the unknown
+#: makes the classification complete by construction, which is the same
+#: principle the ground truth already rests on.
+BODY_FIELDS = frozenset({"id", "family", "left", "right", "policy", "documents"})
+RECORD_FIELDS = frozenset({"ref", "party", "date", "amount"})
+CITATION_FIELDS = frozenset({"id", "text"})
 
-#: What a paraphrase may never touch. Named positively as well as negatively: a
-#: field added to a record later is structural until someone decides otherwise,
-#: and this is what says so if the surface list is edited carelessly.
-STRUCTURAL_FIELDS = frozenset({"id", "family", "ref", "date", "amount"})
+#: What a paraphrase may rewrite, and therefore what identity does not read: the
+#: counterparty as written, and the prose of a policy or document. Stated as the
+#: complement of the projection below rather than as a list to keep in step with
+#: it.
+SURFACE_FIELDS = frozenset({"party", "text"})
 
 
-def _without_surface(value: Any) -> Any:
-    """The template with every paraphrasable field removed, recursively."""
-    if isinstance(value, dict):
-        return {k: _without_surface(v) for k, v in value.items() if k not in SURFACE_FIELDS}
-    if isinstance(value, (list, tuple)):
-        return [_without_surface(v) for v in value]
-    return value
+def _text(value: Any) -> str:
+    """A string as the model would read it, with what it cannot see removed.
+
+    Unicode normal form, format characters, and surrounding or repeated
+    whitespace are differences no reader of a rendered packet can perceive — and
+    each of them used to split one scenario across both roles. A zero-width space
+    in a reference is the worst of them, because it is invisible in a diff too,
+    so a corpus could be poisoned with no visible edit. NFD against NFC is macOS
+    against everything else.
+    """
+    text = unicodedata.normalize("NFC", str(value))
+    text = "".join(c for c in text if unicodedata.category(c) != "Cf")
+    return " ".join(text.split())
+
+
+def _record_projection(record: Any) -> list[str]:
+    """What the model can see about one record, in a canonical form."""
+    if not isinstance(record, dict):
+        return [_text(record)]
+    try:
+        amount = money.canonical(record.get("amount", ""))
+    except ValueError:
+        amount = _text(record.get("amount", ""))
+    return [_text(record.get("ref", "")), _text(record.get("date", "")), amount]
+
+
+def _projection(body: Mapping[str, Any]) -> dict[str, Any]:
+    """The scenario, as distinct from the file that describes it.
+
+    Identity reads exactly what the builder reads, in the form the model will
+    see it. Everything else — the declared id, a counterparty's spelling, a
+    policy's prose, the order the records happen to be listed in, the way an
+    amount was typed — is either a label over the scenario or something a
+    paraphrase may rewrite, and none of it makes a second scenario.
+
+    The pairs are sorted, because applying one permutation to both sides
+    preserves every clean pair. `sort_keys` in a JSON dump sorts keys and never
+    arrays, so reversing both lists used to be a different template.
+    """
+
+    def listed(key: str) -> list[Any]:
+        value = body.get(key)
+        return value if isinstance(value, list) else []
+
+    left, right = listed("left"), listed("right")
+    policy, documents = listed("policy"), listed("documents")
+
+    lefts = [_record_projection(r) for r in left]
+    rights = [_record_projection(r) for r in right]
+    pairs = (
+        sorted([left_side, right_side] for left_side, right_side in zip(lefts, rights, strict=True))
+        if len(lefts) == len(rights)
+        else [sorted(lefts), sorted(rights)]
+    )
+
+    def cited(entries: Any) -> list[str]:
+        return sorted(_text(e.get("id", "")) if isinstance(e, dict) else _text(e) for e in entries)
+
+    return {
+        "family": _text(body.get("family", "")),
+        "pairs": pairs,
+        "policy": cited(policy),
+        "documents": cited(documents),
+    }
 
 
 def _digest(body: Any) -> str:
@@ -103,10 +161,11 @@ class Template:
             # make two copies of one scenario distinct, which is precisely the
             # aliasing the split has to catch.
             fingerprint=_digest(without_id),
-            # And this one drops what a paraphrase may rewrite, so two templates
-            # one rewording apart collide. Exact identity misses them by
-            # construction, because rewording is what makes the content differ.
-            structural_fingerprint=_digest(_without_surface(without_id)),
+            # And this one is taken over the scenario rather than the file, so
+            # two templates describing one scenario collide however differently
+            # they are written. Exact identity misses them by construction,
+            # because being written differently is what makes the file differ.
+            structural_fingerprint=_digest(_projection(frozen)),
         )
 
     def __eq__(self, other: object) -> bool:
@@ -162,6 +221,78 @@ def load(directory: Path) -> list[Template]:
     return templates
 
 
+def shape_violations(template: Template) -> list[Violation]:
+    """Every way a template is outside the closed world the builder reads.
+
+    Reported here and raised by the builder, from one definition, because the
+    audit and the build have to agree about what a template is. A key nobody
+    classified used to reach the packet or sit unread in the body, and either way
+    it changed the identity while changing nothing the model could see.
+    """
+    out: list[Violation] = []
+    body = template.body
+    name = template.id or "<no id>"
+
+    for key in sorted(set(body) - BODY_FIELDS):
+        out.append(
+            Violation(
+                "unknown_field",
+                f"{name}: {key!r} is not part of a template; the builder never reads it, so it "
+                "would change what counts as this scenario without changing the packet",
+                template.id or None,
+            )
+        )
+
+    for side in ("left", "right"):
+        for n, record in enumerate(body.get(side, []) or [], start=1):
+            if not isinstance(record, dict):
+                out.append(
+                    Violation("bad_type", f"{name}: {side} entry {n} is not a record", template.id)
+                )
+                continue
+            for key in sorted(set(record) - RECORD_FIELDS):
+                out.append(
+                    Violation(
+                        "unknown_field",
+                        f"{name}: {side} entry {n} carries {key!r}, which is not a record field. "
+                        "A denylist of prose names can only chase the ones someone thought of.",
+                        template.id or None,
+                    )
+                )
+
+    for section in ("policy", "documents"):
+        for n, entry in enumerate(body.get(section, []) or [], start=1):
+            if not isinstance(entry, dict):
+                out.append(
+                    Violation(
+                        "bad_type", f"{name}: {section} entry {n} is not an object", template.id
+                    )
+                )
+                continue
+            for key in sorted(set(entry) - CITATION_FIELDS):
+                out.append(
+                    Violation(
+                        "unknown_field",
+                        f"{name}: {section} entry {n} carries {key!r}",
+                        template.id or None,
+                    )
+                )
+            if "text" in entry and not isinstance(entry["text"], str):
+                # Prose that is not prose was deleted whole from the identity,
+                # so a nested object holding rates and caps vanished and two
+                # different scenarios were reported as one.
+                out.append(
+                    Violation(
+                        "bad_type",
+                        f"{name}: {section} entry {n} has a 'text' that is not prose; identity "
+                        "does not read it, so anything hidden in it is invisible to the split",
+                        template.id or None,
+                    )
+                )
+
+    return out
+
+
 def check(templates: Iterable[Template], families: frozenset[str]) -> list[Violation]:
     """Every way a template set is unfit to be split on."""
     items = list(templates)
@@ -171,6 +302,8 @@ def check(templates: Iterable[Template], families: frozenset[str]) -> list[Viola
         ]
 
     violations: list[Violation] = []
+    for t in items:
+        violations.extend(shape_violations(t))
 
     by_id: dict[str, list[Template]] = {}
     by_fingerprint: dict[str, list[Template]] = {}
