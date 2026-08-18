@@ -376,3 +376,31 @@ def test_two_templates_agreeing_on_one_packet_are_not_contradictory() -> None:
     codes = [x.code for x in identity_check([a_real("t-001"), a_real("t-002")])]
     assert "contradictory_ground_truth" not in codes
     assert "duplicate_scenario" in codes
+
+
+def test_an_alias_collides_even_when_the_deformation_draws_on_the_seed() -> None:
+    """The falsifying test for the probe's id substitution.
+
+    `case_seed` mixes the template id in, so two copies of one scenario under
+    different ids draw differently unless the probe normalises the id. Every
+    other alias test used `clean_match` — the one family whose deformation never
+    touches the generator — so removing the substitution left the suite green
+    while re-opening the aliasing the probe exists to close.
+    """
+    from consylr import identity
+
+    # The cache is keyed on the content digest, which already excludes the id —
+    # so with it warm the second template never probes and the property looks
+    # true whether or not the probe holds it. Cleared between, this asks the
+    # probe directly.
+    a = Template.from_mapping(template_body(id="t-001", family="fee_at_source", pairs=4))
+    b = Template.from_mapping(template_body(id="t-002", family="fee_at_source", pairs=4))
+
+    identity._SEEN.clear()
+    first = scenario(a)
+    identity._SEEN.clear()
+    second = scenario(b)
+    assert first == second, "the probe let the template id reach the draw"
+
+    identity._SEEN.clear()
+    assert "duplicate_scenario" in [x.code for x in identity_check([a, b])]
