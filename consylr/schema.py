@@ -234,6 +234,13 @@ def validate(output: Any, packet: Any) -> list[Violation]:
             if rid not in residue[_side(rid)]:
                 v.append(Violation("residue_wrong", f"{rid} is listed on the wrong side"))
 
+    # --- a record belongs to the side its identifier names
+    for m, _ in m_ids:
+        for key in ("l", "r"):
+            for rid in (m.get(key) or []) if isinstance(m.get(key), list) else []:
+                if isinstance(rid, str) and rid in records and _side(rid) != key:
+                    v.append(Violation("wrong_side", f"{rid} is on side {key!r}, not its own"))
+
     # --- no record in two supported matches
     seen: set[str] = set()
     for m, ids in m_ids:
