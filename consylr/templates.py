@@ -195,6 +195,18 @@ def shape_violations(template: Template) -> list[Violation]:
                         template.id or None,
                     )
                 )
+            # The allowlist said what a record may not carry and never what it
+            # must. A record short of one of these was certified clean and then
+            # indexed raw by whichever deformation reads it, so a KeyError
+            # escaped an audit written to keep going and count every problem.
+            for key in sorted(RECORD_FIELDS - set(record)):
+                out.append(
+                    Violation(
+                        "missing_field",
+                        f"{name}: {side} entry {n} has no {key!r}; the builder reads it",
+                        template.id or None,
+                    )
+                )
 
     for section in ("policy", "documents"):
         for n, entry in enumerate(body.get(section, []) or [], start=1):
@@ -210,6 +222,14 @@ def shape_violations(template: Template) -> list[Violation]:
                     Violation(
                         "unknown_field",
                         f"{name}: {section} entry {n} carries {key!r}",
+                        template.id or None,
+                    )
+                )
+            for key in sorted(CITATION_FIELDS - set(entry)):
+                out.append(
+                    Violation(
+                        "missing_field",
+                        f"{name}: {section} entry {n} has no {key!r}",
                         template.id or None,
                     )
                 )

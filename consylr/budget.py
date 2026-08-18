@@ -43,10 +43,13 @@ class Tokeniser(Protocol):
 class Budget:
     """*[competition constraint — ADTC profiler]* The window is the harness's."""
 
-    context: int = 2048
-    packet_max: int = 1200
-    template_overhead: int = 0
-    output_reserve: int = 600
+    # No defaults. Removing the `DEFAULT` *name* left these in place, so
+    # `Budget()` still constructed the condemned object — a caller with no
+    # template still had one handed to it, silently.
+    context: int
+    packet_max: int
+    template_overhead: int
+    output_reserve: int
 
     @property
     def prompt_max(self) -> int:
@@ -65,6 +68,18 @@ class Budget:
         Without this, a misconfigured budget fails every case and each message
         blames the case rather than the configuration.
         """
+        # Sizes first. For a budget derived as `packet_max = context - reserve -
+        # K` with `template_overhead = K`, the sum check below reduces to
+        # `context > context` and can never fire — so a packet allowance of minus
+        # three thousand validated cleanly, and every case then failed with a
+        # message blaming the case rather than the configuration.
+        for name in ("context", "packet_max"):
+            if getattr(self, name) <= 0:
+                raise ValueError(f"{name} is {getattr(self, name)}, which is not a size")
+        for name in ("template_overhead", "output_reserve"):
+            if getattr(self, name) < 0:
+                raise ValueError(f"{name} is {getattr(self, name)}, which is not a size")
+
         if self.prompt_max + self.output_reserve > self.context:
             raise ValueError(
                 f"packet_max {self.packet_max} + template_overhead {self.template_overhead} "

@@ -266,7 +266,7 @@ def test_an_over_budget_case_is_reported_when_a_tokeniser_is_supplied() -> None:
         def encode(self, text: str) -> list[int]:
             return [0] * len(text)
 
-    tiny = Budget(context=1000, packet_max=50, output_reserve=100).validate()
+    tiny = Budget(context=1000, packet_max=50, template_overhead=0, output_reserve=100).validate()
     case = build(
         a_richer_template("clean_match"),
         root_seed=ROOT,
@@ -698,7 +698,7 @@ def test_a_budget_whose_numbers_cannot_fit_is_refused_at_the_build() -> None:
             role="train",
             tokeniser=PerCharacter(),
             render=_serialise,
-            budget=Budget(context=2048, packet_max=1600, output_reserve=600),
+            budget=Budget(context=2048, packet_max=1600, template_overhead=0, output_reserve=600),
         )
 
 

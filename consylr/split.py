@@ -89,7 +89,34 @@ def partition(templates: Iterable[Template], *, holdout_share: float, seed: int)
             raise ValueError(f"{t.id!r} is declared by more than one template")
         seen.add(t.id)
 
-    return {t.id: HOLDOUT if _draw(seed, scenario(t)) < holdout_share else TRAIN for t in items}
+    # A template that cannot be built has no scenario, and so no role. Calling
+    # `scenario()` unguarded meant one such template — a shape `templates.check`
+    # certifies clean — aborted the whole partition with an uncaught error,
+    # where `identity.check` reports it as one violation among many.
+    placed: dict[str, str] = {}
+    for t in items:
+        try:
+            digest = scenario(t)
+        except ValueError:
+            continue
+        placed[t.id] = HOLDOUT if _draw(seed, digest) < holdout_share else TRAIN
+    return placed
+
+
+def _named(
+    roles_by_id: Mapping[str, set[str]], known: Mapping[str, Template], structure: str
+) -> list[str]:
+    """The template ids emitting one scenario, skipping any that emit none."""
+    out = []
+    for i in sorted(roles_by_id):
+        if i not in known:
+            continue
+        try:
+            if scenario(known[i]) == structure:
+                out.append(i)
+        except ValueError:
+            continue
+    return out
 
 
 def check(
@@ -219,11 +246,17 @@ def check(
     by_structure: dict[str, set[str]] = {}
     for template_id, roles in roles_by_id.items():
         template = known.get(template_id)
-        if template is not None:
+        if template is None:
+            continue
+        try:
             by_structure.setdefault(scenario(template), set()).update(roles)
+        except ValueError:
+            # `identity.check` owns whether a template emits a case at all.
+            # Raising here would end an audit written to count every problem.
+            continue
 
     for structure in sorted(by_structure):
-        ids = sorted(i for i in roles_by_id if i in known and scenario(known[i]) == structure)
+        ids = _named(roles_by_id, known, structure)
         # `len(ids) > 1` is the whole difference between "one scenario reached
         # both roles" and "one template's own rows did". Without it every
         # ordinary template_in_two_roles cascaded into this higher-severity

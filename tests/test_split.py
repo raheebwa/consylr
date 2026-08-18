@@ -15,10 +15,11 @@ from typing import Any
 
 import pytest
 
+from consylr.identity import check as identity_check
 from consylr.identity import scenario
 from consylr.split import HOLDOUT, TRAIN, _draw, check, partition
 from consylr.templates import Template
-from tests.support import a_template
+from tests.support import a_template, template_body
 
 
 def many(n: int) -> list[Template]:
@@ -294,3 +295,32 @@ def test_a_loaded_template_that_produced_no_cases_is_reported() -> None:
     assert "template_unused" in [
         x.code for x in check(corpus(templates[:2], roles, each=1), templates)
     ]
+
+
+def test_a_template_that_cannot_be_built_is_reported_not_raised_through() -> None:
+    """`partition` and `check` called `scenario()` unguarded.
+
+    So one template that `templates.check` certifies clean — a cause-bearing
+    family with no `cause` key, which is the shape every such template had
+    before that check existed — aborted the whole audit with an uncaught
+    ValueError, where its sibling `identity.check` reports it as one violation
+    among many. An audit that must count every problem died at the first one.
+    """
+    legacy = Template.from_mapping(
+        {
+            **template_body(id="t-legacy", family="fee_at_source"),
+            "cause": "P-2",
+            "policy": [{"id": "P-2", "text": "Invoices settle at face value."}],
+        }
+    )
+    good = a_template(id="t-good")
+
+    roles = partition([good, legacy], holdout_share=0.3, seed=1)
+    assert legacy.id not in roles, "an unbuildable template has no scenario to place"
+    assert good.id in roles
+
+    # `identity.check` owns whether a template emits a case at all; what matters
+    # here is that neither of these raises through an audit meant to count.
+    codes = [v.code for v in check([case(good, roles[good.id])], [good, legacy])]
+    assert codes, "the audit ran and reported"
+    assert "unbuildable_template" in [v.code for v in identity_check([legacy])]

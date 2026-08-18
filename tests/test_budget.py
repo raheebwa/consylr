@@ -15,7 +15,7 @@ from consylr.budget import Budget, check
 #: they state the budget they mean. There is no shared default to borrow: a
 #: budget is a claim about a specific wrapper, and one that assumed no wrapper
 #: was wrong in both directions at once.
-DEFAULT = Budget(context=2048, packet_max=1200, output_reserve=600)
+DEFAULT = Budget(context=2048, packet_max=1200, template_overhead=0, output_reserve=600)
 
 
 class FakeTokeniser:
@@ -49,13 +49,13 @@ def test_the_rejection_names_the_measurement_and_the_limit() -> None:
 
 def test_headroom_being_eaten_is_its_own_failure() -> None:
     # Inside the packet cap, but leaves less than the reserved output room.
-    budget = Budget(context=1000, packet_max=900, output_reserve=600)
+    budget = Budget(context=1000, packet_max=900, template_overhead=0, output_reserve=600)
     codes = [v.code for v in check("x" * 800, TOK, budget)]
     assert "headroom_lost" in codes
 
 
 def test_a_prompt_that_breaks_both_limits_reports_both() -> None:
-    budget = Budget(context=1000, packet_max=500, output_reserve=600)
+    budget = Budget(context=1000, packet_max=500, template_overhead=0, output_reserve=600)
     codes = sorted(v.code for v in check("x" * 800, TOK, budget))
     assert codes == ["headroom_lost", "prompt_over_budget"]
 
@@ -70,7 +70,7 @@ def test_the_budget_is_measured_on_the_rendered_prompt() -> None:
 
 
 def test_templating_can_push_a_legal_packet_over() -> None:
-    budget = Budget(context=2048, packet_max=1010, output_reserve=600)
+    budget = Budget(context=2048, packet_max=1010, template_overhead=0, output_reserve=600)
     packet_text = "x" * 1000
     rendered = "instructions: " + packet_text + " decide."
     assert check(packet_text, TOK, budget) == []
@@ -94,7 +94,7 @@ def test_a_budget_that_cannot_be_satisfied_is_refused_at_construction() -> None:
     # packet_max + output_reserve must fit the context, or every case fails and
     # the message blames the case rather than the configuration.
     with pytest.raises(ValueError, match="cannot fit"):
-        Budget(context=1000, packet_max=900, output_reserve=200).validate()
+        Budget(context=1000, packet_max=900, template_overhead=0, output_reserve=200).validate()
 
 
 # --- the wrapper is part of the prompt, and has to be declared ---------------
@@ -106,7 +106,9 @@ def test_a_packet_at_the_documented_cap_passes_once_its_wrapper_is_declared() ->
     # a number the budget carries — otherwise a generator honouring the RFC's
     # stated packet size has every case rejected.
     wrapper = "instructions: " + " decide."
-    budget = Budget(template_overhead=len(wrapper)).validate()
+    budget = Budget(
+        context=2048, packet_max=1200, template_overhead=len(wrapper), output_reserve=600
+    ).validate()
     rendered = "instructions: " + "x" * budget.packet_max + " decide."
     assert check(rendered, TOK, budget) == []
 
@@ -128,7 +130,9 @@ def test_the_wrapper_cannot_be_used_to_buy_back_output_headroom() -> None:
 
 
 def test_a_prompt_that_overruns_the_context_says_so_rather_than_reporting_a_negative() -> None:
-    budget = Budget(context=1000, packet_max=900, output_reserve=100).validate()
+    budget = Budget(
+        context=1000, packet_max=900, template_overhead=0, output_reserve=100
+    ).validate()
     v = next(x for x in check("x" * 1200, TOK, budget) if x.code == "headroom_lost")
     assert "overruns" in v.detail and "200" in v.detail
 
@@ -144,12 +148,16 @@ def test_a_prompt_exactly_at_the_cap_passes() -> None:
 
 
 def test_a_prompt_leaving_exactly_the_reserve_passes() -> None:
-    budget = Budget(context=1000, packet_max=400, output_reserve=600).validate()
+    budget = Budget(
+        context=1000, packet_max=400, template_overhead=0, output_reserve=600
+    ).validate()
     assert check("x" * 400, TOK, budget) == []
 
 
 def test_a_prompt_one_token_into_the_reserve_fails() -> None:
-    budget = Budget(context=1000, packet_max=400, output_reserve=600).validate()
+    budget = Budget(
+        context=1000, packet_max=400, template_overhead=0, output_reserve=600
+    ).validate()
     assert [v.code for v in check("x" * 401, TOK, budget)] == [
         "prompt_over_budget",
         "headroom_lost",
@@ -181,7 +189,9 @@ def test_the_tokeniser_contract_is_the_count_the_runtime_will_see() -> None:
         def encode(self, text: str) -> list[int]:
             return [1, *([0] * len(text)), 2]
 
-    budget = Budget(context=1000, packet_max=400, output_reserve=600).validate()
+    budget = Budget(
+        context=1000, packet_max=400, template_overhead=0, output_reserve=600
+    ).validate()
     assert check("x" * 400, WithoutSpecials(), budget) == []
     assert [v.code for v in check("x" * 400, WithSpecials(), budget)] == [
         "prompt_over_budget",
@@ -193,7 +203,9 @@ def test_a_prompt_that_exactly_fills_the_context_has_not_overrun_it() -> None:
     # Zero headroom is a headroom failure, not an overrun: nothing was truncated,
     # there is simply no room left to answer in. Reporting it as an overrun "by 0"
     # sends the reader looking for a length that is not the problem.
-    budget = Budget(context=1000, packet_max=900, output_reserve=100).validate()
+    budget = Budget(
+        context=1000, packet_max=900, template_overhead=0, output_reserve=100
+    ).validate()
     v = next(x for x in check("x" * 1000, TOK, budget) if x.code == "headroom_lost")
     assert "overruns" not in v.detail and "leaving 0" in v.detail
 
