@@ -57,6 +57,11 @@ def main() -> int:
     exam = Path(sys.argv[1])
     model_name = sys.argv[2]
     scaffold = "--scaffold" in sys.argv
+    # `--adapter=<path>` rather than `--adapter <path>`: the positional argument
+    # after the model is the expected digest, and a two-token flag would put an
+    # adapter path there — where it would be compared against the exam's digest
+    # and refuse the run with a message about the wrong thing entirely.
+    adapter = next((a.split("=", 1)[1] for a in sys.argv[3:] if a.startswith("--adapter=")), "")
     rest = [a for a in sys.argv[3:] if not a.startswith("--")]
     expected_digest = rest[0] if rest else ""
 
@@ -71,7 +76,11 @@ def main() -> int:
     cases = sorted(p for p in exam.iterdir() if (p / "packet.json").exists())
     print(f"{len(cases)} packets, model {model_name}")
 
-    model, tokeniser = mlx_lm.load(model_name)
+    # The tuned model is the base plus an adapter, and loading the base alone
+    # would score the wrong system while reporting the right name.
+    model, tokeniser = (
+        mlx_lm.load(model_name, adapter_path=adapter) if adapter else mlx_lm.load(model_name)
+    )
     answers, started = [], time.time()
     for n, case in enumerate(cases, start=1):
         meta = json.loads((case / "meta.json").read_text(encoding="utf-8"))
@@ -102,7 +111,7 @@ def main() -> int:
 
     report = score(answers)
     mode = "SCAFFOLDED reference (not profiler mode)" if scaffold else "profiler mode"
-    print(f"\n=== {model_name} on {exam.name} — {mode} ===")
+    print(f"\n=== {model_name}{' + ' + adapter if adapter else ''} on {exam.name} — {mode} ===")
     print(f"parse rate            {report.parse_rate:.1%}")
     print(f"schema valid          {report.schema_valid:.1%}")
     print(f"exact match           {report.exact_match:.1%}")
@@ -115,7 +124,7 @@ def main() -> int:
         t = report.per_family[family]
         print(f"  {family:24s} {t.exact_match:6.1%} {t.correspondence_f1:6.3f} {t.asked:4d}")
 
-    suffix = "-scaffolded" if scaffold else ""
+    suffix = ("-tuned" if adapter else "") + ("-scaffolded" if scaffold else "")
     out = exam.parent / f"eval-{exam.name}-{model_name.split('/')[-1]}{suffix}.json"
     out.write_text(
         json.dumps(
@@ -125,6 +134,7 @@ def main() -> int:
                 exam=exam.name,
                 model=model_name,
                 mode="scaffolded-reference" if scaffold else "profiler",
+                adapter=adapter,
                 exam_digest=digest,
                 prompt_digest=prompt.DIGEST,
             ),
