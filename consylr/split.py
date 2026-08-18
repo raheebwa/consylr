@@ -45,9 +45,28 @@ def _draw(seed: int, structural_fingerprint: str) -> float:
     makes each draw depend on how many were taken before it, so adding a
     template at the front re-partitions everything behind it and a corpus
     regenerated after an unrelated edit no longer matches the published one.
+
+    Fifty-three bits, not sixty-four: a 64-bit quotient is rounded to the nearest
+    float64 and the largest of them rounds to exactly 1.0, which would put a
+    template outside the interval this docstring claims and make a
+    `holdout_share` of 1.0 not quite total.
     """
     digest = hashlib.sha256(f"{seed}:{structural_fingerprint}".encode()).digest()
-    return int.from_bytes(digest[:8], "big") / (1 << 64)
+    return (int.from_bytes(digest[:8], "big") >> 11) / (1 << 53)
+
+
+def _validated_share(holdout_share: float) -> float:
+    """Refuse a share that is not one.
+
+    A percent written where a fraction was meant silently produced a corpus with
+    no training cases at all, and a NaN silently produced one with no holdout —
+    both of which the audit then passed, because a corpus holding one role has no
+    boundary for anything to cross. RFC-0003 has the generator fail loudly on a
+    constraint it cannot meet; quietly satisfying a nonsensical one is worse.
+    """
+    if not 0.0 <= holdout_share <= 1.0:  # false for NaN, which is the point
+        raise ValueError(f"holdout_share must be a fraction in [0, 1], got {holdout_share!r}")
+    return holdout_share
 
 
 def partition(templates: Iterable[Template], *, holdout_share: float, seed: int) -> dict[str, str]:
@@ -56,14 +75,39 @@ def partition(templates: Iterable[Template], *, holdout_share: float, seed: int)
     Two templates that are the same scenario take the same draw, so an alias or
     a rewording cannot straddle the boundary however the ids are spelled.
     """
+    _validated_share(holdout_share)
+    items = list(templates)
+
+    # Keyed on the id, so two templates declaring one id would collapse to
+    # whichever was read last — two templates in, one role out, with the winner
+    # decided by directory order. The corpus then fails its audit as
+    # `template_drifted`, pointing a reader at a content edit nobody made.
+    seen: set[str] = set()
+    for t in items:
+        if t.id in seen:
+            raise ValueError(f"{t.id!r} is declared by more than one template")
+        seen.add(t.id)
+
     return {
         t.id: HOLDOUT if _draw(seed, t.structural_fingerprint) < holdout_share else TRAIN
-        for t in templates
+        for t in items
     }
 
 
-def check(cases: Iterable[Mapping[str, Any]], templates: Iterable[Template]) -> list[Violation]:
-    """Every way a corpus's partition fails, including one built elsewhere."""
+def check(
+    cases: Iterable[Mapping[str, Any]],
+    templates: Iterable[Template],
+    *,
+    expected: Mapping[str, str] | None = None,
+) -> list[Violation]:
+    """Every way a corpus's partition fails, including one built elsewhere.
+
+    `expected` is the partition the corpus claims to have been built to. Given
+    it, the check stops asking only whether the roles are self-consistent and
+    starts asking whether they are the ones the seed and share actually produce —
+    which is the difference between passing a corpus and passing its exact
+    inverse.
+    """
     rows = list(cases)
     known = {t.id: t for t in templates}
 
@@ -73,9 +117,57 @@ def check(cases: Iterable[Mapping[str, Any]], templates: Iterable[Template]) -> 
     violations: list[Violation] = []
 
     roles_by_id: dict[str, set[str]] = {}
+    seen_roles: set[str] = set()
     for row in rows:
         template_id = str(row.get("template_id", ""))
-        roles_by_id.setdefault(template_id, set()).add(str(row.get("role", "")))
+        role = row.get("role")
+        if role not in (TRAIN, HOLDOUT):
+            # Every unrecognised spelling once certified clean, because both leak
+            # checks key off a template holding more than one role — so a corpus
+            # with one uniform value made them structurally unreachable.
+            violations.append(
+                Violation(
+                    "unknown_role",
+                    f"{role!r} is not a role; every case belongs to {TRAIN!r} or {HOLDOUT!r}",
+                    template_id or None,
+                )
+            )
+            continue
+        seen_roles.add(role)
+        roles_by_id.setdefault(template_id, set()).add(role)
+
+    for absent in sorted({TRAIN, HOLDOUT} - seen_roles):
+        violations.append(
+            Violation(
+                "role_missing",
+                f"no case is in {absent!r}; a corpus holding one role has no boundary for "
+                "anything to cross, so every leak check below is vacuous on it",
+            )
+        )
+
+    if expected is not None:
+        for template_id in sorted(roles_by_id):
+            want = expected.get(template_id)
+            if want is not None and roles_by_id[template_id] != {want}:
+                violations.append(
+                    Violation(
+                        "role_not_as_partitioned",
+                        f"{template_id!r} is recorded as "
+                        f"{', '.join(sorted(roles_by_id[template_id]))} but the partition it "
+                        f"claims puts it in {want!r}",
+                        template_id,
+                    )
+                )
+
+    for template_id in sorted(set(known) - set(roles_by_id)):
+        violations.append(
+            Violation(
+                "template_unused",
+                f"{template_id!r} was loaded but produced no case; a corpus covering one "
+                "template of many is not a corpus this partition describes",
+                template_id,
+            )
+        )
 
     for template_id in sorted(i for i in roles_by_id if i not in known):
         violations.append(
@@ -133,12 +225,14 @@ def check(cases: Iterable[Mapping[str, Any]], templates: Iterable[Template]) -> 
             by_structure.setdefault(template.structural_fingerprint, set()).update(roles)
 
     for structure in sorted(by_structure):
-        if len(by_structure[structure]) > 1:
-            ids = sorted(
-                i
-                for i in roles_by_id
-                if i in known and known[i].structural_fingerprint == structure
-            )
+        ids = sorted(
+            i for i in roles_by_id if i in known and known[i].structural_fingerprint == structure
+        )
+        # `len(ids) > 1` is the whole difference between "one scenario reached
+        # both roles" and "one template's own rows did". Without it every
+        # ordinary template_in_two_roles cascaded into this higher-severity
+        # code, and an auditor counting leaks counted mistakes that were none.
+        if len(by_structure[structure]) > 1 and len(ids) > 1:
             violations.append(
                 Violation(
                     "scenario_in_two_roles",
