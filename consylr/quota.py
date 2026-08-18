@@ -21,13 +21,9 @@ from collections import Counter
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 
+from consylr.violation import Violation
+
 ABSTENTION_FAMILY = "cause_not_established"
-
-
-@dataclass(frozen=True)
-class Violation:
-    code: str
-    detail: str
 
 
 @dataclass(frozen=True)

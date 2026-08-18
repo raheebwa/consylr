@@ -8,7 +8,8 @@ Every test states the packet it analyses. The residue rule is quantified over
 the packet, so a fixture that omits a record is a different test.
 """
 
-from consylr.schema import Violation, validate
+from consylr.schema import validate
+from consylr.violation import Violation
 
 POLICY = {"P-02", "P-05"}
 DOCUMENTS = {"D-01"}
