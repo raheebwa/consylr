@@ -81,9 +81,14 @@ def test_the_holdout_share_is_honoured_within_a_template_of_itself() -> None:
 def test_an_aliased_template_cannot_be_split_across_roles() -> None:
     # Assignment is by structural identity, so two ids for one scenario are the
     # same draw. The leak is impossible by construction here, not merely caught.
+    #
+    # Checked over many seeds deliberately: at any single seed two independent
+    # draws agree about seven times in ten, so one passing seed is no evidence
+    # at all that the two ids were treated as one scenario.
     templates = [*many(40), a_template(id="alias-of-000", policy=["P-0: clause 0"])]
-    roles = partition(templates, holdout_share=0.3, seed=11)
-    assert roles["alias-of-000"] == roles["t-000"]
+    for seed in range(30):
+        roles = partition(templates, holdout_share=0.3, seed=seed)
+        assert roles["alias-of-000"] == roles["t-000"], f"seed {seed}"
 
 
 def test_a_reworded_template_cannot_be_split_across_roles() -> None:
@@ -92,8 +97,25 @@ def test_a_reworded_template_cannot_be_split_across_roles() -> None:
         policy=["P-0: clause 0"],
         left={"description": "entirely different prose", "amount": "1000.00"},
     )
-    roles = partition([*many(40), twin], holdout_share=0.3, seed=11)
-    assert roles["reworded-000"] == roles["t-000"]
+    for seed in range(30):
+        roles = partition([*many(40), twin], holdout_share=0.3, seed=seed)
+        assert roles["reworded-000"] == roles["t-000"], f"seed {seed}"
+
+
+# The comparison in `partition` is `draw < holdout_share`. Loosening it to `<=`
+# is an equivalent mutation, not an untested one: the draw is a 64-bit quotient
+# of a SHA-256 digest, so a draw landing exactly on the share is a 2**-64 event
+# that no input can be constructed to hit. The two reachable edges are the ones
+# below, and they are held.
+def test_a_holdout_share_of_zero_holds_nothing_back() -> None:
+    # The share is a strict lower cut: at zero, no draw may fall inside it.
+    roles = partition(many(200), holdout_share=0.0, seed=5)
+    assert set(roles.values()) == {"train"}
+
+
+def test_a_holdout_share_of_one_holds_everything_back() -> None:
+    roles = partition(many(200), holdout_share=1.0, seed=5)
+    assert set(roles.values()) == {"holdout"}
 
 
 # --- checking a corpus, including one this machine did not build --------------

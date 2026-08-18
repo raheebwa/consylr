@@ -181,3 +181,12 @@ def test_the_tokeniser_contract_is_the_count_the_runtime_will_see() -> None:
         "prompt_over_budget",
         "headroom_lost",
     ]
+
+
+def test_a_prompt_that_exactly_fills_the_context_has_not_overrun_it() -> None:
+    # Zero headroom is a headroom failure, not an overrun: nothing was truncated,
+    # there is simply no room left to answer in. Reporting it as an overrun "by 0"
+    # sends the reader looking for a length that is not the problem.
+    budget = Budget(context=1000, packet_max=900, output_reserve=100).validate()
+    v = next(x for x in check("x" * 1000, TOK, budget) if x.code == "headroom_lost")
+    assert "overruns" not in v.detail and "leaving 0" in v.detail
