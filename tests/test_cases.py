@@ -29,7 +29,7 @@ from consylr.templates import Template
 from tests.support import CAUSE_LINES, FAKE_BUDGET, PerCharacter
 
 
-def build(template: Template, **over: Any) -> Case:  # noqa: D103
+def build(template: Template, **over: Any) -> Case:
     """`build` with the two arguments it refuses to proceed without.
 
     They have no defaults in the real function, because both were once optional
@@ -910,6 +910,6 @@ def test_an_invisible_character_does_not_hide_a_genuine_cause() -> None:
     # a zero-width space inside "fee" renders identically and is invisible in a
     # diff. `templates._text` exists for exactly this and was applied to every
     # identity comparison and to nothing here.
-    poisoned = [{"id": "P-1", "text": "A settlement f​ee is deducted at source."}]
+    poisoned = [{"id": "P-1", "text": "A settlement f\u200bee is deducted at source."}]
     case = build(with_policy("fee_at_source", poisoned, pairs=1), root_seed=ROOT)
     assert case.violations == []

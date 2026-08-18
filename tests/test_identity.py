@@ -338,11 +338,12 @@ def test_a_template_that_cannot_be_built_is_reported_not_crashed_through() -> No
 def dual_vocabulary_pair() -> tuple[Template, Template]:
     """Two families whose packets are identical and whose answers are not.
 
-    One policy line satisfies both vocabularies — "charged" reads as a fee,
-    "tax" as a withholding — so the word-list check passes for each family
-    while the packet distinguishes neither.
+    One policy line satisfies both vocabularies — "fee" reads as a fee at source,
+    "tax" as a withholding — so the word-list check passes for each family while
+    the packet distinguishes neither. That is why the word list cannot be the
+    gate: it can always be satisfied by prose that means something else.
     """
-    line = [{"id": "P-1", "text": "Withholding tax is charged before remittance."}]
+    line = [{"id": "P-1", "text": "A withholding tax fee is deducted before remittance."}]
     body = template_body(pairs=1)
     fee = Template.from_mapping(
         {**body, "id": "t-fee", "family": "fee_at_source", "policy": line, "cause": "P-1"}

@@ -42,7 +42,7 @@ from typing import Any
 from consylr import money, prompt, schema
 from consylr.budget import Budget, Tokeniser, check_packet
 from consylr.budget import check as budget_check
-from consylr.templates import Template, shape_violations
+from consylr.templates import Template, _text, shape_violations
 from consylr.violation import Violation
 
 
@@ -90,7 +90,14 @@ class Draft:
 
     @property
     def warrant(self) -> str:
-        """The policy line a supported claim cites when nothing narrower applies."""
+        """The policy line the *deformed* pair cites.
+
+        Never the clean ones. When this was the general-purpose citation, every
+        untouched pair on a fee template cited the fee line — including the pairs
+        with no fee deducted — and the line warranting a clean match was cited
+        nowhere. Citation precision is a scored metric, so a citation that points
+        at a real line about the wrong records is not a small error.
+        """
         return self.cause or str(self.policy[0]["id"])
 
     def new_id(self, prefix: str) -> str:
@@ -121,6 +128,15 @@ CAUSE_TERMS: dict[str, frozenset[str]] = {
 }
 
 
+#: Words that turn a cause line into its own denial. Crude, and deliberately so:
+#: this is authoring lint. The gate is `identity.check`'s refusal of one packet
+#: carrying two answers, because a vocabulary can always be satisfied by prose
+#: that means something else and so cannot be the thing relied on.
+_DENIALS = frozenset({"no", "not", "never", "without", "excluded", "exempt", "waived"})
+
+_PUNCTUATION = str.maketrans(dict.fromkeys(".,;:()[]\"'!?/", " "))
+
+
 #: What `cause_not_established` removes: a share, because a fixed sum turned a
 #: small obligation negative and moved a large one barely at all.
 SHORTFALL_RATE = Decimal("0.075")
@@ -135,9 +151,15 @@ def _supported(left: Sequence[str], right: Sequence[str], why: Sequence[str]) ->
 
 
 def _clean(draft: Draft, skip: str | None = None) -> list[dict[str, Any]]:
-    """A supported match for every pair the deformation did not touch."""
+    """A supported match for every pair the deformation did not touch.
+
+    Each cites its own two records, because that is what settles it: the
+    reference, the amount and the date correspond, and no policy line is doing
+    any work. A per-draft warrant put the deformed pair's policy line on every
+    clean match in the case — including pairs from which nothing was deducted.
+    """
     return [
-        _supported([left], [right], [draft.warrant]) for left, right in draft.pairs if left != skip
+        _supported([left], [right], [left, right]) for left, right in draft.pairs if left != skip
     ]
 
 
@@ -444,12 +466,23 @@ def _prove_cause(template: Template, policy: list[dict[str, Any]]) -> str:
             f"this template carries ({', '.join(ids) or 'none'})"
         )
 
-    text = next(str(line.get("text", "")) for line in policy if str(line.get("id")) == declared)
-    if not any(term in text.lower() for term in terms):
+    raw = next(str(line.get("text", "")) for line in policy if str(line.get("id")) == declared)
+    # Normalised first, for the direction that sabotages a good template rather
+    # than passing a bad one: a zero-width space inside "fee" renders identically
+    # to a human, is invisible in a diff, and made the template unbuildable.
+    words = set(_text(raw).lower().replace("-", " ").translate(_PUNCTUATION).split())
+
+    if not terms & words:
         raise ValueError(
             f"{template.family} cites {declared!r}, whose text says nothing about it: "
-            f"{text!r}. A packet that does not describe the cause cannot carry the "
+            f"{raw!r}. A packet that does not describe the cause cannot carry the "
             f"distinction, and grading it asks the model to supply what it was not shown."
+        )
+    if _DENIALS & words:
+        raise ValueError(
+            f"{template.family} cites {declared!r}, which denies the cause rather than "
+            f"stating it: {raw!r}. The answer key would assert a deduction the packet "
+            f"expressly rules out."
         )
     return declared
 
