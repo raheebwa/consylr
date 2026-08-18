@@ -19,8 +19,9 @@ then skipped, rather than being fed to rules that assume it parsed.
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
 from typing import Any
+
+from consylr.violation import Violation
 
 CERTAINTIES = frozenset({"supported", "ambiguous", "unsupported"})
 ACTS = frozenset({"accept", "hold", "escalate", "request"})
@@ -70,12 +71,6 @@ REQUIRED: dict[str, frozenset[str]] = {
 NEED_MAX = 120
 
 _POLICY_REF = re.compile(r"^(P-\d+)(?::L\d+(?:-L\d+)?)?$")
-
-
-@dataclass(frozen=True)
-class Violation:
-    code: str
-    detail: str
 
 
 def _norm(values: Any) -> set[str]:

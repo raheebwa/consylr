@@ -22,17 +22,13 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Protocol
 
+from consylr.violation import Violation
+
 
 class Tokeniser(Protocol):
     """Whatever the frozen model tokenises with."""
 
     def encode(self, text: str) -> Sequence[int]: ...
-
-
-@dataclass(frozen=True)
-class Violation:
-    code: str
-    detail: str
 
 
 @dataclass(frozen=True)
