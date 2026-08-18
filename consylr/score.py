@@ -240,3 +240,40 @@ def record(
         "cases": [{"family": a.family, "produced": a.produced} for a in answers],
         **extra,
     }
+
+
+def positional(packet: Mapping[str, Any]) -> str:
+    """What a model that reads nothing would answer: pair record n with record n.
+
+    **This is a control, and every reported correspondence F1 belongs beside it.**
+    The generator emits records in correspondence order on both sides, so pairing
+    by list position and claiming every pair supported is a winning policy that
+    consults no amount, no reference, no date and no policy line. On sealed-v4 it
+    scores **0.839** correspondence F1. A tuned model at 0.904 is therefore 0.065
+    above reading nothing — not 0.904 above it, which is how the raw figure reads
+    to anyone who has not seen this number.
+
+    It is built from the packet's identifiers alone. The moment it consults
+    `expected` it stops being a control and becomes a cheat, so it does not take
+    the answer key as an argument at all.
+
+    Records left unpaired by a length mismatch are declared residue rather than
+    matched, because a control that claimed them would score better than reading
+    nothing can and would understate the real gain.
+    """
+    ids = [str(r.get("id", "")) for r in packet.get("records", [])]
+    left = [i for i in ids if i.startswith("A-")]
+    right = [i for i in ids if i.startswith("B-")]
+    paired = min(len(left), len(right))
+    return json.dumps(
+        {
+            "matches": [
+                {"l": [a], "r": [b], "c": "supported", "why": [a, b]}
+                for a, b in zip(left[:paired], right[:paired], strict=True)
+            ],
+            "exceptions": [],
+            "open": [],
+            "residue": {"l": left[paired:], "r": right[paired:]},
+            "do": [{"act": "accept", "on": left[:paired] + right[:paired]}],
+        }
+    )

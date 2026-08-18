@@ -38,7 +38,7 @@ from pathlib import Path
 
 from consylr import prompt
 from consylr.corpus import content_digest
-from consylr.score import Answer, record, score
+from consylr.score import Answer, positional, record, score
 
 #: RFC-0001 sizes the answer at well inside the harness's 256-token default
 #: reservation. Generating far beyond it would measure a model rambling rather
@@ -110,12 +110,33 @@ def main() -> int:
             print(f"  {n}/{len(cases)}  {rate:.1f}s/case  eta {rate * (len(cases) - n) / 60:.1f}m")
 
     report = score(answers)
+    # Scored on the same packets, every run, and printed on the same line as the
+    # figure it qualifies. Correspondence F1 is nearly saturated on a
+    # position-regular exam by a model that reads nothing, so the raw number
+    # invites exactly the wrong reading — and a control kept in a separate script
+    # is one nobody runs.
+    null = score(
+        [
+            Answer(
+                packet=a.packet, expected=a.expected, produced=positional(a.packet), family=a.family
+            )
+            for a in answers
+        ]
+    )
     mode = "SCAFFOLDED reference (not profiler mode)" if scaffold else "profiler mode"
     print(f"\n=== {model_name}{' + ' + adapter if adapter else ''} on {exam.name} — {mode} ===")
     print(f"parse rate            {report.parse_rate:.1%}")
     print(f"schema valid          {report.schema_valid:.1%}")
-    print(f"exact match           {report.exact_match:.1%}")
-    print(f"correspondence F1     {report.correspondence_f1:.3f}")
+    print(
+        f"exact match           {report.exact_match:.1%}"
+        f"   (null {null.exact_match:.1%}, margin "
+        f"{report.exact_match - null.exact_match:+.1%})"
+    )
+    print(
+        f"correspondence F1     {report.correspondence_f1:.3f}"
+        f"   (null {null.correspondence_f1:.3f}, margin "
+        f"{report.correspondence_f1 - null.correspondence_f1:+.3f})"
+    )
     print(f"citation resolution   {report.citation_resolution:.1%}")
     print(f"correct abstention    {report.correct_abstention:.1%}  (target >= 90%)")
     print(f"false abstention      {report.false_abstention:.1%}  (target < 5%)")
@@ -135,6 +156,8 @@ def main() -> int:
                 model=model_name,
                 mode="scaffolded-reference" if scaffold else "profiler",
                 adapter=adapter,
+                null_correspondence_f1=null.correspondence_f1,
+                null_exact_match=null.exact_match,
                 exam_digest=digest,
                 prompt_digest=prompt.DIGEST,
             ),
