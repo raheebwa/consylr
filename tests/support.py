@@ -130,3 +130,20 @@ FAKE_BUDGET = Budget(
     template_overhead=_WRAPPER_CHARS,
     output_reserve=2048,
 ).validate()
+
+
+class PerFourCharacters:
+    """Roughly a token per four characters of JSON.
+
+    For tests about structure — how many packets, which roles, which families —
+    that would otherwise become budget tests by accident. `PerCharacter` counts
+    four times high, so a real packet trips the frozen budget and the test fails
+    for a reason it is not about.
+
+    It is an approximation and is used for nothing else. RFC-0003 refuses a
+    heuristic where the count decides an outcome, and the sealed set's real
+    measurement is taken with the frozen tokeniser.
+    """
+
+    def encode(self, text: str) -> list[int]:
+        return [0] * (len(text) // 4 + 1)

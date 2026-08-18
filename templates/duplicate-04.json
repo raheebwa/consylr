@@ -1,0 +1,44 @@
+{
+  "documents": [
+    {
+      "id": "D-1",
+      "text": "Remittance advice, batch 044."
+    }
+  ],
+  "family": "duplicate",
+  "id": "duplicate-04",
+  "left": [
+    {
+      "amount": "42150.00",
+      "date": "2026-04-14",
+      "party": "Eastvale Trading Ltd",
+      "ref": "INV-4572"
+    },
+    {
+      "amount": "480.00",
+      "date": "2026-03-02",
+      "party": "Westbrook Services Ltd",
+      "ref": "INV-4579"
+    }
+  ],
+  "policy": [
+    {
+      "id": "P-1",
+      "text": "Invoices settle at face value unless a deduction is stated in this schedule."
+    }
+  ],
+  "right": [
+    {
+      "amount": "42150.00",
+      "date": "2026-04-17",
+      "party": "Eastvale Trading Ltd",
+      "ref": "INV-4572"
+    },
+    {
+      "amount": "480.00",
+      "date": "2026-03-05",
+      "party": "Westbrook Services Ltd",
+      "ref": "INV-4579"
+    }
+  ]
+}
