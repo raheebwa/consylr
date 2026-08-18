@@ -28,11 +28,20 @@ ACTS = frozenset({"accept", "hold", "escalate", "request"})
 #: The exception families, per RFC-0002. `missing_record` is deliberately absent:
 #: residue plus an `open` entry already say it, and two ways to state one fact
 #: produce inconsistent ground truth.
-KINDS = frozenset({
-    "fee_at_source", "withholding", "timing_cutoff", "reference_mangled",
-    "name_variant", "partial_payment", "duplicate", "reversal",
-    "batched_vs_itemised", "cause_not_established",
-})
+KINDS = frozenset(
+    {
+        "fee_at_source",
+        "withholding",
+        "timing_cutoff",
+        "reference_mangled",
+        "name_variant",
+        "partial_payment",
+        "duplicate",
+        "reversal",
+        "batched_vs_itemised",
+        "cause_not_established",
+    }
+)
 
 #: The field set is frozen by RFC-0001, so unknown keys are refused rather than
 #: ignored. An allowlist subsumes a denylist of confidence-like names — which
@@ -143,14 +152,18 @@ def validate(output: Any, packet: Any) -> list[Violation]:
             if isinstance(item, str):
                 out.append(item)
             else:
-                v.append(Violation("bad_type", f"{name}.{key} entry must be a string, got {item!r}"))
+                v.append(
+                    Violation("bad_type", f"{name}.{key} entry must be a string, got {item!r}")
+                )
         return out
 
     # --- residue is required even when empty, so "everything matched" is never silence
     residue_raw = output.get("residue")
     residue: dict[str, list[str]] = {"l": [], "r": []}
     if not isinstance(residue_raw, dict):
-        v.append(Violation("residue_missing", "residue with 'l' and 'r' is required on every output"))
+        v.append(
+            Violation("residue_missing", "residue with 'l' and 'r' is required on every output")
+        )
     else:
         for key in sorted(set(residue_raw) - FIELDS["residue"]):
             v.append(Violation("unknown_field", f"{key!r} is not a field of residue"))
@@ -162,7 +175,11 @@ def validate(output: Any, packet: Any) -> list[Violation]:
             residue[side] = id_list(residue_raw, "residue", side)
 
     matches, exceptions, opens, dispositions = (
-        sections["matches"], sections["exceptions"], sections["open"], sections["do"])
+        sections["matches"],
+        sections["exceptions"],
+        sections["open"],
+        sections["do"],
+    )
 
     # --- enumerations
     for m in matches:
@@ -181,7 +198,9 @@ def validate(output: Any, packet: Any) -> list[Violation]:
     for o in opens:
         need = o.get("need")
         if isinstance(need, str) and len(need) > NEED_MAX:
-            v.append(Violation("need_too_long", f"need is {len(need)} characters; the cap is {NEED_MAX}"))
+            v.append(
+                Violation("need_too_long", f"need is {len(need)} characters; the cap is {NEED_MAX}")
+            )
         elif need is not None and not isinstance(need, str):
             v.append(Violation("bad_type", f"open.need must be a string, got {need!r}"))
 
@@ -190,9 +209,11 @@ def validate(output: Any, packet: Any) -> list[Violation]:
     e_ids = [(e, id_list(e, "exceptions", "on")) for e in exceptions]
     o_ids = [(o, id_list(o, "open", "on")) for o in opens]
     d_ids = [(d, id_list(d, "do", "on")) for d in dispositions]
-    whys = ([id_list(m, "matches", "why") for m in matches]
-            + [id_list(e, "exceptions", "why") for e in exceptions]
-            + [id_list(o, "open", "why") for o in opens])
+    whys = (
+        [id_list(m, "matches", "why") for m in matches]
+        + [id_list(e, "exceptions", "why") for e in exceptions]
+        + [id_list(o, "open", "why") for o in opens]
+    )
 
     # --- a supported claim must cite something; an absent cause is itself the claim
     for m in matches:
@@ -226,9 +247,12 @@ def validate(output: Any, packet: Any) -> list[Violation]:
     expected = {r for r in records if r not in matched}
     declared = set(residue["l"]) | set(residue["r"])
     if expected != declared:
-        v.append(Violation(
-            "residue_wrong",
-            f"missing {sorted(expected - declared)}, unexpected {sorted(declared - expected)}"))
+        v.append(
+            Violation(
+                "residue_wrong",
+                f"missing {sorted(expected - declared)}, unexpected {sorted(declared - expected)}",
+            )
+        )
     else:
         for rid in sorted(declared):
             if rid not in residue[_side(rid)]:
@@ -260,9 +284,12 @@ def validate(output: Any, packet: Any) -> list[Violation]:
             continue
         for rid in ids:
             if rid not in open_ids:
-                v.append(Violation(
-                    "dangling_request",
-                    f"request names {rid}, which no open entry records as needed"))
+                v.append(
+                    Violation(
+                        "dangling_request",
+                        f"request names {rid}, which no open entry records as needed",
+                    )
+                )
 
     # --- every disposed identifier is reasoned about somewhere in the output
     reasoned: set[str] = set(open_ids) | set(residue["l"]) | set(residue["r"])
@@ -271,8 +298,11 @@ def validate(output: Any, packet: Any) -> list[Violation]:
     for _, ids in d_ids:
         for rid in ids:
             if rid not in reasoned:
-                v.append(Violation(
-                    "incoherent_disposition",
-                    f"{rid} is disposed of but appears nowhere else in the output"))
+                v.append(
+                    Violation(
+                        "incoherent_disposition",
+                        f"{rid} is disposed of but appears nowhere else in the output",
+                    )
+                )
 
     return v

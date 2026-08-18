@@ -112,5 +112,30 @@ cc="+"; plausible="${cc}256 772 123 456"
 try bad check_pii "locale-plausible number" "e.md" <<<"Call $plausible for support."
 try ok  check_pii "binary skipped" "f.gguf" <<<'anything'
 
+
+# --- the tooling gates must actually be capable of failing ---------------------
+# A stubbed linter that exits 0 on everything passes every check and reports a
+# clean tree. That happened: a shim named `ruff` shadowed the real binary and
+# every local "lint clean" claim was meaningless until CI disagreed.
+if command -v mise >/dev/null 2>&1; then
+  mise_ruff="$(mise which ruff 2>/dev/null || true)"
+  [ -n "$mise_ruff" ] && PATH="$(dirname "$mise_ruff"):$PATH"
+fi
+probe=$tmp/gate_probe.py
+printf 'import re\nx = re.compile("a", re.S)\n' > "$probe"
+printf '  %-42s ' "lint gate can detect a violation"
+if ruff check --isolated --select FURB "$probe" >/dev/null 2>&1; then
+  fail=$((fail+1)); printf 'FAIL  ruff exited 0 on a known violation — it is not linting\n'
+else
+  pass=$((pass+1)); printf 'ok\n'
+fi
+printf '  %-42s ' "type gate can detect an error"
+printf 'def f(x: int) -> str:\n    return x\n' > "$probe"
+if python -m mypy --no-error-summary "$probe" >/dev/null 2>&1; then
+  fail=$((fail+1)); printf 'FAIL  mypy exited 0 on a known type error — it is not checking\n'
+else
+  pass=$((pass+1)); printf 'ok\n'
+fi
+
 printf '\n%d passed, %d failed\n' "$pass" "$fail"
 [ "$fail" -eq 0 ]

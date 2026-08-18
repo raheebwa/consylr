@@ -39,7 +39,7 @@ PACKETS: list[dict[str, object]] = [
 @pytest.fixture(scope="module")
 def blocks() -> list[str]:
     text = RFC.read_text(encoding="utf-8")
-    return re.findall(r"```json\n(.*?)\n```", text, re.S)
+    return re.findall(r"```json\n(.*?)\n```", text, re.DOTALL)
 
 
 def test_the_rfc_contains_the_examples_this_file_declares_packets_for(blocks: list[str]) -> None:
