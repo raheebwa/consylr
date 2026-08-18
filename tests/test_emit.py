@@ -10,8 +10,11 @@ one interface and examined through another, and nothing downstream would say so
 import json
 from pathlib import Path
 
+import pytest
+
 from consylr.corpus import write
 from consylr.emit import emit
+from consylr.passthrough import CHAT_TEMPLATE, TEMPLATE_FILE
 from consylr.prompt import DIGEST, TEMPLATE, render
 from tests.support import a_template, built
 
@@ -68,12 +71,19 @@ def test_a_row_carries_no_chat_markers(tmp_path: Path) -> None:
         assert marker not in text
 
 
+def a_passthrough(where: Path) -> Path:
+    """A directory carrying the passthrough template, as `build` leaves it."""
+    where.mkdir(parents=True, exist_ok=True)
+    (where / TEMPLATE_FILE).write_text(CHAT_TEMPLATE, encoding="utf-8")
+    return where
+
+
 def test_a_row_uses_the_key_that_avoids_the_chat_template(tmp_path: Path) -> None:
     """`mlx_lm` picks its dataset class by which keys are present.
 
     `prompt` and `completion` together select the class that applies the chat
-    template, whatever else the row carries — so those keys must be absent, not
-    merely accompanied by a `text` field.
+    template, whatever else the row carries — so by default those keys must be
+    absent, not merely accompanied by a `text` field.
     """
     corpus = a_corpus(tmp_path / "corpus", n=1)
     out = tmp_path / "train.jsonl"
@@ -81,6 +91,39 @@ def test_a_row_uses_the_key_that_avoids_the_chat_template(tmp_path: Path) -> Non
     row = json.loads(out.read_text().splitlines()[0])
     assert "text" in row
     assert "prompt" not in row and "completion" not in row
+
+
+def test_masked_rows_are_refused_without_a_model_to_check(tmp_path: Path) -> None:
+    """The invariant was never "use `text`". It was that the interface the
+    trainer sees is the interface the profiler sends.
+
+    `text` rows guaranteed that by being tokenised verbatim, at the cost of the
+    prompt sharing the loss. Masking needs the `prompt`/`completion` shape, which
+    routes through the chat template — safe only against a model whose template
+    passes through. Emitting those rows without naming that model would produce
+    a file that is correct or catastrophic depending on a flag somebody sets
+    later, with nothing to say which.
+    """
+    corpus = a_corpus(tmp_path / "corpus", n=1)
+
+    with pytest.raises(ValueError, match="passthrough"):
+        emit(corpus, tmp_path / "train.jsonl", masked=True)
+
+
+def test_masked_rows_split_the_prompt_from_the_answer(tmp_path: Path) -> None:
+    """Concatenated they must equal the unmasked row exactly, because that is
+    the string the profiler sends. The split is where the loss boundary goes,
+    not a change to what the model reads."""
+    corpus = a_corpus(tmp_path / "corpus", n=1)
+    plain, split = tmp_path / "plain.jsonl", tmp_path / "split.jsonl"
+    emit(corpus, plain)
+    emit(corpus, split, masked=True, model=a_passthrough(tmp_path / "model"))
+
+    row = json.loads(split.read_text().splitlines()[0])
+    assert (
+        row["prompt"] + row["completion"] == json.loads(plain.read_text().splitlines()[0])["text"]
+    )
+    assert "text" not in row
 
 
 def test_a_corpus_rendered_against_another_template_is_refused(tmp_path: Path) -> None:
@@ -139,3 +182,20 @@ def test_the_validation_split_is_the_same_every_time(tmp_path: Path) -> None:
     emit(corpus, tmp_path / "t1.jsonl", valid_out=first, valid_share=0.3)
     emit(corpus, tmp_path / "t2.jsonl", valid_out=second, valid_share=0.3)
     assert first.read_text() == second.read_text()
+
+
+def test_a_model_whose_template_is_not_the_passthrough_is_refused(tmp_path: Path) -> None:
+    """The directory has to be the artefact `build` verified, not merely a path.
+
+    Naming any directory would make the guard a formality — and the failure it
+    guards against is a training run against the model's real chat markers,
+    which produces a falling loss and a poor score with nothing naming the
+    cause.
+    """
+    corpus = a_corpus(tmp_path / "corpus", n=1)
+    wrong = tmp_path / "wrong"
+    wrong.mkdir()
+    (wrong / TEMPLATE_FILE).write_text("{% for m in messages %}<|im_start|>{{ m }}{% endfor %}")
+
+    with pytest.raises(ValueError, match="passthrough"):
+        emit(corpus, tmp_path / "train.jsonl", masked=True, model=wrong)
