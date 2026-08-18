@@ -33,8 +33,9 @@ from __future__ import annotations
 import hashlib
 import json
 from collections.abc import Callable, Mapping, Sequence
+from copy import deepcopy
 from dataclasses import dataclass, field
-from decimal import Decimal
+from decimal import ROUND_HALF_UP, Decimal
 from random import Random
 from typing import Any
 
@@ -96,8 +97,52 @@ class Draft:
         return next(r for r in (*self.a, *self.b) if r["id"] == rid)
 
 
+CENT = Decimal("0.01")
+
+#: Every deformation that reduces an amount takes this share of it, and never
+#: less than a cent. A proportional cut alone quantised to zero on small
+#: amounts, which produced a packet that was a clean match beneath an answer key
+#: asserting an exception on it.
+CUT_RATE = Decimal("0.02")
+
+#: What `cause_not_established` removes: a share, because a fixed sum turned a
+#: small obligation negative and a large one barely moved.
+SHORTFALL_RATE = Decimal("0.075")
+
+
 def _money(value: Any) -> Decimal:
     return Decimal(str(value))
+
+
+def _amount(value: Any) -> str:
+    """One way to write an amount, used for every amount in every packet.
+
+    The single serialisation policy the packet has. A deformation once wrote
+    `str(Decimal)` back into the record it touched while untouched records kept
+    whatever the template had — so the deformed record was the only string-typed
+    amount in the packet and the answer could be read off the JSON types, with no
+    reconciliation at all. Applied to every record at construction, so a clean
+    record and a deformed one are written identically by construction rather than
+    by care.
+    """
+    return str(_money(value).quantize(CENT, rounding=ROUND_HALF_UP))
+
+
+def _reduced_by(amount: Decimal, rate: Decimal, what: str) -> Decimal:
+    """A cut that is a share of the amount, is at least a cent, and is visible.
+
+    Half-up because this is money: two per cent of 12.25 is 0.2450, which
+    banker's rounding takes to 0.24. Refused rather than clamped when the amount
+    cannot carry it, because a cut that leaves the record unchanged is an
+    exception asserted about nothing.
+    """
+    cut = max(CENT, (amount * rate).quantize(CENT, rounding=ROUND_HALF_UP))
+    if cut >= amount:
+        raise ValueError(
+            f"an amount of {amount} cannot carry a {what}: the cut would be {cut}, "
+            "which leaves nothing to observe"
+        )
+    return cut
 
 
 def _supported(left: Sequence[str], right: Sequence[str], why: Sequence[str]) -> dict[str, Any]:
@@ -173,8 +218,8 @@ def _reduced_on_the_right(kind: str) -> Callable[[Draft, Random], dict[str, Any]
     def deform(draft: Draft, rng: Random) -> dict[str, Any]:
         left, right = rng.choice(draft.pairs)
         record = draft.record(right)
-        cut = (_money(record["amount"]) * Decimal("0.02")).quantize(Decimal("0.01"))
-        record["amount"] = str(_money(record["amount"]) - cut)
+        whole = _money(record["amount"])
+        record["amount"] = _amount(whole - _reduced_by(whole, CUT_RATE, kind))
         matches = [*_clean(draft, skip=left), _supported([left], [right], [draft.warrant])]
         exception = {"on": [right], "kind": kind, "c": "supported", "why": [draft.warrant]}
         return _finish(draft, matches, [exception])
@@ -215,9 +260,11 @@ def _partial_payment(draft: Draft, rng: Random) -> dict[str, Any]:
     left, right = rng.choice(draft.pairs)
     record = draft.record(right)
     whole = _money(record["amount"])
-    first = (whole / 2).quantize(Decimal("0.01"))
-    record["amount"] = str(first)
-    second = {**record, "id": draft.new_id("B"), "amount": str(whole - first)}
+    first = (whole / 2).quantize(CENT, rounding=ROUND_HALF_UP)
+    if not 0 < first < whole:
+        raise ValueError(f"an amount of {whole} cannot be split into two observable parts")
+    record["amount"] = _amount(first)
+    second = {**record, "id": draft.new_id("B"), "amount": _amount(whole - first)}
     draft.b.append(second)
     matches = [
         *_clean(draft, skip=left),
@@ -237,7 +284,7 @@ def _batched_vs_itemised(draft: Draft, rng: Random) -> dict[str, Any]:
         raise ValueError("batched_vs_itemised needs a template with at least two pairs")
     (left_one, right_one), (left_two, right_two) = draft.pairs[0], draft.pairs[1]
     kept, folded = draft.record(right_one), draft.record(right_two)
-    kept["amount"] = str(_money(kept["amount"]) + _money(folded["amount"]))
+    kept["amount"] = _amount(_money(kept["amount"]) + _money(folded["amount"]))
     draft.b.remove(folded)
     draft.pairs = [p for p in draft.pairs if p[0] not in (left_one, left_two)]
     matches = [*_clean(draft), _supported([left_one, left_two], [right_one], [draft.warrant])]
@@ -269,7 +316,11 @@ def _duplicate(draft: Draft, rng: Random) -> dict[str, Any]:
 def _reversal(draft: Draft, rng: Random) -> dict[str, Any]:
     left, right = rng.choice(draft.pairs)
     original = draft.record(right)
-    reversing = {**original, "id": draft.new_id("B"), "amount": str(-_money(original["amount"]))}
+    reversing = {
+        **original,
+        "id": draft.new_id("B"),
+        "amount": _amount(-_money(original["amount"])),
+    }
     draft.b.append(reversing)
     reinstated = {**original, "id": draft.new_id("B")}
     draft.b.append(reinstated)
@@ -302,7 +353,8 @@ def _missing_record(draft: Draft, rng: Random) -> dict[str, Any]:
 def _cause_not_established(draft: Draft, rng: Random) -> dict[str, Any]:
     left, right = rng.choice(draft.pairs)
     record = draft.record(right)
-    record["amount"] = str(_money(record["amount"]) - Decimal("37.50"))
+    whole = _money(record["amount"])
+    record["amount"] = _amount(whole - _reduced_by(whole, SHORTFALL_RATE, "shortfall"))
     matches = [
         *_clean(draft, skip=left),
         {"l": [left], "r": [right], "c": "ambiguous", "why": [left, right]},
@@ -317,7 +369,7 @@ def _cause_not_established(draft: Draft, rng: Random) -> dict[str, Any]:
 
 
 def _decoy(draft: Draft, rng: Random) -> dict[str, Any]:
-    amount = str(_money(draft.a[0]["amount"]) + Decimal("11.00"))
+    amount = _amount(_money(draft.a[0]["amount"]) + Decimal("11.00"))
     left = {
         "id": draft.new_id("A"),
         "ref": "INV-7100",
@@ -383,6 +435,48 @@ DEFORMATIONS: dict[str, Callable[[Draft, Random], dict[str, Any]]] = {
 }
 
 
+def _prove_effect(
+    before: Mapping[str, Mapping[str, Any]],
+    after: Mapping[str, Mapping[str, Any]],
+    expected: Mapping[str, Any],
+    family: str,
+) -> None:
+    """Check the answer's truth against the packet, not just its form.
+
+    The shipping validator checks the answer's *form*: that every identifier
+    resolves and the sections cohere. It cannot check that the packet was
+    actually deformed in the way the answer key claims, because it never saw the
+    clean packet. So an exception whose named records are all byte-identical to
+    the clean ones passes it — a claim about nothing, and exactly what a cut that
+    quantised to zero produced: a packet that was a clean match beneath an answer
+    asserting an exception on it, with a correct answer scored wrong.
+
+    Raised rather than reported, because this is a defect in the generator or in
+    a template, and no corpus should contain the case at all.
+    """
+    changed = {rid for rid in set(before) | set(after) if before.get(rid) != after.get(rid)}
+
+    if family == "clean_match":
+        if changed:
+            raise ValueError(f"clean_match deformed {sorted(changed)}; it must deform nothing")
+        return
+
+    if not changed:
+        raise ValueError(
+            f"{family} deformed nothing; its answer describes a packet it did not make"
+        )
+
+    for exception in expected.get("exceptions", []):
+        # Per exception rather than per record: `reversal` legitimately names the
+        # original posting beside the reversing one. What cannot be legitimate is
+        # an exception none of whose records the packet shows anything about.
+        if not set(exception.get("on", [])) & changed:
+            raise ValueError(
+                f"{family} asserts {exception.get('kind')!r} on "
+                f"{sorted(exception.get('on', []))}, all unchanged from the clean packet"
+            )
+
+
 def _records(body: Mapping[str, Any], key: str, prefix: str) -> list[dict[str, Any]]:
     raw = body.get(key)
     if not isinstance(raw, list) or not raw:
@@ -399,7 +493,12 @@ def _records(body: Mapping[str, Any], key: str, prefix: str) -> list[dict[str, A
         # Identifiers are the packet's, assigned by side and position; a record
         # supplying one could collide across sides, and every `why` in the
         # expected output is written against the generated id rather than that.
-        out.append({**record, "id": f"{prefix}-{n:03d}"})
+        normalised = {**record, "id": f"{prefix}-{n:03d}"}
+        if "amount" in normalised:
+            # Here rather than in each deformation, so a clean record and a
+            # deformed one are written identically by construction.
+            normalised["amount"] = _amount(normalised["amount"])
+        out.append(normalised)
     return out
 
 
@@ -444,7 +543,9 @@ def build(
     )
 
     seed = case_seed(root_seed, template.id, case_index)
+    before = {r["id"]: deepcopy(r) for r in (*draft.a, *draft.b)}
     expected = deform(draft, Random(seed))
+    _prove_effect(before, {r["id"]: r for r in (*draft.a, *draft.b)}, expected, template.family)
 
     packet = {"records": draft.a + draft.b, "policy": draft.policy, "documents": draft.documents}
     meta: dict[str, Any] = {
