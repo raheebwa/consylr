@@ -145,7 +145,11 @@ def main() -> int:
         t = report.per_family[family]
         print(f"  {family:24s} {t.exact_match:6.1%} {t.correspondence_f1:6.3f} {t.asked:4d}")
 
-    suffix = ("-tuned" if adapter else "") + ("-scaffolded" if scaffold else "")
+    # The adapter's own name, not a bare "-tuned". Two adapters both wrote to
+    # `…-tuned.json`, so evaluating the second silently destroyed the first
+    # run's result file and every raw answer in it. A filename that cannot
+    # distinguish two artefacts is a filename that overwrites one of them.
+    suffix = (f"-{Path(adapter).name}" if adapter else "") + ("-scaffolded" if scaffold else "")
     out = exam.parent / f"eval-{exam.name}-{model_name.split('/')[-1]}{suffix}.json"
     out.write_text(
         json.dumps(

@@ -41,7 +41,10 @@ from pathlib import Path
 #: Emits each message's content and nothing else: no role markers, no
 #: separators, no generation prompt. Kept on one line because a Jinja template
 #: emits its own whitespace, and a newline here would become a token there.
-CHAT_TEMPLATE = '{% for m in messages %}{{ m["content"] }}{% endfor %}'
+CHAT_TEMPLATE = (
+    '{% for m in messages %}{{ m["content"] }}{% endfor %}'
+    "{% if not add_generation_prompt %}{{ eos_token }}{% endif %}"
+)
 
 #: The file transformers reads a chat template from when it sits beside the
 #: tokeniser rather than inside `tokenizer_config.json`. The frozen model ships
@@ -103,10 +106,26 @@ def verify(model: Path) -> tuple[int, int]:
     whole = tok.apply_chat_template(messages, return_dict=False)
     prefix = tok.apply_chat_template(messages[:-1], add_generation_prompt=True, return_dict=False)
 
-    if whole != tok.encode(PROMPT + COMPLETION):
+    body = tok.encode(PROMPT + COMPLETION)
+    if whole[:-1] != body:
         raise ValueError(
             "the chat template does not pass through: training would see tokens the "
             "profiler never sends"
+        )
+    # The stop token is the whole reason this is `whole[:-1]` above. A template
+    # emitting only its messages' contents drops it, and the backend does not put
+    # it back: `TextDataset` appends `eos_token_id` when it is missing and
+    # `CompletionsDataset` does not. A model trained without it never learns to
+    # stop — it generates to the cap and its JSON is truncated mid-structure, so
+    # every answer is well-formed for three hundred tokens and parses as none.
+    #
+    # The first version of this check asserted `whole == body` and passed. It was
+    # not a weak check; it was an exact assertion of the wrong property — it
+    # confirmed the terminator's absence.
+    if whole[-1] != tok.eos_token_id:
+        raise ValueError(
+            "the chat template does not end the answer with the stop token: the model "
+            "would never learn to stop and every answer would truncate at the cap"
         )
     if prefix != tok.encode(PROMPT):
         raise ValueError(
