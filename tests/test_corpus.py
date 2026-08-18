@@ -107,16 +107,14 @@ def test_a_corpus_that_fails_its_audit_does_not_reach_disk(tmp_path: Path) -> No
     template = a_template(id="t-001")
     rows = case_rows(template, "train", (0,)) + case_rows(template, "holdout", (0,))
     with pytest.raises(ValueError, match="packet_in_two_roles"):
-        write(tmp_path, rows)
+        write(tmp_path, rows, templates=[template])
     assert list(tmp_path.iterdir()) == [], "a refused corpus left files behind"
 
 
 def test_a_clean_corpus_is_written_as_rfc_0003_describes(tmp_path: Path) -> None:
-    rows = [
-        built(a_template(id=f"t-{i:03d}", amount=f"{100 + i}.00"), case_index=0, role="train")
-        for i in range(2)
-    ]
-    write(tmp_path, rows)
+    templates = [a_template(id=f"t-{i:03d}", amount=f"{100 + i}.00") for i in range(2)]
+    rows = [built(t, case_index=0, role="train") for t in templates]
+    write(tmp_path, rows, templates=templates)
 
     written = sorted(p.name for p in tmp_path.iterdir())
     assert len(written) == len(rows)
@@ -138,10 +136,11 @@ def test_a_case_carrying_violations_does_not_reach_disk(tmp_path: Path) -> None:
     from consylr.budget import Budget
 
     tiny = Budget(context=1000, packet_max=50, template_overhead=0, output_reserve=100)
-    rows = [built(a_template(id="t-001"), budget=tiny, tokeniser=PerCharacter())]
+    template = a_template(id="t-001")
+    rows = [built(template, budget=tiny, tokeniser=PerCharacter())]
     assert rows[0].violations
     with pytest.raises(ValueError, match="packet_over_budget"):
-        write(tmp_path, rows)
+        write(tmp_path, rows, templates=[template])
 
 
 def test_the_same_packet_twice_in_one_corpus_is_refused() -> None:
@@ -190,11 +189,9 @@ def test_the_content_digest_covers_every_packet(tmp_path: Path) -> None:
     alone does not establish that the set on disk is the set the numbers were
     computed on — a file edited afterwards still has the seed in its metadata.
     """
-    rows = [
-        built(a_template(id=f"t-{i:03d}", amount=f"{100 + i}.00"), case_index=0, role="holdout")
-        for i in range(4)
-    ]
-    write(tmp_path, rows)
+    templates = [a_template(id=f"t-{i:03d}", amount=f"{100 + i}.00") for i in range(4)]
+    rows = [built(t, case_index=0, role="holdout") for t in templates]
+    write(tmp_path, rows, templates=templates)
     before = content_digest(tmp_path)
 
     assert before == content_digest(tmp_path), "the digest moved without the corpus moving"
@@ -205,12 +202,56 @@ def test_the_content_digest_covers_every_packet(tmp_path: Path) -> None:
 
 
 def test_the_content_digest_does_not_depend_on_the_order_files_are_read(tmp_path: Path) -> None:
-    rows = [
-        built(a_template(id=f"t-{i:03d}", amount=f"{100 + i}.00"), case_index=0, role="holdout")
-        for i in range(3)
-    ]
-    write(tmp_path, rows)
+    templates = [a_template(id=f"t-{i:03d}", amount=f"{100 + i}.00") for i in range(3)]
+    rows = [built(t, case_index=0, role="holdout") for t in templates]
+    write(tmp_path, rows, templates=templates)
     first = content_digest(tmp_path)
     for case_dir in tmp_path.iterdir():
         case_dir.touch()
     assert content_digest(tmp_path) == first
+
+
+# --- every check reaches the corpus through the one caller -------------------
+
+
+def test_a_corpus_cannot_be_written_without_the_templates_it_came_from() -> None:
+    """Three checks had no production caller at all.
+
+    `templates.check`, `identity.check` and `quota.check` were reachable only
+    from tests — so the closed-world shape rules, the duplicate-scenario audit
+    and RFC-0002's certainty bands were enforced by nothing. That is the same
+    class as the two found earlier today, and the count is why this is now
+    structural: a corpus is written from templates, so the writer takes them and
+    checks them.
+    """
+    rows = [built(a_template(id="t-001"), case_index=0, role="train")]
+    with pytest.raises(TypeError):
+        write(Path("/tmp/never"), rows)  # type: ignore[call-arg]
+
+
+def test_a_template_defect_stops_the_corpus(tmp_path: Path) -> None:
+    body = template_body(id="t-001")
+    body["left"] = [{k: v for k, v in r.items() if k != "amount"} for r in body["left"]]
+    broken = Template.from_mapping(body)
+    good = a_template(id="t-002", amount="900.00")
+    rows = [built(good, case_index=0, role="train")]
+    with pytest.raises(ValueError, match="missing_field"):
+        write(tmp_path, rows, templates=[good, broken])
+
+
+def test_a_quota_breach_stops_the_corpus_when_a_plan_is_given(tmp_path: Path) -> None:
+    from consylr.quota import Plan
+
+    templates = [a_template(id=f"t-{i:03d}", amount=f"{100 + i}.00") for i in range(4)]
+    rows = [built(t, case_index=0, role="train") for t in templates]
+    plan = Plan(families=frozenset({"clean_match"}), family_floor=1)
+    # Every case here is clean_match/supported: 100% clearly supported, well
+    # above RFC-0002's 40-50% band.
+    with pytest.raises(ValueError, match="supported_share_high"):
+        write(tmp_path, rows, templates=templates, plan=plan)
+
+
+def test_a_corpus_with_its_templates_and_no_plan_is_written(tmp_path: Path) -> None:
+    templates = [a_template(id=f"t-{i:03d}", amount=f"{100 + i}.00") for i in range(3)]
+    rows = [built(t, case_index=0, role="train") for t in templates]
+    assert len(write(tmp_path, rows, templates=templates)) == 3

@@ -117,12 +117,13 @@ def seal(
     # sevenfold. The seed is recorded per case rather than in a manifest beside
     # them: a case that travels alone still says which exam it belongs to and
     # which seed would rebuild it.
+    chosen = sealed_templates(templates, config, tokeniser=tokeniser)
     produced = generate.corpus_for(
-        sealed_templates(templates, config, tokeniser=tokeniser),
+        chosen,
         seed=config.seed,
         role=HOLDOUT,
         limit=config.cases_per_template,
         tokeniser=tokeniser,
         extra={"sealed_seed": config.seed},
     )
-    return corpus.write(out, produced.cases)
+    return corpus.write(out, produced.cases, templates=chosen)
