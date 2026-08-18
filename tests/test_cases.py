@@ -7,9 +7,12 @@ rather than a judgement made afterwards. That is what makes the evaluation
 honest, and it is the whole of the provenance story.
 """
 
+from random import Random
+from typing import Any
+
 import pytest
 
-from consylr.cases import DEFORMATIONS, _serialise, build, case_seed
+from consylr.cases import DEFORMATIONS, Draft, _clean, _finish, _serialise, build, case_seed
 from consylr.templates import Template
 
 ROOT = 20260818
@@ -248,7 +251,10 @@ def test_a_case_that_fails_the_validator_is_reported_not_emitted_silently() -> N
     # The self-validation is the only thing standing between "correct by
     # construction" and a claim about the builder that nothing can contradict.
     # A deformation that produces a wrong answer must surface as violations.
-    def wrong(draft: object, rng: object) -> dict[str, object]:
+    def wrong(draft: Draft, rng: Random) -> dict[str, Any]:
+        # Deforms something, so the effect proof is satisfied and the case
+        # reaches the validator — which is what this test is about.
+        draft.record(draft.pairs[0][1])["amount"] = "1.00"
         # A supported match that cites nothing, and residue that omits everything.
         return {
             "matches": [{"l": ["A-001"], "r": ["B-001"], "c": "supported", "why": []}],
@@ -474,8 +480,8 @@ def test_every_amount_in_a_packet_is_written_the_same_way(family: str) -> None:
 # --- a deformation has to prove it deformed something ------------------------
 
 
-@pytest.mark.parametrize("amount", ["0.25", "0.10", "0.01"])
-def test_a_cut_too_small_to_observe_is_refused_rather_than_asserted(amount: str) -> None:
+@pytest.mark.parametrize("amount", ["0.25", "0.10", "0.02"])
+def test_a_small_amount_still_carries_an_observable_cut(amount: str) -> None:
     """Ground truth by construction requires the construction to have an effect.
 
     The 2% cut quantised to 0.00 for small amounts, so the packet was a clean
@@ -491,6 +497,20 @@ def test_a_cut_too_small_to_observe_is_refused_rather_than_asserted(amount: str)
     )
     distinct = {r["amount"] for r in case.packet["records"]}
     assert len(distinct) > 1, "nothing was deformed, yet an exception is asserted"
+
+
+@pytest.mark.parametrize("amount", ["0.01", "0.00"])
+def test_an_amount_that_cannot_carry_a_cut_is_refused_rather_than_asserted(amount: str) -> None:
+    # The alternative is a packet that is a clean match beneath an answer key
+    # asserting an exception on it: ground truth that is factually wrong, passed
+    # by the validator, scoring a correct answer as wrong.
+    with pytest.raises(ValueError, match="nothing to observe"):
+        build(
+            a_richer_template("fee_at_source", amount=amount),
+            root_seed=ROOT,
+            case_index=0,
+            role="train",
+        )
 
 
 def test_money_rounds_half_up_rather_than_to_even() -> None:
@@ -546,3 +566,45 @@ def test_every_asserted_exception_is_observable_in_the_packet(family: str) -> No
 
     if family == "clean_match":
         assert before == after
+
+
+def test_a_deformation_that_asserts_an_unobservable_exception_is_refused() -> None:
+    """The rule, rather than the instances.
+
+    Every family is fixed, but the class is not closed until the builder refuses
+    a case whose answer key asserts something the packet does not show. This is
+    self-validation's other half: the shipping validator checks the answer's
+    form, and this checks its truth against the packet it describes.
+    """
+
+    def asserts_nothing(draft: Draft, rng: Random) -> dict[str, Any]:
+        # Deforms one record and asserts the exception on a different one, so the
+        # packet does change — just not anywhere the answer key points.
+        draft.record(draft.pairs[1][1])["amount"] = "1.00"
+        matches = _clean(draft)
+        exception: dict[str, Any] = {
+            "on": [draft.pairs[0][1]],
+            "kind": "fee_at_source",
+            "c": "supported",
+            "why": [draft.warrant],
+        }
+        return _finish(draft, matches, [exception])
+
+    DEFORMATIONS["asserts_nothing"] = asserts_nothing
+    try:
+        with pytest.raises(ValueError, match="unchanged"):
+            build(a_richer_template("asserts_nothing"), root_seed=ROOT, case_index=0, role="train")
+    finally:
+        del DEFORMATIONS["asserts_nothing"]
+
+
+def test_a_deformation_that_changes_nothing_at_all_is_refused() -> None:
+    def changes_nothing(draft: Draft, rng: Random) -> dict[str, Any]:
+        return _finish(draft, _clean(draft))
+
+    DEFORMATIONS["changes_nothing"] = changes_nothing
+    try:
+        with pytest.raises(ValueError, match="deformed nothing"):
+            build(a_richer_template("changes_nothing"), root_seed=ROOT, case_index=0, role="train")
+    finally:
+        del DEFORMATIONS["changes_nothing"]
