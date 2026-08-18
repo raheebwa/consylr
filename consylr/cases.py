@@ -442,6 +442,26 @@ def _prove_effect(
             )
 
 
+def _certainty(expected: Mapping[str, Any]) -> str:
+    """The case's own certainty, which `quota.check` counts.
+
+    A property of the case rather than of its family, per RFC-0002: a fee case
+    with a supporting policy line is itself a clearly-supported case. Taken from
+    the weakest correspondence the answer asserts, because a case is only as
+    confident as its least confident claim.
+
+    Every deformation already knew this; nothing recorded it, so the quota gate
+    read zero clearly-supported cases on every corpus the builder could produce
+    and its contradiction check was unreachable.
+    """
+    asserted = {m.get("c") for m in expected.get("matches", [])}
+    if "ambiguous" in asserted:
+        return "ambiguous"
+    if "unsupported" in asserted:
+        return "unsupported"
+    return "supported"
+
+
 def _records(body: Mapping[str, Any], key: str, prefix: str) -> list[dict[str, Any]]:
     raw = body.get(key)
     if not isinstance(raw, list) or not raw:
@@ -478,9 +498,9 @@ def build(
     root_seed: int,
     case_index: int,
     role: str,
-    tokeniser: Tokeniser | None = None,
+    tokeniser: Tokeniser,
+    render: Callable[[Mapping[str, Any]], str],
     budget: Budget = DEFAULT,
-    render: Callable[[Mapping[str, Any]], str] | None = None,
 ) -> Case:
     """One case, with the answer that is correct for how it was built."""
     if not template.id:
@@ -514,6 +534,10 @@ def build(
         pairs=[(a["id"], b["id"]) for a, b in zip(left, right, strict=True)],
     )
 
+    # `Budget.validate()` had no caller in the package, so a budget whose own
+    # numbers cannot fit its context was accepted and blamed every case.
+    budget.validate()
+
     seed = case_seed(root_seed, template.id, case_index)
     before = {r["id"]: deepcopy(r) for r in (*draft.a, *draft.b)}
     expected = deform(draft, Random(seed))
@@ -527,24 +551,24 @@ def build(
         "role": role,
         "seed": seed,
         "case_index": case_index,
+        "certainty": _certainty(expected),
     }
 
     violations = schema.validate(expected, packet)
-    if tokeniser is not None:
-        # The packet against the packet allowance. `_serialise` is not a rendered
-        # prompt and is not called one: no template has been wrapped round it, so
-        # recording its length as `prompt_tokens` would put a packet count under
-        # a prompt name and let the wrapper be assumed away a second time.
-        serialised = _serialise(packet)
-        meta["packet_tokens"] = len(tokeniser.encode(serialised))
-        violations = violations + check_packet(serialised, tokeniser, budget, case=template.id)
 
-        # The prompt, when there is one. Until a renderer exists this is the
-        # honest state of affairs: the packet cap is enforced, the prompt cap is
-        # not yet enforceable, and nothing claims otherwise.
-        if render is not None:
-            rendered = render(packet)
-            meta["prompt_tokens"] = len(tokeniser.encode(rendered))
-            violations = violations + budget_check(rendered, tokeniser, budget, case=template.id)
+    # Neither `tokeniser` nor `render` has a default, and that is the point. Both
+    # were optional, so the ordinary path enforced nothing: a packet six times
+    # the default cap came back with no violations, and a deliberately tiny
+    # budget changed nothing because the argument was accepted and ignored. An
+    # opt-in gate is an off gate. A caller who cannot say how tokens are counted,
+    # or what prompt the packet is rendered into, cannot assert the budget — and
+    # is now told so at the call rather than trusted at the audit.
+    serialised = _serialise(packet)
+    meta["packet_tokens"] = len(tokeniser.encode(serialised))
+    violations = violations + check_packet(serialised, tokeniser, budget, case=template.id)
+
+    rendered = render(packet)
+    meta["prompt_tokens"] = len(tokeniser.encode(rendered))
+    violations = violations + budget_check(rendered, tokeniser, budget, case=template.id)
 
     return Case(packet=packet, expected=expected, meta=meta, violations=violations)

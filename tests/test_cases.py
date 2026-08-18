@@ -12,8 +12,26 @@ from typing import Any
 
 import pytest
 
-from consylr.cases import DEFORMATIONS, Draft, _clean, _finish, _serialise, build, case_seed
+from consylr.budget import Budget
+from consylr.cases import DEFORMATIONS, Case, Draft, _clean, _finish, _serialise, case_seed
+from consylr.cases import build as _build
 from consylr.templates import Template
+from tests.support import PerCharacter
+
+
+def build(template: Template, **over: Any) -> Case:
+    """`build` with the two arguments it refuses to proceed without.
+
+    They have no defaults in the real function, because both were once optional
+    and the ordinary path therefore enforced no budget at all. That requirement
+    is asserted directly by
+    `test_a_case_cannot_be_built_without_saying_how_tokens_are_counted`; every
+    other test here is about something else and says so by not repeating it.
+    """
+    over.setdefault("tokeniser", PerCharacter())
+    over.setdefault("render", _serialise)
+    return _build(template, **over)
+
 
 ROOT = 20260818
 
@@ -303,11 +321,6 @@ def test_a_template_whose_sides_do_not_correspond_is_refused() -> None:
 # --- the packet and the prompt are different strings --------------------------
 
 
-class PerCharacter:
-    def encode(self, text: str) -> list[int]:
-        return [0] * len(text)
-
-
 def test_declaring_a_wrapper_does_not_loosen_the_packet_allowance() -> None:
     # The cap on the rendered prompt is packet_max + template_overhead. Measuring
     # the *packet* against that cap makes every declared token of wrapper an
@@ -339,16 +352,18 @@ def test_declaring_a_wrapper_does_not_loosen_the_packet_allowance() -> None:
     assert "packet_over_budget" in [v.code for v in case.violations]
 
 
-def test_the_packet_count_is_recorded_under_a_name_that_means_the_packet() -> None:
+def test_each_count_is_recorded_under_a_name_that_means_what_it_counted() -> None:
+    # The packet count was once stored as `prompt_tokens`, which put a packet
+    # count under a prompt name and let the wrapper be assumed away a second
+    # time — in the metadata, where the fast audit path would later read it.
     case = build(
         a_richer_template("clean_match"),
         root_seed=ROOT,
         case_index=0,
         role="train",
-        tokeniser=PerCharacter(),
+        render=lambda packet: "instructions: " + _serialise(packet) + " decide.",
     )
-    assert "packet_tokens" in case.meta
-    assert "prompt_tokens" not in case.meta, "nothing here has rendered a prompt"
+    assert case.meta["packet_tokens"] < case.meta["prompt_tokens"]
 
 
 def test_a_rendered_prompt_is_checked_against_the_prompt_cap_when_one_is_given() -> None:
@@ -606,3 +621,115 @@ def test_a_deformation_that_changes_nothing_at_all_is_refused() -> None:
             build(a_richer_template("changes_nothing"), root_seed=ROOT, case_index=0, role="train")
     finally:
         del DEFORMATIONS["changes_nothing"]
+
+
+# --- a gate that is opt-in is a gate that is off ------------------------------
+
+
+def test_a_case_cannot_be_built_without_saying_how_tokens_are_counted() -> None:
+    """The budget gate was opt-in on `tokeniser`, so the default path enforced
+    nothing: a 7838-token packet against the 1200-token default cap returned no
+    violations, and passing a deliberately tiny budget changed nothing because
+    the argument was accepted and ignored. That was a regression — the same call
+    returned `headroom_lost` before the round that "fixed" the budget.
+    """
+    with pytest.raises(TypeError):
+        _build(a_richer_template("clean_match"), root_seed=ROOT, case_index=0, role="train")  # type: ignore[call-arg]
+
+
+def test_a_large_packet_is_caught_on_the_ordinary_path() -> None:
+    case = build(
+        a_richer_template("clean_match", pairs=40),
+        root_seed=ROOT,
+        case_index=0,
+        role="train",
+        tokeniser=PerCharacter(),
+        render=_serialise,
+    )
+    codes = [v.code for v in case.violations]
+    assert "packet_over_budget" in codes and "headroom_lost" in codes
+
+
+def test_a_built_case_always_records_both_counts() -> None:
+    # RFC-0003 has `meta.json` carry the rendered prompt token count, and makes
+    # it what the fast audit path re-checks. Both were absent on every path the
+    # code could run.
+    case = build(
+        a_richer_template("clean_match"),
+        root_seed=ROOT,
+        case_index=0,
+        role="train",
+        tokeniser=PerCharacter(),
+        render=_serialise,
+    )
+    assert case.meta["packet_tokens"] > 0
+    assert case.meta["prompt_tokens"] > 0
+
+
+def test_a_budget_whose_numbers_cannot_fit_is_refused_at_the_build() -> None:
+    # `Budget.validate()` had no caller anywhere in the package, so a budget that
+    # raises when validated was silently accepted.
+    with pytest.raises(ValueError, match="cannot fit"):
+        build(
+            a_richer_template("clean_match"),
+            root_seed=ROOT,
+            case_index=0,
+            role="train",
+            tokeniser=PerCharacter(),
+            render=_serialise,
+            budget=Budget(context=2048, packet_max=1600, output_reserve=600),
+        )
+
+
+# --- the quota gate reads what the builder writes ------------------------------
+
+
+@pytest.mark.parametrize(
+    ("family", "certainty"),
+    [
+        ("clean_match", "supported"),
+        ("fee_at_source", "supported"),
+        ("cause_not_established", "ambiguous"),
+        ("decoy", "unsupported"),
+        ("ambiguous_pair", "ambiguous"),
+    ],
+)
+def test_a_case_records_the_certainty_it_was_built_with(family: str, certainty: str) -> None:
+    """`quota.check` reads `certainty` off each case, and nothing wrote it.
+
+    So the quota gate reported `supported_share_low` at 0% on every corpus the
+    builder could produce, and its contradiction check was unreachable. Each
+    deformation already knows the certainty it constructed; it simply was not
+    recorded.
+    """
+    case = build(
+        a_richer_template(family),
+        root_seed=ROOT,
+        case_index=0,
+        role="train",
+        tokeniser=PerCharacter(),
+        render=_serialise,
+    )
+    assert case.meta["certainty"] == certainty
+
+
+def test_a_corpus_of_built_cases_can_be_measured_by_the_quota_gate() -> None:
+    from consylr.quota import Plan
+    from consylr.quota import check as quota_check
+
+    families = ["clean_match", "fee_at_source", "cause_not_established"]
+    rows = [
+        build(
+            a_richer_template(f),
+            root_seed=ROOT,
+            case_index=i,
+            role="train",
+            tokeniser=PerCharacter(),
+            render=_serialise,
+        ).meta
+        for f in families
+        for i in range(10)
+    ]
+    plan = Plan(families=frozenset(families), family_floor=2)
+    codes = [v.code for v in quota_check(rows, plan)]
+    assert "supported_share_low" not in codes, "the gate is reading 0% again"

@@ -17,9 +17,8 @@ from pathlib import Path
 
 import pytest
 
-from consylr.cases import build
 from consylr.templates import SURFACE_FIELDS, Template, check, load
-from tests.support import FAMILIES, a_template, template_body
+from tests.support import FAMILIES, a_template, built, template_body
 
 
 def test_the_fixture_is_something_the_generator_can_actually_build() -> None:
@@ -28,8 +27,7 @@ def test_the_fixture_is_something_the_generator_can_actually_build() -> None:
     Identity is a property of templates the product produces. Checked against
     any other shape it is a property of nothing.
     """
-    case = build(a_template(), root_seed=1, case_index=0, role="train")
-    assert case.violations == []
+    assert built(a_template()).violations == []
 
 
 def test_the_surface_fields_are_fields_a_real_template_has() -> None:
