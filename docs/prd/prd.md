@@ -106,7 +106,7 @@ rather than being filled with plausible-sounding intentions.
    — [ADR-0002](../adrs/0002-keep-the-name-consylr.md). No registry clearance was performed
    and that residual risk is recorded there. Revisit before any commercial launch, which is
    the same trigger question 1 carries.
-4. ADTC Participation Agreement IP terms — **blocks submission**, not just the roadmap. A
-   preliminary working read exists; the owner's full read is still required. See
-   [docs/decisions.md](../decisions.md), and tracked as blocked in
-   [issue #37](https://github.com/raheebwa/consylr/issues/37).
+4. ~~ADTC Participation Agreement IP terms.~~ **Answered:** read in full and accepted
+   2026-08-18. IP is retained by the participant under §7; the licence granted covers submissions
+   for promotion only. §9 permits the terms to change, so they are re-checked at submission — see
+   [docs/decisions.md](../decisions.md) §Contest terms.

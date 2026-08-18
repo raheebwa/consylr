@@ -137,10 +137,11 @@ thermal penalty. These are real constraints and they are honoured, but they belo
 harness rather than to the product — the profiler's context limit is why Gate 1 packets are
 capped below the range the PRD specifies, for instance, and that cap expires with the gate.
 
-**An unresolved dependency.** The ADTC Participation Agreement's IP terms have not been read in
-full. That is a pre-submission blocker in its own right, and publishing this repository under
-MIT resolved none of it — see [docs/decisions.md](docs/decisions.md) and
-[issue #37](https://github.com/raheebwa/consylr/issues/37), where it is tracked as blocked.
+**Contest terms.** The Participation Agreement was read in full and accepted on 2026-08-18. IP
+stays with the participant; entering grants a non-exclusive royalty-free licence over the
+submission for promotion only, which is consistent with this repository being MIT. The terms may
+change under their own §9, so the accepted text is kept and **re-checked against the published
+version at submission** — see [docs/decisions.md](docs/decisions.md) §Contest terms.
 
 > [!IMPORTANT]
 > **This is not the submission repo.** ADTC Gate 1 is entered from a public **fork of the
