@@ -107,21 +107,51 @@ def test_unicode_normal_form_is_not_a_scenario() -> None:
     same_scenario(a, b)
 
 
-def test_the_order_records_are_listed_in_is_not_a_scenario() -> None:
-    # Reversing both sides by the same permutation preserves every clean pair.
-    # `sort_keys` sorts keys and never arrays, so this split the two.
+def test_reordering_both_sides_is_a_different_scenario_and_this_is_a_known_gap() -> None:
+    """Honest about a residual risk rather than quiet about it.
+
+    Reversing both record lists by one permutation preserves every clean pair,
+    but identifiers are assigned by position — so A-001 holds different content
+    and the packet genuinely differs. Under identity taken over what the model
+    sees, that is two scenarios, and the two can land in opposite roles.
+
+    A model trained on one has effectively seen the other, with the labels
+    moved. The mechanical backstops do not catch it either: they refuse
+    *identical* packets carrying contradictory answers, and these packets are
+    not identical.
+
+    The exposure is bounded — it needs a template committed twice with its
+    records permuted, which is an authoring mistake rather than something the
+    generator produces — and closing it properly means comparing packets as
+    multisets of records rather than as sequences. Recorded here so the next
+    reader finds a decision rather than an oversight.
+    """
     body = template_body(id="t-002")
     body["left"] = list(reversed(body["left"]))
     body["right"] = list(reversed(body["right"]))
-    same_scenario(BASE, Template.from_mapping(body))
+    assert scenario(BASE) != scenario(Template.from_mapping(body))
 
 
-def test_a_reworded_counterparty_is_not_a_scenario() -> None:
-    same_scenario(BASE, other(party="Northwind Limited"))
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [("party", "Northwind Limited"), ("policy_text", "Face value settles invoices.")],
+)
+def test_reworded_prose_is_a_different_scenario(field: str, value: str) -> None:
+    """Deliberate, and the reversal of an earlier decision.
 
+    Identity dropped the counterparty and the policy prose so that two templates
+    a paraphrase apart would collide. It cost false merges: "Invoices settle at
+    face value" and "A 40% commission is deducted from every remittance" became
+    one scenario, reported as differing "only in what never reaches a packet",
+    which a diff of those packets disproves.
 
-def test_reworded_policy_prose_is_not_a_scenario() -> None:
-    same_scenario(BASE, other(policy_text="Face value settles invoices."))
+    RFC-0003 keeps paraphrase off by default and never paraphrases the sealed
+    set, so the invariance defended against a transformation this project does
+    not apply. If it is ever switched on, a paraphrased corpus is a preserved
+    derived artefact with its provenance recorded — not two independently
+    authored templates that have to be recognised as one.
+    """
+    assert scenario(BASE) != scenario(other(**{field: value}))
 
 
 # --- and the mirror: a real difference must stay a difference ----------------
@@ -280,9 +310,10 @@ def test_two_files_that_emit_one_case_are_reported_as_what_they_are() -> None:
     assert "never reaches a packet" in v.detail
 
 
-def test_a_paraphrase_apart_pair_is_reported() -> None:
+def test_a_pair_a_rewording_apart_is_not_reported_as_one_scenario() -> None:
+    # Their packets differ, so a model trained on one has not seen the other.
     templates = [a_real("t-001"), a_real("t-002", party="Northwind Limited")]
-    assert "duplicate_scenario" in [x.code for x in identity_check(templates)]
+    assert identity_check(templates) == []
 
 
 def test_distinct_scenarios_are_not_reported() -> None:
@@ -299,3 +330,48 @@ def test_a_template_that_cannot_be_built_is_reported_not_crashed_through() -> No
     )
     v = next(x for x in identity_check([unbuildable]) if x.code == "unbuildable_template")
     assert "t-bad" in v.detail
+
+
+# --- the backstop: one packet may not carry two answers ----------------------
+
+
+def dual_vocabulary_pair() -> tuple[Template, Template]:
+    """Two families whose packets are identical and whose answers are not.
+
+    One policy line satisfies both vocabularies — "charged" reads as a fee,
+    "tax" as a withholding — so the word-list check passes for each family
+    while the packet distinguishes neither.
+    """
+    line = [{"id": "P-1", "text": "Withholding tax is charged before remittance."}]
+    body = template_body(pairs=1)
+    fee = Template.from_mapping(
+        {**body, "id": "t-fee", "family": "fee_at_source", "policy": line, "cause": "P-1"}
+    )
+    tax = Template.from_mapping(
+        {**body, "id": "t-tax", "family": "withholding", "policy": line, "cause": "P-1"}
+    )
+    return fee, tax
+
+
+def test_one_packet_carrying_two_answers_is_refused() -> None:
+    """Contradictory ground truth, caught mechanically rather than by vocabulary.
+
+    A word list can always be satisfied by prose that means something else, so
+    it cannot be the gate. This can: two cases whose packets are identical and
+    whose answer keys differ are, between them, teaching the model that one
+    input has two correct outputs — and grading it on a distinction the packet
+    does not carry. It needs no opinion about what the policy line says.
+    """
+    fee, tax = dual_vocabulary_pair()
+    assert probe_case(fee).packet == probe_case(tax).packet
+    assert probe_case(fee).expected != probe_case(tax).expected
+    v = next(x for x in identity_check([fee, tax]) if x.code == "contradictory_ground_truth")
+    assert "t-fee" in v.detail and "t-tax" in v.detail
+
+
+def test_two_templates_agreeing_on_one_packet_are_not_contradictory() -> None:
+    # The same packet with the same answer is an alias, reported as a duplicate
+    # scenario rather than as a contradiction.
+    codes = [x.code for x in identity_check([a_real("t-001"), a_real("t-002")])]
+    assert "contradictory_ground_truth" not in codes
+    assert "duplicate_scenario" in codes

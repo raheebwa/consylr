@@ -6,6 +6,23 @@ templates produce the same packet and the same answer key, they are one
 scenario, whatever their sources hold — and a model examined on one has been
 trained on the other.
 
+It is taken over the whole case — the packet and the expected output, every
+field of both. An earlier version dropped the counterparty and the policy prose to be
+invariant under paraphrase, and paid for it in false merges: two templates whose
+packets differed materially were reported as differing "only in what never
+reaches a packet", which a diff of those packets disproved. RFC-0003 keeps
+paraphrase off by default and never paraphrases the sealed set, so the
+invariance was defending against a transformation this project does not apply.
+If it is ever switched on, a paraphrased corpus is a preserved derived artefact
+with its provenance recorded, not two independently authored templates that must
+collide.
+
+Strings are still normalised, which is a different thing and was conflated with
+the first for a round. A zero-width space in a reference renders identically to
+a human and is invisible in a diff, so without normalisation a corpus can be
+poisoned with no visible edit; dropping a counterparty merged packets that
+genuinely differed. The first is worth doing and the second was not.
+
 That distinction is the whole module, and it took three attempts to reach.
 Identity was first taken over the template body, then over a projection of the
 fields the builder reads. Both approximated the principle one level short,
@@ -25,10 +42,9 @@ from __future__ import annotations
 
 import hashlib
 import json
-from collections.abc import Iterable, Mapping, Sequence
+from collections.abc import Iterable, Sequence
 from typing import Any
 
-from consylr import money
 from consylr.cases import build
 from consylr.templates import Template, _text
 from consylr.violation import Violation
@@ -51,6 +67,15 @@ PROBE_ID = "probe"
 
 PROBE_ROLE = "train"
 
+#: Keyed on the content digest, because identical content emits identical cases.
+#: Holds the emitted cases rather than only their digest, so the corpus-level
+#: contradiction check below costs no further builds.
+#: Without it `split.check` recomputed this inside a nested loop — N squared
+#: calls, each running three builds, which at RFC-0003's three to five hundred
+#: templates is a quarter of a million calls and minutes per audit, on the path
+#: every corpus runs.
+_SEEN: dict[str, list[tuple[str, str]]] = {}
+
 
 class _NoTokens:
     """A tokeniser for probing only.
@@ -68,38 +93,25 @@ def _canonical(value: Any) -> str:
     return json.dumps(value, sort_keys=True, separators=(",", ":"))
 
 
-def _record(record: Mapping[str, Any]) -> list[str]:
-    """One emitted record, as the model can distinguish it.
+def _normalised(value: Any) -> Any:
+    """The case with differences no reader could perceive removed.
 
-    The counterparty is dropped, because RFC-0003 lets a paraphrase rewrite it.
-    The identifier is dropped because it is positional: it says where a record
-    sits, not which record it is. What is left is normalised, so a form the
-    reader of a rendered packet cannot perceive is not a second scenario.
+    Normalisation is not paraphrase-invariance, and conflating the two cost a
+    round: dropping the counterparty and the policy prose made materially
+    different packets collide, whereas normalising a zero-width space or an NFD
+    accent removes a difference that renders identically to a human *and* is
+    invisible in a diff. The first is a false merge; the second is a corpus
+    someone could poison with no visible edit.
+
+    So every field stays and every string is canonicalised.
     """
-    amount = record.get("amount")
-    return [
-        _text(record.get("ref", "")),
-        _text(record.get("date", "")),
-        money.canonical(amount) if amount is not None else "",
-    ]
-
-
-def _projection(packet: Mapping[str, Any], family: str) -> dict[str, Any]:
-    """The emitted packet, as a scenario rather than as bytes.
-
-    Sorted per side: assigning identifiers by position means permuting both
-    sides relabels every record without changing the problem, and a model
-    trained on one labelling has seen the other.
-    """
-    records = packet.get("records", [])
-    return {
-        "family": _text(family),
-        "left": sorted(_record(r) for r in records if str(r.get("id", "")).startswith("A-")),
-        "right": sorted(_record(r) for r in records if str(r.get("id", "")).startswith("B-")),
-        # Which lines are cited is structural; their prose is not.
-        "policy": sorted(_text(p.get("id", "")) for p in packet.get("policy", [])),
-        "documents": sorted(_text(d.get("id", "")) for d in packet.get("documents", [])),
-    }
+    if isinstance(value, dict):
+        return {k: _normalised(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [_normalised(v) for v in value]
+    if isinstance(value, str):
+        return _text(value)
+    return value
 
 
 def scenario(template: Template) -> str:
@@ -109,8 +121,22 @@ def scenario(template: Template) -> str:
     scenario, and inventing one would let it take a role in a partition it can
     never contribute a case to.
     """
+    return hashlib.sha256(" ".join(p + e for p, e in emitted(template)).encode()).hexdigest()
+
+
+def emitted(template: Template) -> list[tuple[str, str]]:
+    """What this template emits at each probe index: (packet, answer) digests.
+
+    Kept apart so the contradiction check below can compare packets and answers
+    separately — a packet two templates share is only a defect when the answers
+    they attach to it differ.
+    """
+    cached = _SEEN.get(template.fingerprint)
+    if cached is not None:
+        return cached
+
     probe = Template.from_mapping({**template.body, "id": PROBE_ID})
-    emitted = []
+    cases = []
     for index in PROBE_INDICES:
         case = build(
             probe,
@@ -120,8 +146,14 @@ def scenario(template: Template) -> str:
             tokeniser=_NoTokens(),
             render=_canonical,
         )
-        emitted.append(_canonical(_projection(case.packet, template.family)))
-    return hashlib.sha256(" ".join(emitted).encode()).hexdigest()
+        cases.append(
+            (
+                _canonical(_normalised(case.packet)),
+                _canonical(_normalised(case.expected)),
+            )
+        )
+    _SEEN[template.fingerprint] = cases
+    return cases
 
 
 def check(templates: Iterable[Template]) -> list[Violation]:
@@ -134,9 +166,19 @@ def check(templates: Iterable[Template]) -> list[Violation]:
     items = list(templates)
     violations: list[Violation] = []
 
+    # One packet may carry one answer. Two templates emitting the same packet
+    # under different answers are, between them, teaching the model that one
+    # input has two correct outputs — and grading it on a distinction the packet
+    # does not carry. This needs no opinion about what any policy line says,
+    # which is why it is the gate and the word list is only authoring lint: a
+    # vocabulary can always be satisfied by prose that means something else.
+    answers: dict[str, dict[str, list[str]]] = {}
+
     by_scenario: dict[str, list[Template]] = {}
     for t in items:
         try:
+            for packet, answer in emitted(t):
+                answers.setdefault(packet, {}).setdefault(answer, []).append(t.id)
             by_scenario.setdefault(scenario(t), []).append(t)
         except ValueError as e:
             violations.append(
@@ -144,6 +186,18 @@ def check(templates: Iterable[Template]) -> list[Violation]:
                     "unbuildable_template",
                     f"{t.id or '<no id>'} emits no case, so it has no scenario: {e}",
                     t.id or None,
+                )
+            )
+
+    for by_answer in answers.values():
+        if len(by_answer) > 1:
+            named = sorted({i for ids in by_answer.values() for i in ids})
+            violations.append(
+                Violation(
+                    "contradictory_ground_truth",
+                    f"{', '.join(repr(i) for i in named)} emit one packet under "
+                    f"{len(by_answer)} different answers; a packet that cannot distinguish them "
+                    "grades the model on something it was never shown",
                 )
             )
 
