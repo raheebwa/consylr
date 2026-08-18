@@ -111,7 +111,12 @@ def main() -> int:
         role="train",
         limit=limit,
         tokeniser=tokeniser,
-        extra={"corpus_seed": seed},
+        extra={"corpus_seed": seed, "permuted": True},
+        # Training packets are permuted; the exam is not. score.positional scores
+        # 0.809 against an unpermuted corpus built from these templates and 0.273
+        # against a permuted one, so pairing by list position stops being a
+        # winning policy and a model has to read the records to pair them.
+        permute=True,
     )
     print(
         f"asked {produced.asked}, distinct {produced.distinct}, "

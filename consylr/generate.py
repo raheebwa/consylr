@@ -66,6 +66,7 @@ def cases_for(
     limit: int,
     tokeniser: Tokeniser,
     seen: set[str] | None = None,
+    permute: bool = False,
 ) -> list[Case]:
     """Up to `limit` cases from one template, each with a different packet.
 
@@ -84,6 +85,7 @@ def cases_for(
             tokeniser=tokeniser,
             render=prompt.render,
             budget=prompt.BUDGET,
+            permute=permute,
         )
         packet = _packet(case)
         if packet in known:
@@ -101,6 +103,7 @@ def corpus_for(
     limit: int,
     tokeniser: Tokeniser,
     extra: Mapping[str, Any] | None = None,
+    permute: bool = False,
 ) -> Yield:
     """Every distinct case the templates yield, and what it cost to find them.
 
@@ -113,7 +116,13 @@ def corpus_for(
     for template in templates:
         asked += limit
         for case in cases_for(
-            template, seed=seed, role=role, limit=limit, tokeniser=tokeniser, seen=seen
+            template,
+            seed=seed,
+            role=role,
+            limit=limit,
+            tokeniser=tokeniser,
+            seen=seen,
+            permute=permute,
         ):
             if extra:
                 case.meta.update(extra)
