@@ -39,18 +39,24 @@ from consylr.budget import Budget
 
 _PATH = Path(__file__).parent / "artefacts" / "prompt-v1.txt"
 
-TEMPLATE = _PATH.read_text()
+#: Read as UTF-8 with newlines normalised, because the digest below has to
+#: attest *the string that is rendered* rather than the bytes that happened to be
+#: on this disk. Taken over raw bytes the two diverged in both directions: a CRLF
+#: checkout renders the identical prompt under a different digest, failing a
+#: corpus audit over a prompt nobody edited; and decoding under a non-UTF-8
+#: locale gives mojibake in the string while the digest certifies no change.
+TEMPLATE = _PATH.read_text(encoding="utf-8").replace("\r\n", "\n")
 
-#: SHA-256 of the artefact, recorded in every corpus's configuration.
-DIGEST = hashlib.sha256(_PATH.read_bytes()).hexdigest()
+#: SHA-256 of the rendered template, recorded in every corpus's configuration.
+DIGEST = hashlib.sha256(TEMPLATE.encode("utf-8")).hexdigest()
 
 #: What the wrapper costs, measured once with the frozen model's tokeniser
 #: (ADR-0003) rather than estimated. A character or word heuristic is wrong by
 #: exactly the amount that matters at the boundary — and this number was measured
-#: three times during drafting, twice going *up* when the text was shortened.
+#: repeatedly during drafting, twice going *up* when the text was shortened.
 #: `test_the_pinned_overhead_is_what_the_frozen_tokeniser_counts` re-measures it
 #: wherever the tokeniser is present.
-OVERHEAD_TOKENS = 308
+OVERHEAD_TOKENS = 359
 
 #: Derived rather than declared. RFC-0003 gives the packet "~1,200 tokens", but
 #: the constraint that actually binds is the window: the context, less what is
