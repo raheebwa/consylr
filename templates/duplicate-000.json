@@ -19,6 +19,12 @@
       "date": "2026-05-21",
       "party": "Thornbury Chemicals Ltd",
       "ref": "PO-11411"
+    },
+    {
+      "amount": "17400.00",
+      "date": "2026-06-03",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "CN-11422"
     }
   ],
   "policy": [
@@ -39,6 +45,12 @@
       "date": "2026-05-26",
       "party": "Thornbury Chemicals Ltd",
       "ref": "PO-11411"
+    },
+    {
+      "amount": "17400.00",
+      "date": "2026-06-09",
+      "party": "Ullswater Textiles Ltd",
+      "ref": "CN-11422"
     }
   ]
 }

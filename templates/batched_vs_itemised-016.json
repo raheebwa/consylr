@@ -31,18 +31,6 @@
       "date": "2026-04-14",
       "party": "Vantage Print Ltd",
       "ref": "REM-11100"
-    },
-    {
-      "amount": "29840.00",
-      "date": "2026-04-27",
-      "party": "Wexford Agriculture Ltd",
-      "ref": "INV-11111"
-    },
-    {
-      "amount": "480.00",
-      "date": "2026-05-08",
-      "party": "Northwind Ltd",
-      "ref": "PO-11122"
     }
   ],
   "policy": [
@@ -75,18 +63,6 @@
       "date": "2026-04-17",
       "party": "Vantage Print Ltd",
       "ref": "REM-11100"
-    },
-    {
-      "amount": "29840.00",
-      "date": "2026-05-04",
-      "party": "Wexford Agriculture Ltd",
-      "ref": "INV-11111"
-    },
-    {
-      "amount": "480.00",
-      "date": "2026-05-12",
-      "party": "Northwind Ltd",
-      "ref": "PO-11122"
     }
   ]
 }

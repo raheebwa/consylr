@@ -31,12 +31,6 @@
       "date": "2026-04-14",
       "party": "Westbrook Services Ltd",
       "ref": "INV-09472"
-    },
-    {
-      "amount": "1250.00",
-      "date": "2026-04-27",
-      "party": "Harbourline Freight Ltd",
-      "ref": "PO-09483"
     }
   ],
   "policy": [
@@ -69,12 +63,6 @@
       "date": "2026-04-17",
       "party": "Westbrook Services Ltd",
       "ref": "INV-09472"
-    },
-    {
-      "amount": "1250.00",
-      "date": "2026-05-04",
-      "party": "Harbourline Freight Ltd",
-      "ref": "PO-09483"
     }
   ]
 }

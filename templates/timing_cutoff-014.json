@@ -26,6 +26,12 @@
       "date": "2026-04-27",
       "party": "Ullswater Textiles Ltd",
       "ref": "PO-07315"
+    },
+    {
+      "amount": "12.60",
+      "date": "2026-05-08",
+      "party": "Vantage Print Ltd",
+      "ref": "CN-07326"
     }
   ],
   "policy": [
@@ -56,6 +62,12 @@
       "date": "2026-05-04",
       "party": "Ullswater Textiles Ltd",
       "ref": "PO-07315"
+    },
+    {
+      "amount": "12.60",
+      "date": "2026-05-12",
+      "party": "Vantage Print Ltd",
+      "ref": "CN-07326"
     }
   ]
 }

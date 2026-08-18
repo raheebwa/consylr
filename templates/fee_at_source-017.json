@@ -32,12 +32,6 @@
       "date": "2026-06-03",
       "party": "Westbrook Services Ltd",
       "ref": "INV-05587"
-    },
-    {
-      "amount": "3075.25",
-      "date": "2026-06-16",
-      "party": "Harbourline Freight Ltd",
-      "ref": "PO-05598"
     }
   ],
   "policy": [
@@ -74,12 +68,6 @@
       "date": "2026-06-09",
       "party": "Westbrook Services Ltd",
       "ref": "INV-05587"
-    },
-    {
-      "amount": "3075.25",
-      "date": "2026-06-22",
-      "party": "Harbourline Freight Ltd",
-      "ref": "PO-05598"
     }
   ]
 }

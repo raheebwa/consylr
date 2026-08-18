@@ -19,6 +19,18 @@
       "date": "2026-06-16",
       "party": "Marlowe Consulting Ltd",
       "ref": "PO-16591"
+    },
+    {
+      "amount": "3075.25",
+      "date": "2026-06-29",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "CN-16602"
+    },
+    {
+      "amount": "29840.00",
+      "date": "2026-03-02",
+      "party": "Pennine Metals Ltd",
+      "ref": "STM-16613"
     }
   ],
   "policy": [
@@ -39,6 +51,18 @@
       "date": "2026-06-22",
       "party": "Marlowe Consulting Ltd",
       "ref": "PO-16591"
+    },
+    {
+      "amount": "3075.25",
+      "date": "2026-07-02",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "CN-16602"
+    },
+    {
+      "amount": "29840.00",
+      "date": "2026-03-05",
+      "party": "Pennine Metals Ltd",
+      "ref": "STM-16613"
     }
   ]
 }

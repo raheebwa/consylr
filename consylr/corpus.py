@@ -27,6 +27,7 @@ for a caller to skip.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from collections.abc import Iterable, Mapping
 from pathlib import Path
@@ -118,6 +119,24 @@ def check(cases: Iterable[Case]) -> list[Violation]:
             )
 
     return violations
+
+
+def content_digest(directory: Path) -> str:
+    """One digest over every packet in a corpus, order-independent.
+
+    What a scoring run asserts before it scores. An exam that can silently
+    change between runs is not an exam, and the seed alone does not establish
+    that the set on disk is the set a number was computed on — a file edited
+    afterwards still carries the seed in its metadata.
+
+    Over the packets rather than the whole tree: the packets are what the model
+    is asked, and metadata a run adds afterwards should not read as the exam
+    having changed.
+    """
+    packets = sorted(
+        hashlib.sha256(p.read_bytes()).hexdigest() for p in directory.glob("*/packet.json")
+    )
+    return hashlib.sha256(" ".join(packets).encode()).hexdigest()
 
 
 def write(directory: Path, cases: Iterable[Case]) -> list[Path]:

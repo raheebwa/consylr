@@ -140,10 +140,13 @@ def records(seed: int, pairs: int) -> tuple[list[dict[str, str]], list[dict[str,
 
 def template(family: str, index: int) -> dict[str, object]:
     seed = FAMILIES.index(family) * PER_FAMILY + index
-    # `batched_vs_itemised` folds two pairs into one, so it needs at least two;
-    # the rest vary between three and five so a packet is a real reconciliation
-    # rather than a single comparison.
-    pairs = 2 + ((seed * 3 + index) % 5)
+    # Three or four correspondence units, which is six or eight records before
+    # the deformation runs. A Gate 1 packet holds five to ten
+    # *[competition constraint — ADTC profiler]*, and deformations move the count:
+    # a decoy or a reversal adds two, a duplicate or a split adds one, a missing
+    # record or a batched total removes one. Three or four keeps every family
+    # inside the range afterwards; five put `decoy` and `reversal` at twelve.
+    pairs = 3 + ((seed * 3 + index) % 2)
     left, right = records(seed, pairs)
 
     policy: list[dict[str, str]] = [{"id": "P-1", "text": BASE_POLICY}]

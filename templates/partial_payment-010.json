@@ -19,6 +19,12 @@
       "date": "2026-06-03",
       "party": "Marlowe Consulting Ltd",
       "ref": "PO-09931"
+    },
+    {
+      "amount": "12.60",
+      "date": "2026-06-16",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "CN-09942"
     }
   ],
   "policy": [
@@ -39,6 +45,12 @@
       "date": "2026-06-09",
       "party": "Marlowe Consulting Ltd",
       "ref": "PO-09931"
+    },
+    {
+      "amount": "12.60",
+      "date": "2026-06-22",
+      "party": "Ashgrove Logistics Ltd",
+      "ref": "CN-09942"
     }
   ]
 }

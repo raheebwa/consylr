@@ -32,18 +32,6 @@
       "date": "2026-04-14",
       "party": "Westbrook Services Ltd",
       "ref": "REM-07030"
-    },
-    {
-      "amount": "3075.25",
-      "date": "2026-04-27",
-      "party": "Harbourline Freight Ltd",
-      "ref": "INV-07041"
-    },
-    {
-      "amount": "29840.00",
-      "date": "2026-05-08",
-      "party": "Copperfield Supply Ltd",
-      "ref": "PO-07052"
     }
   ],
   "policy": [
@@ -80,18 +68,6 @@
       "date": "2026-04-17",
       "party": "Westbrook Services Ltd",
       "ref": "REM-07030"
-    },
-    {
-      "amount": "3075.25",
-      "date": "2026-05-04",
-      "party": "Harbourline Freight Ltd",
-      "ref": "INV-07041"
-    },
-    {
-      "amount": "29840.00",
-      "date": "2026-05-12",
-      "party": "Copperfield Supply Ltd",
-      "ref": "PO-07052"
     }
   ]
 }

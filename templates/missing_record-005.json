@@ -19,6 +19,12 @@
       "date": "2026-05-21",
       "party": "Southgate Ltd",
       "ref": "PO-13446"
+    },
+    {
+      "amount": "29840.00",
+      "date": "2026-06-03",
+      "party": "Eastvale Trading Ltd",
+      "ref": "CN-13457"
     }
   ],
   "policy": [
@@ -39,6 +45,12 @@
       "date": "2026-05-26",
       "party": "Southgate Ltd",
       "ref": "PO-13446"
+    },
+    {
+      "amount": "29840.00",
+      "date": "2026-06-09",
+      "party": "Eastvale Trading Ltd",
+      "ref": "CN-13457"
     }
   ]
 }

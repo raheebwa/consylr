@@ -25,24 +25,6 @@
       "date": "2026-04-27",
       "party": "Ullswater Textiles Ltd",
       "ref": "STM-12199"
-    },
-    {
-      "amount": "755.00",
-      "date": "2026-05-08",
-      "party": "Vantage Print Ltd",
-      "ref": "REM-12210"
-    },
-    {
-      "amount": "63.15",
-      "date": "2026-05-21",
-      "party": "Wexford Agriculture Ltd",
-      "ref": "INV-12221"
-    },
-    {
-      "amount": "17400.00",
-      "date": "2026-06-03",
-      "party": "Northwind Ltd",
-      "ref": "PO-12232"
     }
   ],
   "policy": [
@@ -69,24 +51,6 @@
       "date": "2026-05-04",
       "party": "Ullswater Textiles Ltd",
       "ref": "STM-12199"
-    },
-    {
-      "amount": "755.00",
-      "date": "2026-05-12",
-      "party": "Vantage Print Ltd",
-      "ref": "REM-12210"
-    },
-    {
-      "amount": "63.15",
-      "date": "2026-05-26",
-      "party": "Wexford Agriculture Ltd",
-      "ref": "INV-12221"
-    },
-    {
-      "amount": "17400.00",
-      "date": "2026-06-09",
-      "party": "Northwind Ltd",
-      "ref": "PO-12232"
     }
   ]
 }

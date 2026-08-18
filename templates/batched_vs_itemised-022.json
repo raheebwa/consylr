@@ -31,12 +31,6 @@
       "date": "2026-03-02",
       "party": "Vantage Print Ltd",
       "ref": "INV-11322"
-    },
-    {
-      "amount": "480.00",
-      "date": "2026-03-11",
-      "party": "Wexford Agriculture Ltd",
-      "ref": "PO-11333"
     }
   ],
   "policy": [
@@ -69,12 +63,6 @@
       "date": "2026-03-05",
       "party": "Vantage Print Ltd",
       "ref": "INV-11322"
-    },
-    {
-      "amount": "480.00",
-      "date": "2026-03-13",
-      "party": "Wexford Agriculture Ltd",
-      "ref": "PO-11333"
     }
   ]
 }
