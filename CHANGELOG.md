@@ -34,6 +34,15 @@ installing.
   specification and the code cannot drift apart silently.
 - `pyproject.toml` with a PEP 639 licence expression, and `mise.toml` pinning the interpreter.
 - Continuous integration, running the same commands `CONTRIBUTING.md` documents.
+- `consylr.budget` — the token-budget assertion. It rejects rather than warns, counts with a
+  tokeniser the caller supplies rather than a character heuristic, and measures the rendered
+  prompt rather than the packet before templating. Headroom being eaten is reported separately
+  from the packet cap being exceeded, because they are different mistakes with the same symptom.
+- `consylr.quota` — the two quota constraints. Certainty allocation and family coverage are
+  checked separately, since certainty is a property of a case rather than of a family, and a
+  corpus that cannot satisfy its plan is refused before it is built rather than after.
+- Planted-failure tests on both gates: an over-budget prompt the check must reject, and an
+  unsatisfiable plan the build must refuse. A gate that cannot fail is not a gate.
 
 ### Fixed
 
