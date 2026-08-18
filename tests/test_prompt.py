@@ -184,3 +184,35 @@ def test_the_worked_example_uses_only_shapes_the_answer_keys_use() -> None:
     example = example_from(TEMPLATE)
     for entry in example.get("open", []):
         assert "why" not in entry, "no answer key carries open[].why"
+
+
+def test_nothing_ships_a_budget_that_does_not_know_the_template() -> None:
+    """A default budget is a claim about a wrapper it has never seen.
+
+    `Budget()` assumed a template overhead of zero, so it rejected a valid
+    1,448-token prompt and admitted 61 packet tokens it should not have — and it
+    was `build`'s default, printing "template_overhead 0" for a wrapper that
+    costs 308. There is one budget, derived from the frozen template, and a
+    caller with a different template supplies its own.
+    """
+    import consylr.budget as budget_module
+
+    assert not hasattr(budget_module, "DEFAULT"), "a default budget cannot know any template"
+
+
+def test_a_case_is_budgeted_against_the_frozen_template_by_default() -> None:
+    from consylr.cases import build
+    from tests.support import PerCharacter, a_template
+
+    case = build(
+        a_template(),
+        root_seed=1,
+        case_index=0,
+        role="train",
+        tokeniser=PerCharacter(),
+        render=render,
+    )
+    # One character per token against a 308-token wrapper: the fixture packet is
+    # far longer in characters than the frozen budget allows in tokens, so the
+    # gate must fire rather than pass on a budget nobody chose.
+    assert case.violations, "the ordinary path budgeted against nothing"

@@ -39,8 +39,8 @@ from decimal import ROUND_HALF_UP, Decimal
 from random import Random
 from typing import Any
 
-from consylr import money, schema
-from consylr.budget import DEFAULT, Budget, Tokeniser, check_packet
+from consylr import money, prompt, schema
+from consylr.budget import Budget, Tokeniser, check_packet
 from consylr.budget import check as budget_check
 from consylr.templates import Template, shape_violations
 from consylr.violation import Violation
@@ -82,10 +82,16 @@ class Draft:
     documents: list[dict[str, Any]]
     pairs: list[tuple[str, str]]
 
+    #: The policy line bearing this family's cause, where the family asserts one.
+    #: Declared by the template rather than assumed to be the first line: citing
+    #: `policy[0]` regardless of what it says is a citation pointing at nothing,
+    #: and it is what let two families share one packet under two answer keys.
+    cause: str = ""
+
     @property
     def warrant(self) -> str:
         """The policy line a supported claim cites when nothing narrower applies."""
-        return str(self.policy[0]["id"])
+        return self.cause or str(self.policy[0]["id"])
 
     def new_id(self, prefix: str) -> str:
         """An identifier no record on that side already holds."""
@@ -100,6 +106,20 @@ class Draft:
 #: Every deformation that reduces an amount takes this share of it, never less
 #: than a cent, and never so much that nothing is left to observe.
 CUT_RATE = Decimal("0.02")
+
+#: The families whose answer asserts a cause, and the words a policy line has to
+#: use for a packet to carry it. RFC-0002 distinguishes these by the cause being
+#: *described in policy* — so without this, `fee_at_source` and `withholding` are
+#: one scenario under two contradictory answer keys, and the exam grades a
+#: distinction the model cannot possibly recover. Deliberately crude: it asks
+#: whether the cited line is about the right thing, which is a question a
+#: template author can answer and a reader can check.
+CAUSE_TERMS: dict[str, frozenset[str]] = {
+    "fee_at_source": frozenset({"fee", "charge", "commission"}),
+    "withholding": frozenset({"withhold", "withholding", "tax"}),
+    "timing_cutoff": frozenset({"cut-off", "cutoff", "period", "closes", "close"}),
+}
+
 
 #: What `cause_not_established` removes: a share, because a fixed sum turned a
 #: small obligation negative and moved a large one barely at all.
@@ -231,15 +251,13 @@ def _partial_payment(draft: Draft, rng: Random) -> dict[str, Any]:
     record["amount"] = _amount(first)
     second = {**record, "id": draft.new_id("B"), "amount": _amount(whole - first)}
     draft.b.append(second)
-    matches = [
-        *_clean(draft, skip=left),
-        _supported([left], [right, second["id"]], [draft.warrant]),
-    ]
+    evidence = [left, right, second["id"]]
+    matches = [*_clean(draft, skip=left), _supported([left], [right, second["id"]], evidence)]
     exception = {
         "on": [right, second["id"]],
         "kind": "partial_payment",
         "c": "supported",
-        "why": [draft.warrant],
+        "why": evidence,
     }
     return _finish(draft, matches, [exception])
 
@@ -252,12 +270,13 @@ def _batched_vs_itemised(draft: Draft, rng: Random) -> dict[str, Any]:
     kept["amount"] = _amount(_money(kept["amount"]) + _money(folded["amount"]))
     draft.b.remove(folded)
     draft.pairs = [p for p in draft.pairs if p[0] not in (left_one, left_two)]
-    matches = [*_clean(draft), _supported([left_one, left_two], [right_one], [draft.warrant])]
+    evidence = [left_one, left_two, right_one]
+    matches = [*_clean(draft), _supported([left_one, left_two], [right_one], evidence)]
     exception = {
         "on": [right_one],
         "kind": "batched_vs_itemised",
         "c": "supported",
-        "why": [draft.warrant],
+        "why": evidence,
     }
     return _finish(draft, matches, [exception])
 
@@ -400,6 +419,41 @@ DEFORMATIONS: dict[str, Callable[[Draft, Random], dict[str, Any]]] = {
 }
 
 
+def _prove_cause(template: Template, policy: list[dict[str, Any]]) -> str:
+    """The policy line this family's cause rests on, checked rather than assumed.
+
+    Refused three ways, because each of them produces an answer key asserting
+    something the packet does not carry — the exact failure the prompt artefact
+    instructs the model never to commit, asked of the model but not of the
+    corpus that grades it.
+    """
+    terms = CAUSE_TERMS.get(template.family)
+    if terms is None:
+        return ""
+
+    declared = str(template.body.get("cause", ""))
+    ids = [str(line.get("id", "")) for line in policy]
+    if not declared:
+        raise ValueError(
+            f"a {template.family} template must declare which policy line states the cause; "
+            f"without it the answer cites whichever line came first"
+        )
+    if declared not in ids:
+        raise ValueError(
+            f"{template.family} names {declared!r} as its cause, which is not a policy line "
+            f"this template carries ({', '.join(ids) or 'none'})"
+        )
+
+    text = next(str(line.get("text", "")) for line in policy if str(line.get("id")) == declared)
+    if not any(term in text.lower() for term in terms):
+        raise ValueError(
+            f"{template.family} cites {declared!r}, whose text says nothing about it: "
+            f"{text!r}. A packet that does not describe the cause cannot carry the "
+            f"distinction, and grading it asks the model to supply what it was not shown."
+        )
+    return declared
+
+
 def _prove_effect(
     before: Mapping[str, Mapping[str, Any]],
     after: Mapping[str, Mapping[str, Any]],
@@ -500,7 +554,7 @@ def build(
     role: str,
     tokeniser: Tokeniser,
     render: Callable[[Mapping[str, Any]], str],
-    budget: Budget = DEFAULT,
+    budget: Budget | None = None,
 ) -> Case:
     """One case, with the answer that is correct for how it was built."""
     if not template.id:
@@ -526,17 +580,21 @@ def build(
     if len(left) != len(right):
         raise ValueError("a template's two sides must describe the same clean pairs")
 
+    resolved = [dict(p) for p in policy]
     draft = Draft(
         a=left,
         b=right,
-        policy=[dict(p) for p in policy],
+        cause=_prove_cause(template, resolved),
+        policy=resolved,
         documents=[dict(d) for d in template.body.get("documents", [])],
         pairs=[(a["id"], b["id"]) for a, b in zip(left, right, strict=True)],
     )
 
-    # `Budget.validate()` had no caller in the package, so a budget whose own
-    # numbers cannot fit its context was accepted and blamed every case.
-    budget.validate()
+    # The frozen template's budget unless the caller has a different template. A
+    # default assuming no wrapper was wrong in both directions at once: it
+    # rejected a valid 1,448-token prompt and admitted 61 packet tokens it
+    # should not have, while naming an overhead of zero for a 308-token wrapper.
+    budget = (prompt.BUDGET if budget is None else budget).validate()
 
     seed = case_seed(root_seed, template.id, case_index)
     before = {r["id"]: deepcopy(r) for r in (*draft.a, *draft.b)}

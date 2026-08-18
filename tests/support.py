@@ -22,6 +22,16 @@ from consylr.cases import Case, build
 from consylr.prompt import TEMPLATE, render
 from consylr.templates import Template
 
+#: A policy line that actually names each cause-bearing family's cause. The
+#: builder refuses a template whose policy cannot support its family, so a
+#: fixture without these is a fixture the product rejects — and a fixture the
+#: product refuses is not a fixture.
+CAUSE_LINES = {
+    "fee_at_source": "A settlement fee is deducted at source.",
+    "withholding": "Withholding tax is deducted before remittance.",
+    "timing_cutoff": "The period closes on the last business day; later value dates fall after.",
+}
+
 FAMILIES = frozenset({"clean_match", "fee_at_source", "cause_not_established", "decoy", "reversal"})
 
 
@@ -64,10 +74,12 @@ def template_body(
         ],
         "policy": [
             {"id": "P-1", "text": policy_text},
-            {"id": "P-2", "text": "Settlement fees are deducted at source."},
+            {"id": "P-2", "text": CAUSE_LINES.get(family, "Amounts settle in full.")},
         ],
         "documents": [{"id": "D-1", "text": "Remittance advice for March 2026."}],
     }
+    if family in CAUSE_LINES:
+        body["cause"] = "P-2"
     body.update(over)
     return body
 

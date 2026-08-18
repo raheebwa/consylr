@@ -73,13 +73,18 @@ class Budget:
         return self
 
 
-DEFAULT = Budget()
+# No default. A budget is a claim about a specific wrapper, and `Budget()`
+# assumed an overhead of zero — so it rejected a valid 1,448-token prompt and
+# admitted 61 packet tokens it should not have, while printing
+# "template_overhead 0" for a wrapper that costs 308. `consylr.prompt.BUDGET` is
+# the one derived from the frozen template; a caller with a different template
+# supplies its own, and a caller with no template has no business asserting one.
 
 
 def check_packet(
     packet_text: str,
     tokeniser: Tokeniser,
-    budget: Budget = DEFAULT,
+    budget: Budget,
     *,
     case: str | None = None,
 ) -> list[Violation]:
@@ -107,7 +112,7 @@ def check_packet(
 def check(
     rendered_prompt: str,
     tokeniser: Tokeniser,
-    budget: Budget = DEFAULT,
+    budget: Budget,
     *,
     case: str | None = None,
 ) -> list[Violation]:
