@@ -367,8 +367,18 @@ having looked.
    occur.
 2. Does `do` need an ordering guarantee? Currently a set. If a disposition ever depends on
    another, this becomes a sequence and the schema changes.
-3. Should the report expose the model's raw text alongside the parsed object on every run, or
-   only on failure? Always would help debugging and cost storage.
+3. ~~Should the report expose the model's raw text alongside the parsed object on every run, or
+   only on failure?~~ **Settled: always.** The first scaffolded reference run reported a
+   correspondence F1 of exactly 0.500 on nine of fourteen families. The arithmetic is a plain
+   harmonic mean with a zero-guard and nothing in it was wrong — but telling an honest result
+   from an artefact needed the text the model emitted, and the run had scored the answers and
+   discarded them. The number was not incorrect; it was undiagnosable.
+
+   Failure-only retention would not have helped, which is the part worth recording: **those nine
+   families parsed.** An implausible figure on a well-formed answer is exactly the case
+   failure-only retention misses, and it is the case worth reading, because a malformed answer
+   already announces itself. Implemented as `consylr.score.record`, which `tools/evaluate.py`
+   calls — a retention nothing invoked would be another rule with no enforcer.
 4. Is one `matches` entry with several IDs on one side sufficient for many-to-many, or does that
    case need refusing outright as out of scope? The PRD rules out unconstrained many-to-many at
    scale but does not settle the bounded case.
