@@ -15,8 +15,9 @@ import pytest
 from consylr.budget import Budget
 from consylr.cases import DEFORMATIONS, Case, Draft, _clean, _finish, _serialise, case_seed
 from consylr.cases import build as _build
+from consylr.prompt import render as prompt_render
 from consylr.templates import Template
-from tests.support import PerCharacter
+from tests.support import FAKE_BUDGET, PerCharacter
 
 
 def build(template: Template, **over: Any) -> Case:
@@ -29,7 +30,8 @@ def build(template: Template, **over: Any) -> Case:
     other test here is about something else and says so by not repeating it.
     """
     over.setdefault("tokeniser", PerCharacter())
-    over.setdefault("render", _serialise)
+    over.setdefault("render", prompt_render)
+    over.setdefault("budget", FAKE_BUDGET)
     return _build(template, **over)
 
 

@@ -17,8 +17,9 @@ from __future__ import annotations
 
 from typing import Any
 
+from consylr.budget import Budget
 from consylr.cases import Case, build
-from consylr.cases import _serialise as serialise
+from consylr.prompt import TEMPLATE, render
 from consylr.templates import Template
 
 FAMILIES = frozenset({"clean_match", "fee_at_source", "cause_not_established", "decoy", "reversal"})
@@ -99,7 +100,21 @@ def built(template: Template, **over: Any) -> Case:
         "case_index": 0,
         "role": "train",
         "tokeniser": PerCharacter(),
-        "render": serialise,
+        "render": render,
+        "budget": FAKE_BUDGET,
     }
     kwargs.update(over)
     return build(template, **kwargs)
+
+
+#: A budget scaled for `PerCharacter`, so the tests can render through the real
+#: template. One token per character is roughly four times the frozen tokeniser's
+#: count, and the alternative — a second renderer for the tests — is the "four
+#: surfaces rendering three ways" this artefact exists to prevent.
+_WRAPPER_CHARS = len(TEMPLATE.replace("{packet}", ""))
+FAKE_BUDGET = Budget(
+    context=8192,
+    packet_max=8192 - 2048 - _WRAPPER_CHARS,
+    template_overhead=_WRAPPER_CHARS,
+    output_reserve=2048,
+).validate()
