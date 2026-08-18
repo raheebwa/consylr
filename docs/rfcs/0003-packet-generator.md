@@ -14,7 +14,9 @@ Its defining property is that **ground truth is known by construction rather tha
 case is built by applying a named deformation to a clean pair, so the correct answer is a
 by-product of the construction and not a judgement made afterwards. That is what makes the
 evaluation honest, and it is also the whole of the provenance story — a corpus that can be
-regenerated from a seed needs no claims made about where it came from.
+regenerated from a seed needs no claims made about where it came from. That is why the sealed
+evaluation set is never paraphrased, and why the reproducibility guarantee below is stated against
+the deterministic layer rather than against every artefact this produces.
 
 It is also the last line before the silent failure this project is most exposed to: an
 over-budget packet is **left-truncated by the harness**, producing valid JSON about evidence the
@@ -26,15 +28,22 @@ that failure is visible, so it refuses to emit one.
 ### Command surface
 
 ```
-consylr-gen build   --config <path> --seed <int> --out <dir> --role <train|sealed>
-consylr-gen audit   --corpus <dir>
+consylr-gen build   --config <path> --seed <int> --out <dir>
+consylr-gen seal    --config <sealed-config> --seed <int> --out <dir>
+consylr-gen audit   --corpus <dir> [--deep]
 consylr-gen inspect --corpus <dir> --case <id>
 ```
 
-`build` is the only command that writes a corpus. `audit` re-runs every check against a corpus
-already on disk and is what CI calls. `inspect` renders one case — its packet, its expected
-output, its family, and its template lineage — because a corpus nobody can read case-by-case is a
-corpus nobody can check.
+**`build` and `seal` are separate commands, and that is a safety property rather than tidiness.**
+A single command with `--role sealed` can be pointed at the training config by a typo, and the
+resulting corpus would look correct. `seal` accepts only a sealed-specific configuration whose
+family distribution is frozen independently of the training mix
+([RFC-0002](0002-case-taxonomy.md) guardrail 4) and **rejects a training configuration
+structurally**, not by convention.
+
+`audit` re-runs every check against a corpus already on disk and is what CI calls. `inspect`
+renders one case — its packet, its expected output, its family, and its template lineage —
+because a corpus nobody can read case-by-case is a corpus nobody can check.
 
 ### What a case is
 
@@ -46,7 +55,18 @@ case/
 ```
 
 `meta.json` is not decoration. `template_id` is what the grouped split separates on, and
-`prompt_tokens` is what the budget audit re-checks without re-tokenising the whole corpus.
+`prompt_tokens` is what the fast audit path re-checks without re-tokenising the whole corpus.
+
+### A template is a data file, not a function
+
+A scenario template is a **parameterised description in data, with a stable id**, interpreted by
+the generator. It is not code.
+
+This follows from what a template is *for*: it is the unit of the grouped split, so the split
+check has to be auditable from artefacts alone. Behaviour hidden in a function makes "no template
+crossed the boundary" unfalsifiable from outside the process that produced the corpus — a reader
+would have to trust the generator rather than check it. In data, a template is diffable, its id is
+stable across refactors of the code that reads it, and a reviewer can see what changed.
 
 ### Configuration
 
@@ -61,9 +81,11 @@ of the source material reproduce the evidence.
 
 ## Behaviour
 
-### Determinism
+### Determinism, and exactly how far it reaches
 
-Same config, same seed, same corpus — byte for byte, on any machine.
+**The deterministic layer — the corpus before any paraphrase — is byte-for-byte reproducible from
+config and seed, on any machine, with no network.** That is the guarantee, and §Optional paraphrase
+is scoped against it rather than quietly contradicting it.
 
 Every random draw comes from a seed derived from `(root_seed, template_id, case_index)` rather
 than from one shared stream. A shared stream makes case *n* depend on how many cases were drawn
@@ -78,6 +100,14 @@ log line — a rejection, and the build fails.
 - Counted with the **frozen model's tokeniser** ([ADR-0003](../adrs/0003-freeze-base-model-and-training-backend.md)),
   never a character or word heuristic. A heuristic is wrong by exactly the amount that matters at
   the boundary.
+
+  **Where that tokeniser comes from** follows the artefact policy this repository already has —
+  model weights are *fetched at setup, never committed*, and a tokeniser is the same class of
+  thing. So: a documented one-command fetch into the standard cache; resolution order **explicit
+  config or environment path → cache**; the **SHA-256 of the tokeniser file pinned in the
+  committed generator config**; and the **build itself makes zero network calls**, failing loudly
+  with the exact fetch command when the file is absent. "No network at build" was never "no
+  network at setup".
 - Asserted on the **rendered prompt** — the exact string the runtime sends, after templating —
   not on the packet before it.
 - Output headroom is reserved explicitly, so the check fails when headroom is eaten rather than
@@ -109,7 +139,7 @@ is mechanical rather than a matter of care.
 Family assignment is by construction and is exactly one family per case, which is what makes
 splitting on family well-defined at all.
 
-### Optional paraphrase, tightly bounded
+### Optional paraphrase, and the promise it cannot keep
 
 A frontier model may paraphrase **free-text surface fields only** — descriptions, merchant-style
 names. Never a label, a number, a reference, or a correspondence decision
@@ -120,8 +150,51 @@ family assignment. A paraphrase that changes any of the three is **discarded, no
 correcting it means a human deciding what the case now is, which is exactly the inferred ground
 truth this design exists to avoid.
 
-Paraphrase is off by default and recorded in `meta.json` when used, because a corpus where some
-cases passed through another model and some did not is two corpora unless the record says which.
+**A paraphrased corpus is not reproducible, and pretending otherwise would be the more expensive
+mistake.** A frontier-model call is neither deterministic nor offline, so the moment paraphrase is
+on, "same config, same seed, same corpus" stops being true. The honest consequence:
+
+- A paraphrased corpus is a **derived artefact that must be preserved, not re-derived.** It is
+  kept, not regenerated, and any published number measured on it **binds to the preserved
+  artefact**.
+- `meta.json` records, per case, whether it was paraphrased and by what — enough to prove which
+  cases were touched, so the deterministic subset remains separable and independently checkable.
+- The deterministic layer beneath it stays regenerable, and that is what the reproducibility claim
+  refers to.
+
+**The sealed evaluation set is never paraphrased. That is a refusal, not a default.** The exam has
+to be regenerable by someone holding only the config and the seed, and a preserved-artefact exam is
+one nobody else can obtain — corpora are not committed, so a preserved sealed set would exist only
+where it was made. Every published accuracy figure comes from the sealed set, so this keeps the
+figures that matter attached to something reproducible.
+
+For the training corpus, paraphrase remains permitted and **off by default**. The tension is worth
+stating plainly: it exists only to stop surface text being uniform enough that the model learns the
+generator rather than the task, and it is paid for in a corpus that must be stored forever and
+cannot be handed to anyone as a recipe. If that price ever looks worse than the uniformity it
+buys, the right answer is to leave it off — and a corpus where some cases passed through another
+model and some did not is two corpora unless the record says which.
+
+### Audit depth
+
+`audit` must be able to fail a corpus **it did not generate** — otherwise an externally-supplied
+corpus is checkable only on trust. But a foreign corpus is exactly the one whose `meta.json`
+cannot be believed: trusting a recorded `prompt_tokens` on a corpus from elsewhere makes the audit
+a formality that restates whatever the file claims.
+
+So there are two depths, and the difference is what they are allowed to trust:
+
+| Mode | Trusts `meta.json` | Use |
+|---|---|---|
+| fast (default) | yes | Local iteration only, where the corpus was just built here |
+| **`--deep`** | **no** — re-tokenises every prompt and re-validates every expected output from scratch | Any corpus whose provenance is not this machine, and every CI run |
+
+CI runs **deep on the whole sealed set** — 200 packets, cheap enough that there is no reason not
+to — and **deep on a sample of the training corpus**, because 8,000–15,000 cases is not cheap and
+a sampled deep check still catches a systematic fault.
+
+**The fast path is a local convenience and is never the basis for a published claim.** Any figure
+that reaches a document comes from a deep audit.
 
 ### Scale
 
@@ -141,9 +214,11 @@ and a separately-frozen sealed set of ~200 packets
 - **Touch real data.** No real business, person, account, reference or ledger entry, from any
   source. The pattern configuration carries **aggregate patterns only**, and it is swept like
   every other committed file.
-- **Depend on anything unavailable to a stranger.** No network at build time, no private dataset,
-  no credential.
+- **Depend on anything unavailable to a stranger.** No network **at build time**, no private
+  dataset, no credential. Setup may fetch the tokeniser; the build may not.
 - **Repair a failed paraphrase.**
+- **Paraphrase the sealed set.** The exam stays regenerable from a config and a seed.
+- **Publish a figure from a fast audit.** Deep or it does not count.
 
 ## Verification
 
@@ -153,7 +228,7 @@ Test-driven, per `CONTRIBUTING.md`: the failing test first, then the code.
 
 | Invariant | Why it matters |
 |---|---|
-| Same config + seed → identical corpus | Reproducibility is the provenance story |
+| Same config + seed → identical corpus **at the deterministic layer** | Reproducibility is the provenance story, and the layer is named because paraphrase breaks it |
 | Every case's expected output validates against RFC-0001, **using the validator that ships in the product** | A second validator written for the corpus tests the second validator |
 | Every rendered prompt is inside budget | The silent-truncation failure |
 | Every case belongs to exactly one family | Grouped split is otherwise undefined |
@@ -181,13 +256,14 @@ change, the test describes the code rather than constraining it.
 
 ## Open questions
 
-1. Where does the tokeniser come from at build time? Vendoring it into the repository is
-   forbidden; downloading it makes the build network-dependent, which §What it must refuse rules
-   out. Most likely a documented local path with a checksum — needs deciding before the first
-   corpus is built.
-2. Is the sealed set generated by the same command with `--role sealed`, or by a separate command
-   that cannot be pointed at the training config by accident? The second is harder to misuse.
-3. What is a "template" concretely — a function, a data file, or a parameterised description? It
-   is the unit of the split, so this determines whether the split is checkable.
-4. Should `audit` be able to fail a corpus it did not generate, purely from its `meta.json`? That
-   would make an externally-supplied corpus checkable on the same terms.
+All four questions this RFC opened have been settled and are written into the sections above:
+the tokeniser's provenance (§The token-budget assertion), the separate `seal` command
+(§Command surface), templates as data (§A template is a data file), and the two audit depths
+(§Audit depth). What remains open is narrower:
+
+1. How many templates per family make the grouped split meaningful? Too few and it separates
+   almost nothing — carried from [RFC-0002](0002-case-taxonomy.md).
+2. What sample size makes deep-on-sample a real check rather than a gesture, and is the sample
+   drawn per family or across the corpus?
+3. Should a paraphrased training corpus be given a content hash that a run record cites, so a
+   published number names the exact preserved artefact rather than a directory?
