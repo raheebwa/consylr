@@ -125,3 +125,39 @@ def test_a_case_carrying_violations_does_not_reach_disk(tmp_path: Path) -> None:
     assert rows[0].violations
     with pytest.raises(ValueError, match="packet_over_budget"):
         write(tmp_path, rows)
+
+
+def test_the_same_packet_twice_in_one_corpus_is_refused() -> None:
+    """The check that was missing, one over from the one we built.
+
+    RFC-0003 lists near-duplicate detection in the audit command's stack, and
+    the audit command does not exist — the same no-caller class closed for
+    contradictions and not for duplicates. sealed-v1 was written with 196
+    packets and 73 distinct ones: 63% duplicates, the most repeated appearing
+    seven times, so every metric computed on it would have carried a hidden
+    sevenfold weighting on those cases.
+
+    It is the comparison already being made. Two cases sharing a packet are a
+    contradiction when their answers differ and a duplicate when they agree, and
+    neither belongs in a corpus.
+    """
+    template = a_template(id="t-001")
+    rows = case_rows(template, "train", (0,)) + case_rows(template, "train", (0,))
+    v = next(x for x in check(rows) if x.code == "duplicate_packet")
+    assert "t-001" in v.detail
+
+
+def test_the_duplicate_report_says_how_many_so_template_poverty_is_visible() -> None:
+    # Absorbed silently, a thin template set looks like a large corpus. Named,
+    # it looks like what it is: the same question asked repeatedly.
+    template = a_template(id="t-001")
+    rows = case_rows(template, "train", (0,)) * 4
+    v = next(x for x in check(rows) if x.code == "duplicate_packet")
+    assert "4" in v.detail
+
+
+def test_distinct_packets_in_one_corpus_pass() -> None:
+    rows = case_rows(a_template(id="t-001"), "train", (0,)) + case_rows(
+        a_template(id="t-002", amount="900.00"), "train", (0,)
+    )
+    assert [v.code for v in check(rows)] == []
