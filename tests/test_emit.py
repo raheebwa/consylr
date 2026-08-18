@@ -29,31 +29,58 @@ def test_every_case_becomes_one_line(tmp_path: Path) -> None:
     assert len(out.read_text().splitlines()) == 3
 
 
-def test_the_prompt_is_the_frozen_artefact(tmp_path: Path) -> None:
-    """The one way this can be badly wrong.
+def test_a_row_is_the_rendered_prompt_followed_by_the_answer(tmp_path: Path) -> None:
+    """The transition the model must learn is the one the profiler exercises.
 
-    The profiler applies no chat template, so this artefact is the model's whole
-    interface. Rendering training data any other way trains against an interface
-    the evaluation does not use.
+    `mlx_lm` wraps a `{prompt, completion}` pair in the model's **chat
+    template** — the model would learn to answer after an assistant marker while
+    the profiler sends a bare prompt with no marker at all. That is the
+    four-mode trap on the training side: the loss would fall, the eval would be
+    poor, and nothing would name the cause.
+
+    A `text` row is tokenised verbatim, so the answer begins at exactly the
+    character position generation begins at.
     """
     corpus = a_corpus(tmp_path / "corpus", n=1)
     out = tmp_path / "train.jsonl"
     emit(corpus, out)
     row = json.loads(out.read_text().splitlines()[0])
 
-    packet = json.loads(next(corpus.iterdir()).joinpath("packet.json").read_text())
-    assert row["prompt"] == render(packet)
-    # And it is that artefact, not a copy that happens to match today.
-    assert TEMPLATE.split("{packet}")[1].strip() in row["prompt"]
+    case = next(corpus.iterdir())
+    packet = json.loads((case / "packet.json").read_text())
+    expected = json.loads((case / "expected.json").read_text())
+    rendered = render(packet)
+
+    assert row["text"].startswith(rendered)
+    assert json.loads(row["text"][len(rendered) :]) == expected
+    # And it is the artefact, not a copy that happens to match today.
+    assert TEMPLATE.split("{packet}")[1].strip() in row["text"]
 
 
-def test_the_completion_is_the_answer_key_verbatim(tmp_path: Path) -> None:
+def test_a_row_carries_no_chat_markers(tmp_path: Path) -> None:
+    # The profiler applies no chat template. A marker here would train the model
+    # to expect one.
+    corpus = a_corpus(tmp_path / "corpus", n=1)
+    out = tmp_path / "train.jsonl"
+    emit(corpus, out)
+    text = json.loads(out.read_text().splitlines()[0])["text"]
+    for marker in ("<|im_start|>", "<|im_end|>", "<|endoftext|>", "assistant"):
+        assert marker not in text
+
+
+def test_a_row_uses_the_key_that_avoids_the_chat_template(tmp_path: Path) -> None:
+    """`mlx_lm` picks its dataset class by which keys are present.
+
+    `prompt` and `completion` together select the class that applies the chat
+    template, whatever else the row carries — so those keys must be absent, not
+    merely accompanied by a `text` field.
+    """
     corpus = a_corpus(tmp_path / "corpus", n=1)
     out = tmp_path / "train.jsonl"
     emit(corpus, out)
     row = json.loads(out.read_text().splitlines()[0])
-    expected = json.loads(next(corpus.iterdir()).joinpath("expected.json").read_text())
-    assert json.loads(row["completion"]) == expected
+    assert "text" in row
+    assert "prompt" not in row and "completion" not in row
 
 
 def test_a_corpus_rendered_against_another_template_is_refused(tmp_path: Path) -> None:
