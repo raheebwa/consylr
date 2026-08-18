@@ -33,21 +33,34 @@ being built, and in what order, is tracked in
 | Licence | **MIT**, `Copyright (c) 2026 Aheebwa Ramadhan`. The ADTC template's GPL-3.0 governs the submission fork, not this repo | [ADR-0001](adrs/0001-mit-licence-and-public-repository.md) |
 | Publication | **This repo is public.** The research document was redacted first. Does *not* resolve the Participation Agreement | [ADR-0001](adrs/0001-mit-licence-and-public-repository.md) |
 | Name | **Keep "Consylr".** Knock-out search only — no registry clearance, and the residual risk is recorded | [ADR-0002](adrs/0002-keep-the-name-consylr.md) |
+| Contest terms | **Accepted 2026-08-18** on the full text. §7 leaves IP with the participant, granting a non-exclusive royalty-free licence over submissions for promotion only. §9 permits the terms to change, so the accepted text is retained and **re-verified at submission** rather than trusted once | §Contest terms |
 
 ## What is explicitly not decided
 
-- **The ADTC Participation Agreement.** Still a pre-submission blocker, now with a partial
-  answer rather than none. A **preliminary working read on 2026-08-18** indicated that
-  participants retain ownership of IP created for the contest, and grant the organisers and
-  their partners a non-exclusive, royalty-free promotional and marketing licence over
-  submissions. It also indicated that **the terms themselves may change.**
-  That read is a working interpretation, not legal advice, and **not a substitute for the
-  owner reading the agreement in full** — which is still required before the box is ticked.
-  Because the agreement expressly permits changes and the competition infrastructure is
-  live, **all official sources are re-checked at submission time**, not once.
-  **Going public did not resolve this.** Licensing this repository MIT waives nothing under
-  that agreement and pre-commits nothing to it.
+Nothing of consequence remains open here. Items that were open — the licence, the name, the base
+model, the training backend, the contest terms — are in the table above with the record that
+settled each. Open *design* questions live in the RFCs that carry them, numbered so they can be
+closed by reference.
 
+
+## Contest terms
+
+The ADTC Participation Agreement was read in full and accepted on **2026-08-18**. The clauses that
+bear on this repository:
+
+| Clause | Effect |
+|---|---|
+| §7 Intellectual Property | Participants **retain ownership** of IP created during the contest. Entering grants the organisers and their partners a **non-exclusive, royalty-free licence over submissions**, for promotional and marketing use only. |
+| §2 Prize Discretion | Prizes are discretionary. Nothing here should be planned against as income. |
+| §9 Terms Subject to Change | The terms may change at any time. |
+
+**§9 is why acceptance is not the end of it.** The accepted text is retained verbatim with a
+checksum, and the published terms are **diffed against it at submission time**. Accepting a
+document that may be rewritten is only safe if you can prove which version you accepted.
+
+This does not alter [ADR-0001](adrs/0001-mit-licence-and-public-repository.md): MIT here and §7
+there are consistent, since §7 leaves ownership with the participant and licenses only the
+submission.
 
 ## Where the rest of it lives
 
