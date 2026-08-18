@@ -171,3 +171,147 @@ def test_abstention_is_counted_by_family_not_by_certainty() -> None:
         fee_at_source__ambiguous=3,
     )
     assert check(corpus, plan) == []
+
+
+# --- the boundaries themselves, because a band is only its two edges ---------
+#
+# Every threshold below was mutable without a test noticing. A share check that
+# is off by one row is the difference between a corpus at its floor and one just
+# under it, and that is precisely the corpus the plan exists to reject.
+
+
+def test_the_supported_floor_is_inclusive() -> None:
+    corpus = cases(
+        clean_match__supported=40,
+        fee_at_source__ambiguous=48,
+        cause_not_established__unsupported=12,
+    )
+    assert check(corpus, PLAN) == []
+
+
+def test_one_case_below_the_supported_floor_fails() -> None:
+    corpus = cases(
+        clean_match__supported=39,
+        fee_at_source__ambiguous=49,
+        cause_not_established__unsupported=12,
+    )
+    assert "supported_share_low" in [v.code for v in check(corpus, PLAN)]
+
+
+def test_the_supported_ceiling_is_inclusive() -> None:
+    corpus = cases(
+        clean_match__supported=50,
+        fee_at_source__ambiguous=38,
+        cause_not_established__unsupported=12,
+    )
+    assert check(corpus, PLAN) == []
+
+
+def test_one_case_above_the_supported_ceiling_fails_and_names_the_ceiling() -> None:
+    corpus = cases(
+        clean_match__supported=51,
+        fee_at_source__ambiguous=37,
+        cause_not_established__unsupported=12,
+    )
+    v = next(x for x in check(corpus, PLAN) if x.code == "supported_share_high")
+    assert "51.0%" in v.detail and "50%" in v.detail
+
+
+def test_the_abstention_floor_is_inclusive() -> None:
+    corpus = cases(
+        clean_match__supported=45,
+        fee_at_source__ambiguous=45,
+        cause_not_established__unsupported=10,
+    )
+    assert check(corpus, PLAN) == []
+
+
+def test_one_case_below_the_abstention_floor_fails_and_names_the_family() -> None:
+    corpus = cases(
+        clean_match__supported=45, fee_at_source__ambiguous=46, cause_not_established__unsupported=9
+    )
+    v = next(x for x in check(corpus, PLAN) if x.code == "abstention_share_low")
+    assert ABSTENTION_FAMILY in v.detail and "9.0%" in v.detail and "10%" in v.detail
+
+
+def test_the_abstention_ceiling_is_inclusive() -> None:
+    corpus = cases(
+        clean_match__supported=45,
+        fee_at_source__ambiguous=40,
+        cause_not_established__unsupported=15,
+    )
+    assert check(corpus, PLAN) == []
+
+
+def test_one_case_above_the_abstention_ceiling_fails_and_names_the_family() -> None:
+    corpus = cases(
+        clean_match__supported=45,
+        fee_at_source__ambiguous=39,
+        cause_not_established__unsupported=16,
+    )
+    v = next(x for x in check(corpus, PLAN) if x.code == "abstention_share_high")
+    assert ABSTENTION_FAMILY in v.detail and "16.0%" in v.detail and "15%" in v.detail
+
+
+def test_a_family_exactly_at_a_binding_floor_passes() -> None:
+    # Every other fixture runs the floor at 2 against families six times that, so
+    # the coverage constraint was never tested anywhere near where it binds.
+    plan = Plan(families=PLAN.families, family_floor=12)
+    corpus = cases(
+        clean_match__supported=45,
+        fee_at_source__ambiguous=43,
+        cause_not_established__unsupported=12,
+    )
+    assert check(corpus, plan) == []
+
+
+def test_a_family_one_case_below_a_binding_floor_fails() -> None:
+    plan = Plan(families=PLAN.families, family_floor=13)
+    corpus = cases(
+        clean_match__supported=45,
+        fee_at_source__ambiguous=43,
+        cause_not_established__unsupported=12,
+    )
+    v = next(x for x in check(corpus, plan) if x.code == "family_below_floor")
+    assert ABSTENTION_FAMILY in v.detail and "12" in v.detail and "13" in v.detail
+
+
+def test_every_unknown_family_is_reported_not_just_the_first() -> None:
+    corpus = cases(
+        clean_match__supported=44,
+        fee_at_source__ambiguous=42,
+        cause_not_established__unsupported=12,
+        vibes__supported=1,
+        chaos__supported=1,
+    )
+    named = [v.detail for v in check(corpus, PLAN) if v.code == "unknown_family"]
+    assert len(named) == 2
+    assert any("chaos" in d for d in named) and any("vibes" in d for d in named)
+
+
+def test_a_floor_total_exactly_equal_to_the_size_is_reachable() -> None:
+    plan = Plan(families=frozenset(f"f{i}" for i in range(5)), family_floor=20)
+    assert satisfiable(size=100, plan=plan) == []
+
+
+def test_a_floor_total_one_over_the_size_is_not() -> None:
+    plan = Plan(families=frozenset(f"f{i}" for i in range(5)), family_floor=20)
+    v = next(x for x in satisfiable(size=99, plan=plan) if x.code == "family_floor_unreachable")
+    assert "100" in v.detail and "99" in v.detail
+
+
+def test_the_unreachable_abstention_ceiling_names_both_numbers() -> None:
+    plan = Plan(families=frozenset({"clean_match", ABSTENTION_FAMILY}), family_floor=20)
+    v = next(
+        x for x in satisfiable(size=100, plan=plan) if x.code == "abstention_ceiling_unreachable"
+    )
+    assert "20" in v.detail and "20.0%" in v.detail and "15%" in v.detail
+
+
+def test_the_empty_corpus_and_contradiction_reports_say_what_is_wrong() -> None:
+    assert "no cases" in check([], PLAN)[0].detail
+    corpus = cases(
+        clean_match__supported=25, cause_not_established__supported=15, fee_at_source__ambiguous=60
+    )
+    v = next(x for x in check(corpus, PLAN) if x.code == "contradictory_certainty")
+    assert "15" in v.detail and ABSTENTION_FAMILY in v.detail
