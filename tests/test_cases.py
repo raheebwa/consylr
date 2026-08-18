@@ -142,7 +142,7 @@ def test_a_template_whose_sides_are_not_records_is_refused() -> None:
 # --- every family, put to the validator that will grade the model -------------
 
 
-def a_richer_template(family: str, pairs: int = 4) -> Template:
+def a_richer_template(family: str, pairs: int = 4, amount: str = "500.00") -> Template:
     body: dict[str, object] = {
         "id": f"t-{family}",
         "family": family,
@@ -151,7 +151,7 @@ def a_richer_template(family: str, pairs: int = 4) -> Template:
                 "ref": f"INV-{2000 + i}",
                 "party": f"Party {i}",
                 "date": "2026-03-02",
-                "amount": "500.00",
+                "amount": amount,
             }
             for i in range(pairs)
         ],
@@ -160,7 +160,7 @@ def a_richer_template(family: str, pairs: int = 4) -> Template:
                 "ref": f"INV-{2000 + i}",
                 "party": f"Party {i}",
                 "date": "2026-03-04",
-                "amount": "500.00",
+                "amount": amount,
             }
             for i in range(pairs)
         ],
@@ -398,3 +398,151 @@ def test_a_record_carrying_its_own_id_does_not_override_the_generated_one() -> N
     assert "B-999" not in ids
     assert len(ids) == len(set(ids))
     assert case.violations == []
+
+
+# --- the packet must not tell the model which record was deformed -------------
+
+
+def numeric_template(family: str, amount: object = 1000, pairs: int = 4) -> Template:
+    """A template whose amounts are JSON numbers rather than strings.
+
+    Nothing refuses this: the required-field check does not type-check, `_records`
+    only asks that a record is a dict, and the validator never inspects an amount.
+    """
+    return Template.from_mapping(
+        {
+            "id": f"n-{family}",
+            "family": family,
+            "left": [
+                {
+                    "ref": f"INV-{i}",
+                    "party": "Northwind Ltd",
+                    "date": "2026-03-02",
+                    "amount": amount,
+                }
+                for i in range(pairs)
+            ],
+            "right": [
+                {
+                    "ref": f"INV-{i}",
+                    "party": "Northwind Ltd",
+                    "date": "2026-03-04",
+                    "amount": amount,
+                }
+                for i in range(pairs)
+            ],
+            "policy": [{"id": "P-1", "text": "Invoices settle at face value."}],
+        }
+    )
+
+
+DEFORMED_AMOUNT_FAMILIES = [
+    "fee_at_source",
+    "withholding",
+    "partial_payment",
+    "batched_vs_itemised",
+    "reversal",
+    "cause_not_established",
+]
+
+
+@pytest.mark.parametrize("family", DEFORMED_AMOUNT_FAMILIES)
+def test_no_field_marks_out_the_record_the_deformation_touched(family: str) -> None:
+    """The answer must not be readable from the packet's serialisation.
+
+    A deformation wrote `str(Decimal)` back while untouched records kept the
+    template's JSON type, so a deformed record was the only string-typed amount
+    in the packet. A model could then score near-perfectly on exception
+    identification by reading JSON types, with no reconciliation at all —
+    inflating measured accuracy on exactly the capability being measured.
+    """
+    case = build(numeric_template(family), root_seed=ROOT, case_index=0, role="train")
+    assert case.violations == []
+    for field in ("ref", "party", "date", "amount"):
+        shapes = {type(r[field]).__name__ for r in case.packet["records"] if field in r}
+        assert len(shapes) == 1, f"{field} distinguishes records: {shapes}"
+
+
+@pytest.mark.parametrize("family", sorted(DEFORMATIONS))
+def test_every_amount_in_a_packet_is_written_the_same_way(family: str) -> None:
+    case = build(a_richer_template(family), root_seed=ROOT, case_index=0, role="train")
+    amounts = [r["amount"] for r in case.packet["records"]]
+    assert all(isinstance(a, str) for a in amounts)
+    assert all(a == a.strip() and a.count(".") == 1 and len(a.split(".")[1]) == 2 for a in amounts)
+
+
+# --- a deformation has to prove it deformed something ------------------------
+
+
+@pytest.mark.parametrize("amount", ["0.25", "0.10", "0.01"])
+def test_a_cut_too_small_to_observe_is_refused_rather_than_asserted(amount: str) -> None:
+    """Ground truth by construction requires the construction to have an effect.
+
+    The 2% cut quantised to 0.00 for small amounts, so the packet was a clean
+    match while the answer key asserted an exception. The ground truth was
+    factually wrong, the shipping validator passed it, and a model answering
+    correctly was scored wrong.
+    """
+    case = build(
+        a_richer_template("fee_at_source", amount=amount),
+        root_seed=ROOT,
+        case_index=0,
+        role="train",
+    )
+    distinct = {r["amount"] for r in case.packet["records"]}
+    assert len(distinct) > 1, "nothing was deformed, yet an exception is asserted"
+
+
+def test_money_rounds_half_up_rather_than_to_even() -> None:
+    # 2% of 12.25 is 0.2450. Banker's rounding gives 0.24; money gives 0.25.
+    case = build(
+        a_richer_template("fee_at_source", amount="12.25", pairs=1),
+        root_seed=ROOT,
+        case_index=0,
+        role="train",
+    )
+    right = [r for r in case.packet["records"] if r["id"].startswith("B-")]
+    assert right[0]["amount"] == "12.00"
+
+
+def test_an_unexplained_shortfall_scales_with_the_amount() -> None:
+    # A hard-coded 37.50 turned a 10.00 obligation into -27.50, with no violation.
+    case = build(
+        a_richer_template("cause_not_established", amount="10.00"),
+        root_seed=ROOT,
+        case_index=0,
+        role="train",
+    )
+    assert all(not str(r["amount"]).startswith("-") for r in case.packet["records"])
+
+
+@pytest.mark.parametrize("family", sorted(DEFORMATIONS))
+def test_every_asserted_exception_is_observable_in_the_packet(family: str) -> None:
+    """Self-validation's missing half.
+
+    The validator checks the answer's *form* against the packet's identifiers.
+    Nothing checked the answer's *truth*: that the packet was deformed in the way
+    the answer key claims. An exception naming a record byte-identical to its
+    clean counterpart is an assertion about nothing.
+    """
+    clean = build(
+        a_richer_template("clean_match"), root_seed=ROOT, case_index=0, role="train"
+    ).packet
+    case = build(a_richer_template(family), root_seed=ROOT, case_index=0, role="train")
+    before = {r["id"]: r for r in clean["records"]}
+    after = {r["id"]: r for r in case.packet["records"]}
+
+    # Per exception, not per record: `reversal` legitimately names the original
+    # posting alongside the reversing one. What cannot be legitimate is an
+    # exception whose every named record is byte-identical to the clean packet.
+    for exception in case.expected.get("exceptions", []):
+        observable = [
+            rid for rid in exception["on"] if rid not in before or before[rid] != after[rid]
+        ]
+        assert observable, (
+            f"{family}: exception {exception['kind']!r} names only records that are "
+            f"unchanged from the clean packet"
+        )
+
+    if family == "clean_match":
+        assert before == after
