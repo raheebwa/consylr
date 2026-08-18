@@ -126,3 +126,48 @@ def test_the_two_abstention_constraints_can_contradict_at_a_small_size() -> None
     plan = Plan(families=frozenset({"clean_match", ABSTENTION_FAMILY}), family_floor=20)
     codes = [v.code for v in satisfiable(size=100, plan=plan)]
     assert "abstention_ceiling_unreachable" in codes
+
+
+# --- the two axes are separate, and a row cannot satisfy both -----------------
+
+
+def test_an_abstention_case_labelled_supported_is_a_contradiction() -> None:
+    # RFC-0002: cause_not_established is the family where the packet does *not*
+    # explain the difference, so its correct answer is ambiguous/unsupported. A
+    # row in that family labelled `supported` is not a corpus choice, it is a
+    # mislabel, and counting it in both bands is the exact double-count this
+    # module's docstring says it exists to prevent.
+    corpus = cases(
+        clean_match__supported=25,
+        cause_not_established__supported=15,
+        fee_at_source__ambiguous=60,
+    )
+    codes = [v.code for v in check(corpus, PLAN)]
+    assert "contradictory_certainty" in codes
+
+
+def test_double_counting_cannot_rescue_a_corpus_short_of_the_supported_floor() -> None:
+    # The same 15 rows filling both the supported floor and the abstention
+    # ceiling at once. Relabelled to their RFC-correct certainty the identical
+    # corpus is 15 points short, so a pass here green-lights a bad corpus.
+    corpus = cases(
+        clean_match__supported=25,
+        cause_not_established__supported=15,
+        fee_at_source__ambiguous=60,
+    )
+    codes = [v.code for v in check(corpus, PLAN)]
+    assert "supported_share_low" in codes
+
+
+def test_abstention_is_counted_by_family_not_by_certainty() -> None:
+    # `decoy`'s correct answer is an `unsupported` match (RFC-0002), so a corpus
+    # can hold plenty of `unsupported` rows that are not abstention at all.
+    # Folding the two axes into one would read this corpus as 52% abstention.
+    plan = Plan(families=PLAN.families | {"decoy"}, family_floor=2)
+    corpus = cases(
+        clean_match__supported=45,
+        decoy__unsupported=40,
+        cause_not_established__unsupported=12,
+        fee_at_source__ambiguous=3,
+    )
+    assert check(corpus, plan) == []
