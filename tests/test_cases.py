@@ -13,7 +13,16 @@ from typing import Any
 import pytest
 
 from consylr.budget import Budget
-from consylr.cases import DEFORMATIONS, Case, Draft, _clean, _finish, _serialise, case_seed
+from consylr.cases import (
+    CAUSE_TERMS,
+    DEFORMATIONS,
+    Case,
+    Draft,
+    _clean,
+    _finish,
+    _serialise,
+    case_seed,
+)
 from consylr.cases import build as _build
 from consylr.prompt import render as prompt_render
 from consylr.templates import Template
@@ -753,3 +762,77 @@ def test_a_clean_match_that_deformed_something_is_refused() -> None:
             build(a_richer_template("clean_match"), root_seed=ROOT, case_index=0, role="train")
     finally:
         DEFORMATIONS["clean_match"] = original
+
+
+# --- a family the packet does not distinguish is not a family ----------------
+
+
+def with_policy(family: str, policy: list[dict[str, str]], **over: Any) -> Template:
+    body = dict(a_richer_template(family, **over).body)
+    body["policy"] = policy
+    return Template.from_mapping(body)
+
+
+FEE_POLICY = [{"id": "P-1", "text": "A settlement fee is deducted at source."}]
+TAX_POLICY = [{"id": "P-1", "text": "Withholding tax is deducted before remittance."}]
+
+
+def test_two_families_that_emit_the_same_packet_cannot_both_be_right() -> None:
+    """`fee_at_source` and `withholding` were the same closure at the same rate.
+
+    So one scenario emitted byte-identical packets under two contradictory answer
+    keys, and the split was free to put them in different roles. RFC-0002
+    distinguishes the families by the cause being *described in policy*, so a
+    packet that describes neither cannot carry the distinction — and grading it
+    is exactly the "cause the packet does not support" the artefact forbids.
+    """
+    fee = build(
+        with_policy("fee_at_source", FEE_POLICY, pairs=1),
+        root_seed=ROOT,
+        case_index=0,
+        role="train",
+    )
+    tax = build(
+        with_policy("withholding", TAX_POLICY, pairs=1), root_seed=ROOT, case_index=0, role="train"
+    )
+    assert fee.packet != tax.packet, "the two families are indistinguishable in the packet"
+
+
+@pytest.mark.parametrize(
+    ("family", "policy"), [("fee_at_source", FEE_POLICY), ("withholding", TAX_POLICY)]
+)
+def test_the_exception_cites_the_line_that_names_the_cause(
+    family: str, policy: list[dict[str, str]]
+) -> None:
+    # Every warrant-citing exception cited `policy[0]` whatever that line said.
+    case = build(with_policy(family, policy, pairs=1), root_seed=ROOT, case_index=0, role="train")
+    exception = next(e for e in case.expected["exceptions"] if e["kind"] == family)
+    cited = {p["id"] for p in case.packet["policy"] if p["id"] in exception["why"]}
+    assert cited, "the exception cites no policy line at all"
+    named = " ".join(p["text"] for p in case.packet["policy"] if p["id"] in cited).lower()
+    assert any(term in named for term in CAUSE_TERMS[family])
+
+
+@pytest.mark.parametrize("family", sorted(CAUSE_TERMS))
+def test_a_template_whose_policy_cannot_support_its_family_is_refused(family: str) -> None:
+    # The check the distinction needs: "the exam grades a distinction the packet
+    # carries" as a property the build enforces, not an intention.
+    bland = [{"id": "P-1", "text": "Invoices settle at face value."}]
+    with pytest.raises(ValueError, match=family):
+        build(with_policy(family, bland, pairs=1), root_seed=ROOT, case_index=0, role="train")
+
+
+def test_a_template_declaring_a_cause_line_that_does_not_exist_is_refused() -> None:
+    body = dict(with_policy("fee_at_source", FEE_POLICY, pairs=1).body)
+    body["cause"] = "P-9"
+    with pytest.raises(ValueError, match="P-9"):
+        build(Template.from_mapping(body), root_seed=ROOT, case_index=0, role="train")
+
+
+def test_a_structural_family_cites_the_records_rather_than_a_policy_line() -> None:
+    # `partial_payment` is observable from the records themselves — one
+    # obligation settled by several transfers. Citing a policy line that says
+    # nothing about it is the same defect in a quieter register.
+    case = build(a_richer_template("partial_payment"), root_seed=ROOT, case_index=0, role="train")
+    exception = next(e for e in case.expected["exceptions"] if e["kind"] == "partial_payment")
+    assert not any(w.startswith("P-") for w in exception["why"])
