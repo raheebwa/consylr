@@ -1,0 +1,232 @@
+# SPDX-License-Identifier: MIT
+"""Author the training-only pattern templates, per RFC-0003 and issue #20.
+
+The sibling of `author_templates.py`, and deliberately a second tool rather than
+a flag on the first. `templates/` is frozen with the exam; this writes
+`templates-train/`, which the exam never loads. Two tools cannot be pointed at
+the wrong directory by a typo the way one tool with a `--role` switch can, and
+that is the same reasoning RFC-0003 gives for `build` and `seal` being separate
+commands.
+
+**A pattern declares a pool where a fixed template declares a value.** That is
+what lifts a template past the three-or-fewer distinct cases its deformation can
+distinguish, and it is why the first training corpus stopped at 903 against the
+8,000-15,000 the RFC asks for.
+
+**Every template must declare a different pattern, and that is a hard
+constraint rather than a nicety.** Template identity is a digest over the body
+with the declared id excluded, so templates sharing one set of pools are one
+scenario however many ids they carry — and the audit would refuse the set as
+duplicate scenarios. Each template therefore takes a distinct window into each
+vocabulary, which is also what keeps the split meaningful: two templates that
+draw from the same candidates are not two scenarios.
+
+Everything emitted is synthetic. The counterparties are invented sector words,
+the references follow a documented shape, and no real business, person, account
+or ledger entry appears — RFC-0003 forbids it, and a corpus is published
+evidence.
+"""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+from typing import Any
+
+from tools.author_templates import (
+    BASE_POLICY,
+    CAUSE_LINES,
+    FAMILIES,
+)
+
+OUT = Path(__file__).resolve().parent.parent / "templates-train"
+
+#: Wider than the frozen set's, because a pool of one is a value. These are the
+#: candidates a case draws from; the frozen exam's narrower surface is a subset
+#: of this shape, which is the safe direction — a model trained on the wider
+#: surface and examined on the narrower is under-claimed, never over-claimed.
+PARTIES = [
+    "Northwind Ltd",
+    "Southgate Ltd",
+    "Eastvale Trading Ltd",
+    "Westbrook Services Ltd",
+    "Harbourline Freight Ltd",
+    "Copperfield Supply Ltd",
+    "Marlowe Consulting Ltd",
+    "Ashgrove Logistics Ltd",
+    "Pennine Metals Ltd",
+    "Quayside Packaging Ltd",
+    "Ravensworth Utilities Ltd",
+    "Thornbury Chemicals Ltd",
+    "Ullswater Textiles Ltd",
+    "Vantage Print Ltd",
+    "Wexford Agriculture Ltd",
+    "Bramfield Haulage Ltd",
+    "Calderstone Foods Ltd",
+    "Dunmore Electrical Ltd",
+    "Elmsworth Joinery Ltd",
+    "Fenwick Instruments Ltd",
+]
+
+#: Spread across three orders of magnitude, so a proportional cut is observable
+#: at the small end and a batched total is plausible at the large.
+AMOUNTS = [
+    "12.60",
+    "42.05",
+    "63.15",
+    "88.75",
+    "142.30",
+    "480.00",
+    "755.00",
+    "925.50",
+    "1250.00",
+    "1904.40",
+    "3075.25",
+    "4820.90",
+    "6300.00",
+    "9145.75",
+    "12480.00",
+    "17400.00",
+    "23650.50",
+    "29840.00",
+    "36215.80",
+    "42150.00",
+]
+
+REF_PREFIXES = ["INV", "PO", "CN", "STM", "REM"]
+
+#: Raised and settled dates are drawn from *separate* pools, which is the
+#: expressive form RFC-0003 requires where the two sides must differ: the draw is
+#: keyed by the pool's contents, so one shared pool would resolve a raised date
+#: and its settlement to the same day and every `timing_cutoff` would lose its
+#: gap.
+RAISED = [
+    "2026-01-08",
+    "2026-01-21",
+    "2026-02-03",
+    "2026-02-17",
+    "2026-03-02",
+    "2026-03-11",
+    "2026-03-19",
+    "2026-04-02",
+    "2026-04-14",
+    "2026-04-27",
+    "2026-05-08",
+    "2026-05-21",
+    "2026-06-03",
+    "2026-06-16",
+    "2026-06-29",
+    "2026-07-13",
+]
+SETTLED = [
+    "2026-01-13",
+    "2026-01-27",
+    "2026-02-09",
+    "2026-02-24",
+    "2026-03-05",
+    "2026-03-13",
+    "2026-03-24",
+    "2026-04-06",
+    "2026-04-17",
+    "2026-05-04",
+    "2026-05-12",
+    "2026-05-26",
+    "2026-06-09",
+    "2026-06-22",
+    "2026-07-02",
+    "2026-07-20",
+]
+
+#: How many candidates each field offers a case. Large enough that a template
+#: supports many distinct draws, small enough that the windows below stay
+#: distinct across templates.
+POOL = {"party": 6, "amount": 7, "date": 6, "ref": 5}
+
+#: Templates per family. Weighted for the same reason the frozen set is: eleven
+#: of fourteen families answer "clearly supported", so an equal split lands near
+#: 80% against RFC-0002's 40-50% band. Lower than the frozen set's counts
+#: because each template now yields many cases rather than one to three.
+PER_FAMILY = {
+    "clean_match": 40,
+    "batched_vs_itemised": 40,
+    "cause_not_established": 32,
+    "ambiguous_pair": 40,
+    "decoy": 48,
+}
+DEFAULT_PER_FAMILY = 16
+
+
+def _window(source: list[str], start: int, size: int) -> list[str]:
+    """A rotating window, so each template's pool differs from its neighbours'.
+
+    Rotation rather than a random subset: a reviewer reading two templates should
+    be able to see why they differ, and a diff should change only where the
+    scenario does.
+    """
+    return [source[(start + n) % len(source)] for n in range(size)]
+
+
+def count_for(family: str) -> int:
+    return PER_FAMILY.get(family, DEFAULT_PER_FAMILY)
+
+
+def template(family: str, index: int) -> dict[str, Any]:
+    seed = sum(count_for(f) for f in FAMILIES[: FAMILIES.index(family)]) + index
+
+    # Three or four correspondence units, as in the frozen set: deformations add
+    # and remove records on top of this, and a Gate 1 packet holds five to ten.
+    pairs = 3 + ((seed * 3 + index) % 2)
+
+    left: list[dict[str, Any]] = []
+    right: list[dict[str, Any]] = []
+    for i in range(pairs):
+        # Each field's window is offset by a different multiple of the seed, so
+        # two templates agreeing on one vocabulary still differ on the rest.
+        refs = [
+            f"{REF_PREFIXES[(seed + i + n) % len(REF_PREFIXES)]}-{10000 + seed * 37 + i * 11 + n * 7:05d}"
+            for n in range(POOL["ref"])
+        ]
+        party = _window(PARTIES, seed * 3 + i, POOL["party"])
+        amount = _window(AMOUNTS, seed * 5 + i * 2, POOL["amount"])
+        raised = _window(RAISED, seed * 2 + i, POOL["date"])
+        settled = _window(SETTLED, seed * 2 + i, POOL["date"])
+        # The same pool object on both sides for ref, party and amount — the draw
+        # is keyed by the pool's contents, so identical pools resolve alike and
+        # the clean pair survives instantiation.
+        left.append({"ref": refs, "party": party, "date": raised, "amount": amount})
+        right.append({"ref": refs, "party": party, "date": settled, "amount": amount})
+
+    policy: list[dict[str, str]] = [{"id": "P-1", "text": BASE_POLICY}]
+    body: dict[str, Any] = {
+        "id": f"{family}-{index:03d}",
+        "family": family,
+        "left": left,
+        "right": right,
+    }
+    if family in CAUSE_LINES:
+        policy.append({"id": "P-2", "text": CAUSE_LINES[family]})
+        body["cause"] = "P-2"
+
+    body["policy"] = policy
+    body["documents"] = [{"id": "D-1", "text": f"Remittance advice, batch {seed:03d}."}]
+    return body
+
+
+def main() -> None:
+    OUT.mkdir(parents=True, exist_ok=True)
+    for stale in OUT.glob("*.json"):
+        stale.unlink()
+
+    written = 0
+    for family in FAMILIES:
+        for index in range(count_for(family)):
+            body = template(family, index)
+            path = OUT / f"{body['id']}.json"
+            path.write_text(json.dumps(body, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+            written += 1
+
+    print(f"{written} pattern templates in {OUT}")
+
+
+if __name__ == "__main__":
+    main()
