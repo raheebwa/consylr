@@ -55,6 +55,12 @@ installing.
 - `consylr.violation` — one violation type for every gate, so that rejections from the schema,
   the budget, the quota and the split can be reported as one list.
 - A rejection may name the case it came from, which RFC-0003 requires of a corpus-wide audit.
+- `consylr.prompt` and the frozen prompt template it loads. The profiler applies no chat template
+  of its own, so this artefact is the whole of the model's interface: it is pinned by digest,
+  rendered by every surface, and changing it invalidates the corpus built against it. The packet
+  is rendered first and the instructions last, because the harness left-truncates.
+- `consylr.money` — one answer to how an amount is written, shared by the generator that writes
+  packets and the identity model that reads them.
 - `consylr.cases` — one case built from one template by applying a named deformation, so the
   correct answer is a by-product of the construction rather than a judgement made afterwards.
   All fourteen families of the frozen taxonomy have one. Every case is put to the validator
