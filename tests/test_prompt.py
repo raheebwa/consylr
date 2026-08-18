@@ -9,13 +9,14 @@ corpus binds to a specific one.
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 from typing import Any
 
 import pytest
 
-from consylr.prompt import BUDGET, DIGEST, OVERHEAD_TOKENS, TEMPLATE, render
-from consylr.schema import validate
+from consylr.prompt import _PATH, BUDGET, DIGEST, OVERHEAD_TOKENS, TEMPLATE, render
+from consylr.schema import ACTS, CERTAINTIES, KINDS, validate
 from tests.support import template_body
 
 PACKET = {"records": [{"id": "A-001", "ref": "INV-1"}], "policy": [], "documents": []}
@@ -216,3 +217,74 @@ def test_a_case_is_budgeted_against_the_frozen_template_by_default() -> None:
     # far longer in characters than the frozen budget allows in tokens, so the
     # gate must fire rather than pass on a budget nobody chose.
     assert case.violations, "the ordinary path budgeted against nothing"
+
+
+def test_the_example_disposes_of_every_record_it_names() -> None:
+    """The keys always do, and the example did not.
+
+    Across all fourteen families every `open` entry is paired with a `request`
+    disposition, and every key disposes of every identifier — matched and
+    residue alike. The example showed an `open` with no `request` and disposed
+    one of its three records, so a model copying the only worked example it is
+    given loses the disposition on every abstention case.
+    """
+    example = example_from(TEMPLATE)
+    named = {i for m in example["matches"] for i in (*m["l"], *m["r"])}
+    named |= set(example["residue"]["l"]) | set(example["residue"]["r"])
+    disposed = {i for d in example["do"] for i in d["on"]}
+    assert named == disposed
+
+    opened = {i for o in example.get("open", []) for i in o["on"]}
+    requested = {i for d in example["do"] if d["act"] == "request" for i in d["on"]}
+    assert opened == requested, "an open entry without a request, or the reverse"
+
+
+def test_the_artefact_says_what_to_do_when_a_counterpart_is_absent() -> None:
+    """`missing_record` is one of the fourteen families and went unmentioned.
+
+    Its correct answer is an `open` entry plus residue, and it carries no
+    exception kind — so the artefact's only guidance for an unexplained
+    situation steered the model to `cause_not_established`, which is in the
+    enumeration, validates cleanly, and grades wrong. One family in fourteen was
+    examined with no instruction at all.
+    """
+    lowered = TEMPLATE.lower()
+    assert "no counterpart" in lowered or "counterpart" in lowered
+    assert "residue" in lowered
+
+
+@pytest.mark.parametrize("value", sorted(KINDS | CERTAINTIES | ACTS))
+def test_removing_an_enumeration_value_from_the_artefact_is_caught(value: str) -> None:
+    """The previous check was an unanchored whole-file substring scan.
+
+    So deleting `hold` from the act list still passed, because "hold" occurs
+    inside "withholding" — and `hold` is an act the answer keys do emit.
+    Deleting nine of the fourteen kinds passed too, on incidental occurrences in
+    the worked example. A test satisfied by an accident cannot fail for the thing
+    it was written to catch.
+    """
+    words = set(re.findall(r"[a-z_]+", TEMPLATE.lower()))
+    assert value in words
+
+
+def test_the_digest_covers_the_string_that_is_rendered() -> None:
+    """`TEMPLATE` was decoded and `DIGEST` taken over the raw bytes.
+
+    They diverge in both directions. A CRLF checkout — nothing forces LF, and
+    `.editorconfig` is not something git enforces — yields the identical rendered
+    string under a different digest, so a corpus fails an audit over a prompt
+    nobody edited. And decoding under a non-UTF-8 locale gives mojibake in the
+    string while the digest, which never decodes, certifies no change: the model
+    receives a corrupted prompt and the digest says the interface is intact.
+    """
+    assert DIGEST == hashlib.sha256(TEMPLATE.encode("utf-8")).hexdigest()
+
+    # And demonstrated rather than asserted: a CRLF checkout of the same
+    # artefact renders the identical prompt, so it must carry the identical
+    # digest. Taken over raw bytes it does not, and the corpus fails an audit
+    # over a prompt nobody edited.
+    crlf = _PATH.read_bytes().replace(b"\n", b"\r\n")
+    assert crlf != _PATH.read_bytes()
+    rendered_from_crlf = crlf.decode("utf-8").replace("\r\n", "\n")
+    assert rendered_from_crlf == TEMPLATE
+    assert hashlib.sha256(rendered_from_crlf.encode("utf-8")).hexdigest() == DIGEST
