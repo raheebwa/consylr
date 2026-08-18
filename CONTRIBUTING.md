@@ -36,7 +36,7 @@ From a clone, at the repository root:
 ```sh
 mise trust
 mise install
-mise exec -- uv sync --frozen --extra dev
+mise exec -- uv sync --locked --extra dev
 ```
 
 [mise](https://mise.jdx.dev) pins the interpreter in `mise.toml`, so a contributor's run and a CI
@@ -50,8 +50,9 @@ found". If you have mise wired into your shell, the prefix is redundant; if you 
 difference between a working checkout and a confusing error. Prefix the commands below the same
 way, or run `mise activate` once.
 
-**`--frozen` installs exactly what `uv.lock` records**, and fails if the lock and the manifest
-disagree. `uv.lock` is committed and CI installs from it the same way. Resolving afresh on each
+**`--locked` installs exactly what `uv.lock` records**, and fails if the lock and the manifest
+disagree. `--frozen` installs from the lock too but exits 0 on a disagreement, leaving the new
+dependency missing — which is a pin that reports success while not holding. `uv.lock` is committed and CI installs from it the same way. Resolving afresh on each
 run would let a transitive dependency change under a green build with nothing in the diff to show
 it — and a project whose central claim is that its evidence can be regenerated from pinned inputs
 cannot leave its own inputs unpinned. After editing dependencies in `pyproject.toml`, run
