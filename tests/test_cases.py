@@ -29,7 +29,7 @@ from consylr.templates import Template
 from tests.support import CAUSE_LINES, FAKE_BUDGET, PerCharacter
 
 
-def build(template: Template, **over: Any) -> Case:
+def build(template: Template, **over: Any) -> Case:  # noqa: D103
     """`build` with the two arguments it refuses to proceed without.
 
     They have no defaults in the real function, because both were once optional
@@ -38,6 +38,8 @@ def build(template: Template, **over: Any) -> Case:
     `test_a_case_cannot_be_built_without_saying_how_tokens_are_counted`; every
     other test here is about something else and says so by not repeating it.
     """
+    over.setdefault("case_index", 0)
+    over.setdefault("role", "train")
     over.setdefault("tokeniser", PerCharacter())
     over.setdefault("render", prompt_render)
     over.setdefault("budget", FAKE_BUDGET)
@@ -845,3 +847,69 @@ def test_a_structural_family_cites_the_records_rather_than_a_policy_line() -> No
     case = build(a_richer_template("partial_payment"), root_seed=ROOT, case_index=0, role="train")
     exception = next(e for e in case.expected["exceptions"] if e["kind"] == "partial_payment")
     assert not any(w.startswith("P-") for w in exception["why"])
+
+
+def test_a_clean_pair_cites_its_own_records_not_the_deformed_pair_s_policy() -> None:
+    """Evidence citation precision is a scored metric, and this was a regression.
+
+    `Draft.warrant` began returning the cause line, and `_clean()` uses it for
+    every untouched pair — so on a fee template all four matches cited "A
+    settlement fee is deducted at source", including the three pairs where no fee
+    was deducted. The line that actually warrants a clean match was cited
+    nowhere in the case.
+
+    It was invisible because every test written for the cause work used
+    `pairs=1`, where `_clean()` returns nothing and the path never runs.
+    """
+    case = build(a_richer_template("fee_at_source", pairs=4), root_seed=ROOT, case_index=0)
+    deformed = {i for e in case.expected["exceptions"] for i in e["on"]}
+    cause = "P-2"
+
+    for match in case.expected["matches"]:
+        touched = deformed & set(match["r"])
+        if not touched:
+            assert cause not in match["why"], (
+                f"a clean pair {match['l']}/{match['r']} cites the fee line, and no fee "
+                "was deducted from it"
+            )
+            assert set(match["why"]) <= set(match["l"]) | set(match["r"]), (
+                "a clean pair should rest on its own two records"
+            )
+
+
+@pytest.mark.parametrize(
+    ("family", "text"),
+    [
+        ("fee_at_source", "Coffee and travel costs are excluded."),
+        ("withholding", "Taxidermy services are out of scope."),
+        ("withholding", "Any deviation from the payment syntax will be rejected."),
+        ("timing_cutoff", "The vendor must disclose all fees in writing."),
+    ],
+)
+def test_a_word_inside_another_word_does_not_declare_a_cause(family: str, text: str) -> None:
+    # Bare substring matching accepted "Coffee" as a fee and "syntax" as a tax.
+    with pytest.raises(ValueError, match="says nothing about it"):
+        build(with_policy(family, [{"id": "P-1", "text": text}], pairs=1), root_seed=ROOT)
+
+
+@pytest.mark.parametrize(
+    ("family", "text"),
+    [
+        ("fee_at_source", "No fee is payable under this agreement."),
+        ("withholding", "No tax is withheld on domestic settlements."),
+    ],
+)
+def test_a_line_denying_the_cause_does_not_declare_it(family: str, text: str) -> None:
+    # The answer key would assert a deduction the packet expressly denies.
+    with pytest.raises(ValueError, match="denies"):
+        build(with_policy(family, [{"id": "P-1", "text": text}], pairs=1), root_seed=ROOT)
+
+
+def test_an_invisible_character_does_not_hide_a_genuine_cause() -> None:
+    # The other direction, and the one that lets a valid template be sabotaged:
+    # a zero-width space inside "fee" renders identically and is invisible in a
+    # diff. `templates._text` exists for exactly this and was applied to every
+    # identity comparison and to nothing here.
+    poisoned = [{"id": "P-1", "text": "A settlement f​ee is deducted at source."}]
+    case = build(with_policy("fee_at_source", poisoned, pairs=1), root_seed=ROOT)
+    assert case.violations == []
