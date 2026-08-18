@@ -25,6 +25,7 @@ from typing import Any
 
 import pytest
 
+from consylr.identity import scenario
 from consylr.instantiate import instantiate
 from consylr.templates import Template, shape_violations
 from tests.support import built, template_body
@@ -113,25 +114,82 @@ def test_both_sides_of_a_clean_pair_draw_the_same_value() -> None:
     assert left == right
 
 
-def test_the_builder_refuses_a_pattern_it_was_handed_uninstantiated() -> None:
-    """A pool must never reach the packet, and the guard needs a caller.
+def test_no_pool_can_reach_a_packet() -> None:
+    """The property the builder's internal resolution exists to guarantee.
 
-    An amount was already caught, but only by `money.canonical` refusing a list
-    it could not read — and only for `amount`. The fields no canonicaliser
-    touches were not caught at all: a pool on `party` built **clean**, and the
-    literal text `['Northwind Ltd', 'Southgate Ltd']` was rendered into the
-    prompt as a counterparty name, in a case the corpus writer would have
-    accepted. This is that hole, closed where the audit and the builder share one
-    definition of what a template is.
+    This began as a refusal — the builder raising on a pattern handed to it
+    unresolved — and the refusal was the wrong shape. `shape_violations` reads a
+    record's keys and never the types of its values, so a pool on 'party' built
+    with **zero violations** and rendered `['Northwind Ltd', 'Southgate Ltd']`
+    into the prompt as a counterparty name. Refusing that at the door would have
+    left every caller responsible for remembering; resolving inside the builder
+    means no caller can forget, and the guarantee is structural.
     """
-    with pytest.raises(ValueError, match="not instantiated"):
-        built(a_pattern(party=["Northwind Ltd", "Southgate Ltd"]))
+    parties = ["Northwind Ltd", "Southgate Ltd"]
+    case = built(a_pattern(party=parties))
+
+    reached = {r["party"] for r in case.packet["records"]}
+    assert case.violations == []
+    assert reached <= set(parties), "a value the pattern never declared reached the packet"
+    assert all(isinstance(p, str) for p in reached), "a pool reached the packet"
 
 
-def test_the_audit_reports_the_pool_the_builder_raises_on() -> None:
-    """One definition, read by both. An audit blind to what the builder refuses
-    would pass a template set that cannot produce a single case."""
-    faults = shape_violations(a_pattern(party=["Northwind Ltd", "Southgate Ltd"]))
+def test_a_pool_with_nothing_to_draw_from_is_refused() -> None:
+    """A malformed pool is an authoring defect, and it raises rather than reports.
 
-    assert [v.code for v in faults] == ["bad_type"] * len(faults)
-    assert faults, "the closed-world check did not see an un-instantiated pool"
+    An empty pool has no value to select, and a silent fallback would put a
+    value in the packet that the template never declared — which is the inferred
+    ground truth this whole design exists to avoid.
+    """
+    with pytest.raises(ValueError, match="empty pool"):
+        built(a_pattern(party=[]))
+
+
+def test_a_well_formed_pool_is_not_a_shape_violation() -> None:
+    """A pattern is a legitimate artefact, so the audit must not reject one.
+
+    The first version of this guard rejected every container and would have
+    failed `templates-train/` wholesale.
+    """
+    assert shape_violations(a_pattern()) == []
+
+
+def test_a_pattern_takes_part_in_the_split_like_any_other_template() -> None:
+    """A pattern with no scenario cannot be partitioned, so it cannot be used.
+
+    `identity.scenario()` probes a template by building it under a constant seed
+    and a constant id. A pattern reaching that probe unresolved has no scenario
+    at all — which does not degrade the split, it removes the template from it
+    entirely. Instantiating inside the builder is what makes the probe see a
+    canonical draw instead of a pool.
+    """
+    assert len(scenario(a_pattern())) == 64
+
+
+def test_the_probe_reads_the_pattern_not_the_corpus_draw() -> None:
+    """Identity normalises the variation, which is what lets a pattern vary.
+
+    Two templates declaring the same pools are the same scenario however many
+    different cases each goes on to produce; two declaring different pools are
+    not. Without this the split key dissolves — every instantiated case would be
+    its own scenario.
+    """
+    same = scenario(a_pattern()) == scenario(a_pattern(id="t-999"))
+    different = scenario(a_pattern()) != scenario(a_pattern(policy_text="A different rule."))
+
+    assert same, "one pattern under two ids is one scenario"
+    assert different, "two different patterns are two scenarios"
+
+
+def test_a_case_records_the_pattern_it_came_from_and_what_it_became() -> None:
+    """Both identities, because they answer different questions.
+
+    The pattern's digest is the authored artefact drift detection watches; the
+    instantiated body is what this case actually was. Recording only the second
+    makes "which pattern produced this case" an archaeology.
+    """
+    pattern = a_pattern()
+    case = built(pattern, case_index=4)
+
+    assert case.meta["template_fingerprint"] == pattern.fingerprint
+    assert case.meta["case_fingerprint"] != pattern.fingerprint

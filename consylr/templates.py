@@ -208,24 +208,45 @@ def shape_violations(template: Template) -> list[Violation]:
                     )
                 )
             # A pattern template declares a pool where a fixed one declares a
-            # value, and `instantiate` resolves it before a case is built. Where
-            # that step is skipped the pool reaches the packet, and only `amount`
-            # was ever caught — by `money.canonical` failing to read a list. The
-            # fields no canonicaliser touches went through clean: a pool on
-            # 'party' rendered `['Northwind Ltd', 'Southgate Ltd']` into the
-            # prompt as a counterparty, in a case the corpus writer accepted.
+            # value, and `cases.build` resolves it before a record is read — so a
+            # well-formed pool is a legitimate artefact here and must not be
+            # rejected. What is refused is a pool nothing can be drawn from, or a
+            # container that is not a pool at all. Both would otherwise reach a
+            # packet through fields no canonicaliser inspects: only 'amount' was
+            # ever caught, and only because `money.canonical` could not read a
+            # list, while a pool on 'party' built clean and rendered
+            # `['Northwind Ltd', 'Southgate Ltd']` into a prompt as a
+            # counterparty name.
             for key in sorted(RECORD_FIELDS & set(record)):
-                # A container, not merely a non-string. RFC-0003 canonicalises
-                # amounts, so `1000`, `1000.0` and `"1000.00"` are one amount and
-                # a numeric one is legitimate — rejecting every non-string here
-                # broke eight tests that assert exactly that tolerance. What
-                # cannot reach a packet is a pool.
-                if isinstance(record[key], (list, dict, set, tuple)):
+                value = record[key]
+                if isinstance(value, list):
+                    if not value:
+                        out.append(
+                            Violation(
+                                "bad_type",
+                                f"{name}: {side} entry {n} declares an empty pool for {key!r}; "
+                                "a pool with no candidates has nothing to draw",
+                                template.id or None,
+                            )
+                        )
+                    elif not all(isinstance(candidate, str) for candidate in value):
+                        out.append(
+                            Violation(
+                                "bad_type",
+                                f"{name}: {side} entry {n} declares a pool for {key!r} holding "
+                                "something that is not text; a drawn value reaches the packet",
+                                template.id or None,
+                            )
+                        )
+                elif isinstance(value, (dict, set, tuple)):
+                    # Not a value and not a pool. RFC-0003 canonicalises amounts,
+                    # so a bare `1000` or `1000.0` is a legitimate amount and is
+                    # deliberately not named here.
                     out.append(
                         Violation(
                             "bad_type",
-                            f"{name}: {side} entry {n} has a {key!r} that is not a value; a "
-                            "pattern's pool was not instantiated, and it would reach the packet",
+                            f"{name}: {side} entry {n} has a {key!r} that is neither a value nor "
+                            "a pool; the builder cannot read it and it would reach the packet",
                             template.id or None,
                         )
                     )
