@@ -391,19 +391,17 @@ def test_a_template_with_no_id_is_refused_rather_than_built_under_an_empty_one()
         build(Template.from_mapping(body), root_seed=ROOT, case_index=0, role="train")
 
 
-def test_a_record_carrying_its_own_id_does_not_override_the_generated_one() -> None:
+def test_a_record_carrying_its_own_id_is_refused() -> None:
     # Identifiers are the packet's, assigned by side and position. A record that
     # brought its own would collide across sides or point a citation at nothing,
     # and every `why` in the expected output is written against the generated id.
+    # Silently overriding it was the previous behaviour; refusing says so.
     body = dict(a_richer_template("clean_match").body)
     left = [dict(r) for r in body["left"]]
     left[0]["id"] = "B-999"
     body["left"] = left
-    case = build(Template.from_mapping(body), root_seed=ROOT, case_index=0, role="train")
-    ids = [r["id"] for r in case.packet["records"]]
-    assert "B-999" not in ids
-    assert len(ids) == len(set(ids))
-    assert case.violations == []
+    with pytest.raises(ValueError, match="'id'"):
+        build(Template.from_mapping(body), root_seed=ROOT, case_index=0, role="train")
 
 
 # --- the packet must not tell the model which record was deformed -------------

@@ -68,6 +68,48 @@ crossed the boundary" unfalsifiable from outside the process that produced the c
 would have to trust the generator rather than check it. In data, a template is diffable, its id is
 stable across refactors of the code that reads it, and a reviewer can see what changed.
 
+### What makes two templates the same scenario
+
+The split separates on templates, so "the same template" is load-bearing: get it wrong in one
+direction and one scenario is trained on and examined on; wrong in the other and two different
+scenarios are merged and one is never used. The first failure **raises** measured accuracy, which
+is why this is spec rather than an implementation detail.
+
+**Identity is a digest over a projection of what the builder reads, in the form the model will see
+it — never over the file.** The projection is exactly:
+
+| In the projection | Not in it | Why |
+|---|---|---|
+| `family` | the declared `id` | the id is a label over the scenario, so two ids for one scenario are an alias, not two templates |
+| each record's `ref`, `date`, `amount` | each record's `party` | a counterparty as written is free-text surface, which paraphrase may rewrite |
+| the `id` of each policy and document | their `text` | *which* line is cited is structural; its prose is not |
+
+with three normalisations, each closing a difference no reader of a rendered packet can perceive:
+
+- **Amounts** are canonicalised before comparison. `"1000.00"`, `"1000.0"`, `1000` and `1000.0`
+  are one amount, because the generator collapses them to one `Decimal` everywhere it reasons.
+- **Text** is NFC-normalised, stripped of Unicode format characters, and has its whitespace
+  collapsed. A zero-width space in a reference is invisible in a rendered packet *and in a diff*,
+  so without this a corpus can be poisoned with no visible edit; NFD against NFC is macOS against
+  everything else.
+- **Record order** does not count. Applying one permutation to both sides preserves every clean
+  pair, and a JSON dump with sorted keys sorts keys and never arrays.
+
+**A template is a closed world.** The body carries `id`, `family`, `left`, `right`, `policy` and
+`documents`; a record carries `ref`, `party`, `date` and `amount`; a policy or document entry
+carries `id` and `text`, and that `text` is prose. **Anything else is refused, by the audit and by
+the builder, from one definition.** This is not tidiness. An unclassified key either reaches the
+packet — where it is a difference the model can see that nothing classified — or sits in the body
+unread, where it changes what counts as this scenario while changing nothing the model sees. Both
+are leaks, and a denylist of prose field names can only ever chase the spellings someone thought
+of. Refusing the unknown makes the classification complete **by construction**, which is the same
+property the ground truth already rests on.
+
+Two identities are kept, and they answer different questions. The **content** digest covers the
+whole file and answers "has this template changed since the corpus was built" — drift, where any
+edit is worth reporting. The **projection** digest answers "is this the same scenario" and is what
+the split, the alias check and the near-duplicate check use.
+
 ### Configuration
 
 One file, versioned with the corpus it produced. It carries the quota plan, the family list, the
