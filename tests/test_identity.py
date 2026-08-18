@@ -19,10 +19,9 @@ from typing import Any
 
 import pytest
 
-from consylr.cases import build
 from consylr.split import partition
 from consylr.templates import Template, check
-from tests.support import FAMILIES, template_body
+from tests.support import FAMILIES, built, template_body
 
 
 def other(**over: Any) -> Template:
@@ -48,7 +47,7 @@ def test_a_body_key_the_builder_never_reads_is_refused() -> None:
     # note inside the JSON — where it used to split one scenario in 58 of the
     # first 100 seeds, with byte-identical packets on both sides.
     with pytest.raises(ValueError, match="comment"):
-        build(other(comment="copied from t-000"), root_seed=1, case_index=0, role="train")
+        built(other(comment="copied from t-000"))
 
 
 def test_a_body_key_the_builder_never_reads_is_reported() -> None:
@@ -65,7 +64,7 @@ def test_a_record_key_the_builder_does_not_know_is_refused(key: str) -> None:
     # thought of.
     left = [{**r, key: "some prose"} for r in template_body()["left"]]
     with pytest.raises(ValueError, match=key):
-        build(other(left=left), root_seed=1, case_index=0, role="train")
+        built(other(left=left))
 
 
 # --- the same scenario written differently ------------------------------------
@@ -149,4 +148,4 @@ def test_prose_that_is_not_prose_is_refused_rather_than_erased() -> None:
     # "a paraphrase cannot change a number", which was untrue there.
     nested = [{"id": "P-1", "text": {"rule": "deduct", "rate": "0.02"}}]
     with pytest.raises(ValueError, match="text"):
-        build(other(policy=nested), root_seed=1, case_index=0, role="train")
+        built(other(policy=nested))

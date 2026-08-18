@@ -17,6 +17,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from consylr.cases import Case, build
+from consylr.cases import _serialise as serialise
 from consylr.templates import Template
 
 FAMILIES = frozenset({"clean_match", "fee_at_source", "cause_not_established", "decoy", "reversal"})
@@ -71,3 +73,33 @@ def template_body(
 
 def a_template(id: str = "t-001", family: str = "clean_match", **over: Any) -> Template:
     return Template.from_mapping(template_body(id, family, **over))
+
+
+class PerCharacter:
+    """One token per character. Deterministic, offline, and inspectable.
+
+    The real tokeniser is fetched at setup; a build that reached for it would be
+    network-dependent, which RFC-0003 refuses.
+    """
+
+    def encode(self, text: str) -> list[int]:
+        return [0] * len(text)
+
+
+def built(template: Template, **over: Any) -> Case:
+    """A case, with the two things `build` refuses to proceed without.
+
+    `tokeniser` and `render` have no defaults in `build`, because both were once
+    optional and the ordinary path therefore enforced no budget at all. Supplying
+    them here keeps that strictness at the call site it belongs to rather than
+    softening it for the tests.
+    """
+    kwargs: dict[str, Any] = {
+        "root_seed": 1,
+        "case_index": 0,
+        "role": "train",
+        "tokeniser": PerCharacter(),
+        "render": serialise,
+    }
+    kwargs.update(over)
+    return build(template, **kwargs)
