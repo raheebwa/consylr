@@ -41,7 +41,19 @@ class Budget:
 
     context: int = 2048
     packet_max: int = 1200
+    template_overhead: int = 0
     output_reserve: int = 600
+
+    @property
+    def prompt_max(self) -> int:
+        """What the *rendered* prompt may cost.
+
+        RFC-0003 sizes the packet and asserts on the rendered prompt, and those
+        are different strings. The wrapper between them is a measured number the
+        caller declares; it defaults to zero so an undeclared wrapper is
+        rejected rather than silently charged against the packet allowance.
+        """
+        return self.packet_max + self.template_overhead
 
     def validate(self) -> Budget:
         """Refuse a budget no case could satisfy.
@@ -49,10 +61,10 @@ class Budget:
         Without this, a misconfigured budget fails every case and each message
         blames the case rather than the configuration.
         """
-        if self.packet_max + self.output_reserve > self.context:
+        if self.prompt_max + self.output_reserve > self.context:
             raise ValueError(
-                f"packet_max {self.packet_max} + output_reserve {self.output_reserve} "
-                f"cannot fit context {self.context}"
+                f"packet_max {self.packet_max} + template_overhead {self.template_overhead} "
+                f"+ output_reserve {self.output_reserve} cannot fit context {self.context}"
             )
         return self
 
@@ -70,16 +82,27 @@ def check(rendered_prompt: str, tokeniser: Tokeniser, budget: Budget = DEFAULT) 
     used = len(tokeniser.encode(rendered_prompt))
     violations: list[Violation] = []
 
-    if used > budget.packet_max:
+    if used > budget.prompt_max:
         violations.append(
             Violation(
-                "packet_over_budget",
-                f"rendered prompt is {used} tokens; the cap is {budget.packet_max}",
+                "prompt_over_budget",
+                f"rendered prompt is {used} tokens; the cap is {budget.prompt_max} "
+                f"(packet_max {budget.packet_max} + template_overhead "
+                f"{budget.template_overhead})",
             )
         )
 
     remaining = budget.context - used
-    if remaining < budget.output_reserve:
+    if remaining < 0:
+        violations.append(
+            Violation(
+                "headroom_lost",
+                f"rendered prompt is {used} tokens and overruns the "
+                f"{budget.context}-token context by {-remaining}; "
+                f"{budget.output_reserve} was reserved for output",
+            )
+        )
+    elif remaining < budget.output_reserve:
         violations.append(
             Violation(
                 "headroom_lost",
