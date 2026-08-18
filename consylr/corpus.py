@@ -33,8 +33,13 @@ from collections.abc import Iterable, Mapping
 from pathlib import Path
 from typing import Any
 
-from consylr.cases import Case
+from consylr.cases import DEFORMATIONS, Case
+from consylr.identity import check as identity_check
 from consylr.prompt import DIGEST
+from consylr.quota import Plan
+from consylr.quota import check as quota_check
+from consylr.templates import Template
+from consylr.templates import check as templates_check
 from consylr.violation import Violation
 
 
@@ -46,17 +51,41 @@ def _named(ids: Iterable[str]) -> str:
     return ", ".join(repr(i) for i in sorted(set(ids)))
 
 
-def check(cases: Iterable[Case]) -> list[Violation]:
+def check(
+    cases: Iterable[Case],
+    *,
+    templates: Iterable[Template] | None = None,
+    plan: Plan | None = None,
+) -> list[Violation]:
     """Every way a corpus is unfit to be trained on or examined with.
 
     Exhaustive over the cases given, because a corpus is a finite list of
     artefacts and comparing all of them costs a dictionary.
+
+    `templates.check`, `identity.check` and `quota.check` run from here because
+    they had no production caller at all — the closed-world shape rules, the
+    duplicate-scenario audit and RFC-0002's certainty bands were reachable only
+    from tests. Three separate checks written, agreed, and never made into
+    gates; the count is why this is now the one place a corpus is assembled and
+    the one place everything is asked.
     """
     rows = list(cases)
     if not rows:
         return [Violation("empty_corpus", "a corpus with no cases teaches and measures nothing")]
 
     violations: list[Violation] = []
+
+    if templates is not None:
+        held = list(templates)
+        violations.extend(templates_check(held, frozenset(DEFORMATIONS)))
+        violations.extend(identity_check(held))
+
+    if plan is not None:
+        # The certainty bands are a property of a mix, so they are asked of a
+        # corpus rather than of a case. A sealed set has its own distribution
+        # and is not held to the training quota, which is why this is optional
+        # rather than absent.
+        violations.extend(quota_check([case.meta for case in rows], plan))
 
     for case in rows:
         for problem in case.violations:
@@ -139,7 +168,13 @@ def content_digest(directory: Path) -> str:
     return hashlib.sha256(" ".join(packets).encode()).hexdigest()
 
 
-def write(directory: Path, cases: Iterable[Case]) -> list[Path]:
+def write(
+    directory: Path,
+    cases: Iterable[Case],
+    *,
+    templates: Iterable[Template],
+    plan: Plan | None = None,
+) -> list[Path]:
     """Write a corpus, or refuse to.
 
     There is no unaudited path to disk. The audit is not a step a caller
@@ -147,7 +182,7 @@ def write(directory: Path, cases: Iterable[Case]) -> list[Path]:
     fails it leaves nothing behind.
     """
     rows = list(cases)
-    problems = check(rows)
+    problems = check(rows, templates=templates, plan=plan)
     if problems:
         raise ValueError(
             "this corpus was not written; "
