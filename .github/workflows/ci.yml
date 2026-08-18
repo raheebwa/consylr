@@ -36,10 +36,10 @@ jobs:
         run: bash tests/hooks/run.sh
 
       - name: lint
-        run: python -m ruff check .
+        run: ruff check .
 
       - name: format
-        run: python -m ruff format --check .
+        run: ruff format --check .
 
       - name: types
         run: python -m mypy

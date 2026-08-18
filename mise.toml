@@ -6,3 +6,4 @@ _.python.venv = { path = ".venv", create = true }
 [tools]
 python = "3.13.11"
 uv = "0.12.5"
+ruff = "0.16.3"

@@ -267,16 +267,24 @@ def test_open_why_is_optional_but_must_resolve_when_present() -> None:
 # implementation as first written.
 # ============================================================================
 
-FULL = {"records": {"A-017", "A-019", "A-021", "B-004", "B-011"},
-        "policy": {"P-02", "P-05"}, "documents": {"D-01"}}
+FULL = {
+    "records": {"A-017", "A-019", "A-021", "B-004", "B-011"},
+    "policy": {"P-02", "P-05"},
+    "documents": {"D-01"},
+}
 
 
 def test_a_record_the_output_never_mentions_is_still_residue() -> None:
     # The rule is "if and only if", quantified over the PACKET's records.
     # Quantifying over what the output happens to name lets an empty analysis
     # of a full packet certify clean — the failure residue exists to prevent.
-    empty: dict[str, object] = {"matches": [], "exceptions": [], "open": [],
-                                "residue": {"l": [], "r": []}, "do": []}
+    empty: dict[str, object] = {
+        "matches": [],
+        "exceptions": [],
+        "open": [],
+        "residue": {"l": [], "r": []},
+        "do": [],
+    }
     assert "residue_wrong" in codes(empty, FULL)
 
 
@@ -286,36 +294,51 @@ def test_a_complete_analysis_of_every_packet_record_is_clean() -> None:
         "exceptions": [],
         "open": [{"on": ["A-019"], "need": "settlement breakdown"}],
         "residue": {"l": ["A-019", "A-021"], "r": ["B-011"]},
-        "do": [{"act": "accept", "on": ["A-017", "B-004"]},
-               {"act": "request", "on": ["A-019"]},
-               {"act": "escalate", "on": ["A-021", "B-011"]}],
+        "do": [
+            {"act": "accept", "on": ["A-017", "B-004"]},
+            {"act": "request", "on": ["A-019"]},
+            {"act": "escalate", "on": ["A-021", "B-011"]},
+        ],
     }
     assert codes(out, FULL) == []
 
 
 # --- identifier classes the RFC defines --------------------------------------
 
+
 def test_a_policy_line_span_resolves_against_its_policy_document() -> None:
-    out = ok(matches=[{"l": ["A-017"], "r": ["B-004"], "c": "supported", "why": ["P-02:L7"]}],
-             residue={"l": ["A-019", "A-021"], "r": ["B-011"]},
-             do=[{"act": "accept", "on": ["A-017", "B-004"]},
-                 {"act": "escalate", "on": ["A-019", "A-021", "B-011"]}])
+    out = ok(
+        matches=[{"l": ["A-017"], "r": ["B-004"], "c": "supported", "why": ["P-02:L7"]}],
+        residue={"l": ["A-019", "A-021"], "r": ["B-011"]},
+        do=[
+            {"act": "accept", "on": ["A-017", "B-004"]},
+            {"act": "escalate", "on": ["A-019", "A-021", "B-011"]},
+        ],
+    )
     assert "unresolved_id" not in codes(out, FULL)
 
 
 def test_a_document_identifier_resolves() -> None:
-    out = ok(matches=[{"l": ["A-017"], "r": ["B-004"], "c": "supported", "why": ["D-01"]}],
-             residue={"l": ["A-019", "A-021"], "r": ["B-011"]},
-             do=[{"act": "accept", "on": ["A-017", "B-004"]},
-                 {"act": "escalate", "on": ["A-019", "A-021", "B-011"]}])
+    out = ok(
+        matches=[{"l": ["A-017"], "r": ["B-004"], "c": "supported", "why": ["D-01"]}],
+        residue={"l": ["A-019", "A-021"], "r": ["B-011"]},
+        do=[
+            {"act": "accept", "on": ["A-017", "B-004"]},
+            {"act": "escalate", "on": ["A-019", "A-021", "B-011"]},
+        ],
+    )
     assert "unresolved_id" not in codes(out, FULL)
 
 
 def test_a_span_on_an_unknown_policy_does_not_resolve() -> None:
-    out = ok(matches=[{"l": ["A-017"], "r": ["B-004"], "c": "supported", "why": ["P-99:L1"]}],
-             residue={"l": ["A-019", "A-021"], "r": ["B-011"]},
-             do=[{"act": "accept", "on": ["A-017", "B-004"]},
-                 {"act": "escalate", "on": ["A-019", "A-021", "B-011"]}])
+    out = ok(
+        matches=[{"l": ["A-017"], "r": ["B-004"], "c": "supported", "why": ["P-99:L1"]}],
+        residue={"l": ["A-019", "A-021"], "r": ["B-011"]},
+        do=[
+            {"act": "accept", "on": ["A-017", "B-004"]},
+            {"act": "escalate", "on": ["A-019", "A-021", "B-011"]},
+        ],
+    )
     assert "unresolved_id" in codes(out, FULL)
 
 
@@ -326,6 +349,7 @@ def test_a_packet_whose_records_are_objects_is_accepted() -> None:
 
 
 # --- malformed output is reported, never raised ------------------------------
+
 
 def test_a_string_where_a_list_belongs_is_reported_not_raised() -> None:
     # The single most likely malformed model output there is.
@@ -352,6 +376,7 @@ def test_a_citation_sent_as_a_string_is_rejected() -> None:
 
 # --- required fields ---------------------------------------------------------
 
+
 def test_an_output_missing_every_section_is_not_clean() -> None:
     assert codes({"residue": {"l": [], "r": []}}) != []
 
@@ -361,8 +386,11 @@ def test_a_match_without_sides_is_invalid() -> None:
 
 
 def test_an_open_entry_without_a_need_is_invalid() -> None:
-    out = ok(open=[{"on": ["A-019"]}], residue={"l": ["A-019"], "r": []},
-             do=[{"act": "accept", "on": ["A-017", "B-004"]}])
+    out = ok(
+        open=[{"on": ["A-019"]}],
+        residue={"l": ["A-019"], "r": []},
+        do=[{"act": "accept", "on": ["A-017", "B-004"]}],
+    )
     assert "missing_field" in codes(out)
 
 
@@ -371,35 +399,49 @@ def test_a_disposition_without_records_is_invalid() -> None:
 
 
 def test_an_ambiguous_match_still_needs_a_why_key() -> None:
-    assert "missing_field" in codes(ok(matches=[{"l": ["A-017"], "r": ["B-004"], "c": "ambiguous"}]))
+    assert "missing_field" in codes(
+        ok(matches=[{"l": ["A-017"], "r": ["B-004"], "c": "ambiguous"}])
+    )
 
 
 # --- the free-text field is capped -------------------------------------------
 
+
 def test_an_unbounded_need_is_rejected() -> None:
-    out = ok(open=[{"on": ["A-019"], "need": "x" * 4000}],
-             residue={"l": ["A-019"], "r": []},
-             do=[{"act": "accept", "on": ["A-017", "B-004"]},
-                 {"act": "request", "on": ["A-019"]}])
+    out = ok(
+        open=[{"on": ["A-019"], "need": "x" * 4000}],
+        residue={"l": ["A-019"], "r": []},
+        do=[{"act": "accept", "on": ["A-017", "B-004"]}, {"act": "request", "on": ["A-019"]}],
+    )
     assert "need_too_long" in codes(out)
 
 
 # --- unknown keys, rather than a denylist ------------------------------------
 
+
 def test_a_near_miss_confidence_key_is_rejected() -> None:
     for key in ("certainty", "conf", "p", "likelihood", "confidence_score"):
-        out = ok(matches=[{"l": ["A-017"], "r": ["B-004"], "c": "supported",
-                           "why": ["A-017"], key: 0.87}])
+        out = ok(
+            matches=[
+                {"l": ["A-017"], "r": ["B-004"], "c": "supported", "why": ["A-017"], key: 0.87}
+            ]
+        )
         assert "unknown_field" in codes(out), key
 
 
 def test_a_misspelled_section_is_rejected_not_ignored() -> None:
-    out = {"matches": [], "exception": [{"on": ["A-017"], "kind": "vibes", "c": "nope"}],
-           "opens": [{"on": ["A-019"]}], "residue": {"l": [], "r": []}, "do": []}
+    out = {
+        "matches": [],
+        "exception": [{"on": ["A-017"], "kind": "vibes", "c": "nope"}],
+        "opens": [{"on": ["A-019"]}],
+        "residue": {"l": [], "r": []},
+        "do": [],
+    }
     assert "unknown_field" in codes(out)
 
 
 # --- an exception's citation rule is not gated on certainty -------------------
+
 
 def test_a_hedged_exception_still_needs_a_citation() -> None:
     out = ok(exceptions=[{"on": ["A-017"], "kind": "fee_at_source", "c": "ambiguous", "why": []}])
@@ -408,12 +450,17 @@ def test_a_hedged_exception_still_needs_a_citation() -> None:
 
 # --- one defect produces one violation ---------------------------------------
 
+
 def test_a_missing_residue_key_does_not_cascade() -> None:
-    out = {"matches": [{"l": ["A-017"], "r": ["B-004"], "c": "supported", "why": ["A-017"]}],
-           "exceptions": [], "open": [],
-           "do": [{"act": "accept", "on": ["A-017", "B-004"]}]}
-    assert codes(out, {"records": {"A-017", "B-004"}, "policy": set(), "documents": set()}) \
-        == ["residue_missing"]
+    out = {
+        "matches": [{"l": ["A-017"], "r": ["B-004"], "c": "supported", "why": ["A-017"]}],
+        "exceptions": [],
+        "open": [],
+        "do": [{"act": "accept", "on": ["A-017", "B-004"]}],
+    }
+    assert codes(out, {"records": {"A-017", "B-004"}, "policy": set(), "documents": set()}) == [
+        "residue_missing"
+    ]
 
 
 def test_a_half_present_residue_keeps_the_side_it_declared() -> None:
@@ -427,26 +474,37 @@ def test_a_half_present_residue_keeps_the_side_it_declared() -> None:
 
 # --- rules that had no failing test behind them ------------------------------
 
+
 def test_an_exception_certainty_is_checked_too() -> None:
-    out = ok(exceptions=[{"on": ["A-017"], "kind": "fee_at_source", "c": "probably",
-                          "why": ["P-02"]}])
+    out = ok(
+        exceptions=[{"on": ["A-017"], "kind": "fee_at_source", "c": "probably", "why": ["P-02"]}]
+    )
     assert "bad_certainty" in codes(out, FULL)
 
 
 def test_residue_listed_on_the_wrong_side_is_caught() -> None:
     # Membership correct, placement wrong.
-    out = ok(residue={"l": ["B-011"], "r": ["A-019", "A-021"]},
-             do=[{"act": "accept", "on": ["A-017", "B-004"]},
-                 {"act": "escalate", "on": ["A-019", "A-021", "B-011"]}])
+    out = ok(
+        residue={"l": ["B-011"], "r": ["A-019", "A-021"]},
+        do=[
+            {"act": "accept", "on": ["A-017", "B-004"]},
+            {"act": "escalate", "on": ["A-019", "A-021", "B-011"]},
+        ],
+    )
     assert "residue_wrong" in codes(out, FULL)
 
 
 def test_cause_not_established_exemption_holds_at_supported() -> None:
-    out = ok(exceptions=[{"on": ["A-017"], "kind": "cause_not_established", "c": "supported",
-                          "why": []}],
-             residue={"l": ["A-019", "A-021"], "r": ["B-011"]},
-             do=[{"act": "accept", "on": ["A-017", "B-004"]},
-                 {"act": "escalate", "on": ["A-019", "A-021", "B-011"]}])
+    out = ok(
+        exceptions=[
+            {"on": ["A-017"], "kind": "cause_not_established", "c": "supported", "why": []}
+        ],
+        residue={"l": ["A-019", "A-021"], "r": ["B-011"]},
+        do=[
+            {"act": "accept", "on": ["A-017", "B-004"]},
+            {"act": "escalate", "on": ["A-019", "A-021", "B-011"]},
+        ],
+    )
     assert "uncited_claim" not in codes(out, FULL)
 
 
@@ -455,7 +513,8 @@ def test_the_empty_packet_answer_the_rfc_prescribes_validates() -> None:
     # reconciled: the prescribed answer carried a request with no open entry.
     packet = P("A-001", "A-002")
     out: dict[str, object] = {
-        "matches": [], "exceptions": [],
+        "matches": [],
+        "exceptions": [],
         "open": [{"on": ["A-001", "A-002"], "need": "records for the other side"}],
         "residue": {"l": ["A-001", "A-002"], "r": []},
         "do": [{"act": "request", "on": ["A-001", "A-002"]}],
@@ -471,7 +530,8 @@ def test_a_match_with_its_sides_swapped_is_caught() -> None:
 
 
 def test_a_many_side_match_keeps_every_record_on_its_own_side() -> None:
-    out = ok(matches=[{"l": ["A-021"], "r": ["B-008", "B-009"], "c": "supported",
-                       "why": ["A-021"]}],
-             do=[{"act": "accept", "on": ["A-021", "B-008", "B-009"]}])
+    out = ok(
+        matches=[{"l": ["A-021"], "r": ["B-008", "B-009"], "c": "supported", "why": ["A-021"]}],
+        do=[{"act": "accept", "on": ["A-021", "B-008", "B-009"]}],
+    )
     assert codes(out, P("A-021", "B-008", "B-009")) == []

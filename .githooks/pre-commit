@@ -47,17 +47,28 @@ fi
 # project environment is activated, so look in the documented location too.
 [ -d "$root/.venv/bin" ] && PATH="$root/.venv/bin:$PATH"
 
+# ruff is a mise-provided binary rather than a Python dependency, and a git
+# hook's shell has not activated the toolchain the project declares. Resolve it
+# by path rather than by wrapping every gate in `mise exec` — an unquoted
+# command prefix does not word-split under every shell, which turns the wrapper
+# itself into a command that does not exist.
+if command -v mise >/dev/null 2>&1; then
+  mise_ruff="$(mise which ruff 2>/dev/null || true)"
+  [ -n "$mise_ruff" ] && PATH="$(dirname "$mise_ruff"):$PATH"
+fi
+
 if [ -f "$root/pyproject.toml" ]; then
-  # Probe what the gates below actually invoke. Probing `ruff`/`mypy`/`pytest`
-  # while running `python -m ruff` means an environment without `python` skips
-  # the friendly message and then emits four bare "command not found" lines.
+  # Probe exactly what the gates invoke. A guard that checks a different thing
+  # than it protects will pass and then let bare "command not found" lines
+  # through with no diagnostic.
   missing=""
   command -v python >/dev/null 2>&1 || missing=" python"
-  for t in ruff mypy pytest; do
+  command -v ruff   >/dev/null 2>&1 || missing="$missing ruff"
+  for t in mypy pytest; do
     python -c "import $t" >/dev/null 2>&1 || missing="$missing $t"
   done
   if [ -n "$missing" ]; then
-    printf 'pre-commit: not importable:%s\n  Run: uv pip install -e ".[dev]"\n' "$missing" >&2
+    printf 'pre-commit: not available:%s\n  Run: mise install && mise exec -- uv pip install -e ".[dev]"\n' "$missing" >&2
     rc=1
   else
     # Exactly the commands CONTRIBUTING.md documents, run the way it documents
@@ -69,10 +80,10 @@ if [ -f "$root/pyproject.toml" ]; then
     # They need an importable, installed package, which a snapshot of staged
     # blobs is not. Saying so is better than implying a guarantee that is not
     # given: the committed tree is CI's job, and CI is the authority on it.
-    ( cd "$root" && python -m ruff check . )          || rc=1
-    ( cd "$root" && python -m ruff format --check . ) || rc=1
-    ( cd "$root" && python -m mypy )                  || rc=1
-    ( cd "$root" && python -m pytest )                || rc=1
+    ( cd "$root" && ruff check . )          || rc=1
+    ( cd "$root" && ruff format --check . ) || rc=1
+    ( cd "$root" && python -m mypy )        || rc=1
+    ( cd "$root" && python -m pytest )      || rc=1
   fi
 fi
 
