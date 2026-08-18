@@ -2,7 +2,7 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 181."
+      "text": "Remittance advice, batch 137."
     }
   ],
   "family": "duplicate",
@@ -19,27 +19,27 @@
         "4820.90"
       ],
       "date": [
-        "2026-05-08",
-        "2026-05-21",
-        "2026-06-03",
-        "2026-06-16",
-        "2026-06-29",
-        "2026-07-13"
+        "2026-02-03",
+        "2026-02-17",
+        "2026-03-02",
+        "2026-03-11",
+        "2026-03-19",
+        "2026-04-02"
       ],
       "party": [
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd"
+        "Thornbury Chemicals Ltd",
+        "Ullswater Textiles Ltd",
+        "Vantage Print Ltd",
+        "Wexford Agriculture Ltd",
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd"
       ],
       "ref": [
-        "PO-16697",
-        "CN-16704",
-        "STM-16711",
-        "REM-16718",
-        "INV-16725"
+        "CN-15069",
+        "STM-15076",
+        "REM-15083",
+        "INV-15090",
+        "PO-15097"
       ]
     },
     {
@@ -53,27 +53,27 @@
         "9145.75"
       ],
       "date": [
-        "2026-05-21",
-        "2026-06-03",
-        "2026-06-16",
-        "2026-06-29",
-        "2026-07-13",
-        "2026-01-08"
+        "2026-02-17",
+        "2026-03-02",
+        "2026-03-11",
+        "2026-03-19",
+        "2026-04-02",
+        "2026-04-14"
       ],
       "party": [
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd",
-        "Quayside Packaging Ltd"
+        "Ullswater Textiles Ltd",
+        "Vantage Print Ltd",
+        "Wexford Agriculture Ltd",
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd"
       ],
       "ref": [
-        "CN-16708",
-        "STM-16715",
-        "REM-16722",
-        "INV-16729",
-        "PO-16736"
+        "STM-15080",
+        "REM-15087",
+        "INV-15094",
+        "PO-15101",
+        "CN-15108"
       ]
     },
     {
@@ -87,27 +87,27 @@
         "17400.00"
       ],
       "date": [
-        "2026-06-03",
-        "2026-06-16",
-        "2026-06-29",
-        "2026-07-13",
-        "2026-01-08",
-        "2026-01-21"
+        "2026-03-02",
+        "2026-03-11",
+        "2026-03-19",
+        "2026-04-02",
+        "2026-04-14",
+        "2026-04-27"
       ],
       "party": [
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd",
-        "Quayside Packaging Ltd",
-        "Ravensworth Utilities Ltd"
+        "Vantage Print Ltd",
+        "Wexford Agriculture Ltd",
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd"
       ],
       "ref": [
-        "STM-16719",
-        "REM-16726",
-        "INV-16733",
-        "PO-16740",
-        "CN-16747"
+        "REM-15091",
+        "INV-15098",
+        "PO-15105",
+        "CN-15112",
+        "STM-15119"
       ]
     }
   ],
@@ -129,27 +129,27 @@
         "4820.90"
       ],
       "date": [
-        "2026-05-12",
-        "2026-05-26",
-        "2026-06-09",
-        "2026-06-22",
-        "2026-07-02",
-        "2026-07-20"
+        "2026-02-09",
+        "2026-02-24",
+        "2026-03-05",
+        "2026-03-13",
+        "2026-03-24",
+        "2026-04-06"
       ],
       "party": [
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd"
+        "Thornbury Chemicals Ltd",
+        "Ullswater Textiles Ltd",
+        "Vantage Print Ltd",
+        "Wexford Agriculture Ltd",
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd"
       ],
       "ref": [
-        "PO-16697",
-        "CN-16704",
-        "STM-16711",
-        "REM-16718",
-        "INV-16725"
+        "CN-15069",
+        "STM-15076",
+        "REM-15083",
+        "INV-15090",
+        "PO-15097"
       ]
     },
     {
@@ -163,27 +163,27 @@
         "9145.75"
       ],
       "date": [
-        "2026-05-26",
-        "2026-06-09",
-        "2026-06-22",
-        "2026-07-02",
-        "2026-07-20",
-        "2026-01-13"
+        "2026-02-24",
+        "2026-03-05",
+        "2026-03-13",
+        "2026-03-24",
+        "2026-04-06",
+        "2026-04-17"
       ],
       "party": [
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd",
-        "Quayside Packaging Ltd"
+        "Ullswater Textiles Ltd",
+        "Vantage Print Ltd",
+        "Wexford Agriculture Ltd",
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd"
       ],
       "ref": [
-        "CN-16708",
-        "STM-16715",
-        "REM-16722",
-        "INV-16729",
-        "PO-16736"
+        "STM-15080",
+        "REM-15087",
+        "INV-15094",
+        "PO-15101",
+        "CN-15108"
       ]
     },
     {
@@ -197,27 +197,27 @@
         "17400.00"
       ],
       "date": [
-        "2026-06-09",
-        "2026-06-22",
-        "2026-07-02",
-        "2026-07-20",
-        "2026-01-13",
-        "2026-01-27"
+        "2026-03-05",
+        "2026-03-13",
+        "2026-03-24",
+        "2026-04-06",
+        "2026-04-17",
+        "2026-05-04"
       ],
       "party": [
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd",
-        "Quayside Packaging Ltd",
-        "Ravensworth Utilities Ltd"
+        "Vantage Print Ltd",
+        "Wexford Agriculture Ltd",
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd"
       ],
       "ref": [
-        "STM-16719",
-        "REM-16726",
-        "INV-16733",
-        "PO-16740",
-        "CN-16747"
+        "REM-15091",
+        "INV-15098",
+        "PO-15105",
+        "CN-15112",
+        "STM-15119"
       ]
     }
   ]

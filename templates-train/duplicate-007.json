@@ -2,7 +2,7 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 183."
+      "text": "Remittance advice, batch 139."
     }
   ],
   "family": "duplicate",
@@ -19,27 +19,27 @@
         "42.05"
       ],
       "date": [
-        "2026-06-29",
-        "2026-07-13",
-        "2026-01-08",
-        "2026-01-21",
-        "2026-02-03",
-        "2026-02-17"
+        "2026-03-19",
+        "2026-04-02",
+        "2026-04-14",
+        "2026-04-27",
+        "2026-05-08",
+        "2026-05-21"
       ],
       "party": [
-        "Quayside Packaging Ltd",
-        "Ravensworth Utilities Ltd",
-        "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd",
-        "Vantage Print Ltd",
-        "Wexford Agriculture Ltd"
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd",
+        "Eastvale Trading Ltd"
       ],
       "ref": [
-        "STM-16771",
-        "REM-16778",
-        "INV-16785",
-        "PO-16792",
-        "CN-16799"
+        "REM-15143",
+        "INV-15150",
+        "PO-15157",
+        "CN-15164",
+        "STM-15171"
       ]
     },
     {
@@ -53,27 +53,27 @@
         "88.75"
       ],
       "date": [
-        "2026-07-13",
-        "2026-01-08",
-        "2026-01-21",
-        "2026-02-03",
-        "2026-02-17",
-        "2026-03-02"
+        "2026-04-02",
+        "2026-04-14",
+        "2026-04-27",
+        "2026-05-08",
+        "2026-05-21",
+        "2026-06-03"
       ],
       "party": [
-        "Ravensworth Utilities Ltd",
-        "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd",
-        "Vantage Print Ltd",
-        "Wexford Agriculture Ltd",
-        "Bramfield Haulage Ltd"
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd",
+        "Eastvale Trading Ltd",
+        "Westbrook Services Ltd"
       ],
       "ref": [
-        "REM-16782",
-        "INV-16789",
-        "PO-16796",
-        "CN-16803",
-        "STM-16810"
+        "INV-15154",
+        "PO-15161",
+        "CN-15168",
+        "STM-15175",
+        "REM-15182"
       ]
     },
     {
@@ -87,27 +87,27 @@
         "480.00"
       ],
       "date": [
-        "2026-01-08",
-        "2026-01-21",
-        "2026-02-03",
-        "2026-02-17",
-        "2026-03-02",
-        "2026-03-11"
+        "2026-04-14",
+        "2026-04-27",
+        "2026-05-08",
+        "2026-05-21",
+        "2026-06-03",
+        "2026-06-16"
       ],
       "party": [
-        "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd",
-        "Vantage Print Ltd",
-        "Wexford Agriculture Ltd",
-        "Bramfield Haulage Ltd",
-        "Calderstone Foods Ltd"
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd",
+        "Eastvale Trading Ltd",
+        "Westbrook Services Ltd",
+        "Harbourline Freight Ltd"
       ],
       "ref": [
-        "INV-16793",
-        "PO-16800",
-        "CN-16807",
-        "STM-16814",
-        "REM-16821"
+        "PO-15165",
+        "CN-15172",
+        "STM-15179",
+        "REM-15186",
+        "INV-15193"
       ]
     }
   ],
@@ -129,27 +129,27 @@
         "42.05"
       ],
       "date": [
-        "2026-07-02",
-        "2026-07-20",
-        "2026-01-13",
-        "2026-01-27",
-        "2026-02-09",
-        "2026-02-24"
+        "2026-03-24",
+        "2026-04-06",
+        "2026-04-17",
+        "2026-05-04",
+        "2026-05-12",
+        "2026-05-26"
       ],
       "party": [
-        "Quayside Packaging Ltd",
-        "Ravensworth Utilities Ltd",
-        "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd",
-        "Vantage Print Ltd",
-        "Wexford Agriculture Ltd"
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd",
+        "Eastvale Trading Ltd"
       ],
       "ref": [
-        "STM-16771",
-        "REM-16778",
-        "INV-16785",
-        "PO-16792",
-        "CN-16799"
+        "REM-15143",
+        "INV-15150",
+        "PO-15157",
+        "CN-15164",
+        "STM-15171"
       ]
     },
     {
@@ -163,27 +163,27 @@
         "88.75"
       ],
       "date": [
-        "2026-07-20",
-        "2026-01-13",
-        "2026-01-27",
-        "2026-02-09",
-        "2026-02-24",
-        "2026-03-05"
+        "2026-04-06",
+        "2026-04-17",
+        "2026-05-04",
+        "2026-05-12",
+        "2026-05-26",
+        "2026-06-09"
       ],
       "party": [
-        "Ravensworth Utilities Ltd",
-        "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd",
-        "Vantage Print Ltd",
-        "Wexford Agriculture Ltd",
-        "Bramfield Haulage Ltd"
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd",
+        "Eastvale Trading Ltd",
+        "Westbrook Services Ltd"
       ],
       "ref": [
-        "REM-16782",
-        "INV-16789",
-        "PO-16796",
-        "CN-16803",
-        "STM-16810"
+        "INV-15154",
+        "PO-15161",
+        "CN-15168",
+        "STM-15175",
+        "REM-15182"
       ]
     },
     {
@@ -197,27 +197,27 @@
         "480.00"
       ],
       "date": [
-        "2026-01-13",
-        "2026-01-27",
-        "2026-02-09",
-        "2026-02-24",
-        "2026-03-05",
-        "2026-03-13"
+        "2026-04-17",
+        "2026-05-04",
+        "2026-05-12",
+        "2026-05-26",
+        "2026-06-09",
+        "2026-06-22"
       ],
       "party": [
-        "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd",
-        "Vantage Print Ltd",
-        "Wexford Agriculture Ltd",
-        "Bramfield Haulage Ltd",
-        "Calderstone Foods Ltd"
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd",
+        "Eastvale Trading Ltd",
+        "Westbrook Services Ltd",
+        "Harbourline Freight Ltd"
       ],
       "ref": [
-        "INV-16793",
-        "PO-16800",
-        "CN-16807",
-        "STM-16814",
-        "REM-16821"
+        "PO-15165",
+        "CN-15172",
+        "STM-15179",
+        "REM-15186",
+        "INV-15193"
       ]
     }
   ]

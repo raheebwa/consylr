@@ -2,7 +2,7 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 141."
+      "text": "Remittance advice, batch 113."
     }
   ],
   "family": "batched_vs_itemised",
@@ -19,27 +19,27 @@
         "4820.90"
       ],
       "date": [
-        "2026-05-08",
-        "2026-05-21",
-        "2026-06-03",
-        "2026-06-16",
-        "2026-06-29",
-        "2026-07-13"
+        "2026-02-03",
+        "2026-02-17",
+        "2026-03-02",
+        "2026-03-11",
+        "2026-03-19",
+        "2026-04-02"
       ],
       "party": [
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd",
+        "Eastvale Trading Ltd",
         "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd"
+        "Harbourline Freight Ltd"
       ],
       "ref": [
-        "PO-15217",
-        "CN-15224",
-        "STM-15231",
-        "REM-15238",
-        "INV-15245"
+        "STM-14181",
+        "REM-14188",
+        "INV-14195",
+        "PO-14202",
+        "CN-14209"
       ]
     },
     {
@@ -53,27 +53,27 @@
         "9145.75"
       ],
       "date": [
-        "2026-05-21",
-        "2026-06-03",
-        "2026-06-16",
-        "2026-06-29",
-        "2026-07-13",
-        "2026-01-08"
+        "2026-02-17",
+        "2026-03-02",
+        "2026-03-11",
+        "2026-03-19",
+        "2026-04-02",
+        "2026-04-14"
       ],
       "party": [
+        "Northwind Ltd",
+        "Southgate Ltd",
+        "Eastvale Trading Ltd",
+        "Westbrook Services Ltd",
         "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd",
-        "Quayside Packaging Ltd"
+        "Copperfield Supply Ltd"
       ],
       "ref": [
-        "CN-15228",
-        "STM-15235",
-        "REM-15242",
-        "INV-15249",
-        "PO-15256"
+        "REM-14192",
+        "INV-14199",
+        "PO-14206",
+        "CN-14213",
+        "STM-14220"
       ]
     },
     {
@@ -87,27 +87,27 @@
         "17400.00"
       ],
       "date": [
-        "2026-06-03",
-        "2026-06-16",
-        "2026-06-29",
-        "2026-07-13",
-        "2026-01-08",
-        "2026-01-21"
+        "2026-03-02",
+        "2026-03-11",
+        "2026-03-19",
+        "2026-04-02",
+        "2026-04-14",
+        "2026-04-27"
       ],
       "party": [
+        "Southgate Ltd",
+        "Eastvale Trading Ltd",
+        "Westbrook Services Ltd",
+        "Harbourline Freight Ltd",
         "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd",
-        "Quayside Packaging Ltd",
-        "Ravensworth Utilities Ltd"
+        "Marlowe Consulting Ltd"
       ],
       "ref": [
-        "STM-15239",
-        "REM-15246",
-        "INV-15253",
-        "PO-15260",
-        "CN-15267"
+        "INV-14203",
+        "PO-14210",
+        "CN-14217",
+        "STM-14224",
+        "REM-14231"
       ]
     }
   ],
@@ -129,27 +129,27 @@
         "4820.90"
       ],
       "date": [
-        "2026-05-12",
-        "2026-05-26",
-        "2026-06-09",
-        "2026-06-22",
-        "2026-07-02",
-        "2026-07-20"
+        "2026-02-09",
+        "2026-02-24",
+        "2026-03-05",
+        "2026-03-13",
+        "2026-03-24",
+        "2026-04-06"
       ],
       "party": [
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd",
+        "Eastvale Trading Ltd",
         "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd"
+        "Harbourline Freight Ltd"
       ],
       "ref": [
-        "PO-15217",
-        "CN-15224",
-        "STM-15231",
-        "REM-15238",
-        "INV-15245"
+        "STM-14181",
+        "REM-14188",
+        "INV-14195",
+        "PO-14202",
+        "CN-14209"
       ]
     },
     {
@@ -163,27 +163,27 @@
         "9145.75"
       ],
       "date": [
-        "2026-05-26",
-        "2026-06-09",
-        "2026-06-22",
-        "2026-07-02",
-        "2026-07-20",
-        "2026-01-13"
+        "2026-02-24",
+        "2026-03-05",
+        "2026-03-13",
+        "2026-03-24",
+        "2026-04-06",
+        "2026-04-17"
       ],
       "party": [
+        "Northwind Ltd",
+        "Southgate Ltd",
+        "Eastvale Trading Ltd",
+        "Westbrook Services Ltd",
         "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd",
-        "Quayside Packaging Ltd"
+        "Copperfield Supply Ltd"
       ],
       "ref": [
-        "CN-15228",
-        "STM-15235",
-        "REM-15242",
-        "INV-15249",
-        "PO-15256"
+        "REM-14192",
+        "INV-14199",
+        "PO-14206",
+        "CN-14213",
+        "STM-14220"
       ]
     },
     {
@@ -197,27 +197,27 @@
         "17400.00"
       ],
       "date": [
-        "2026-06-09",
-        "2026-06-22",
-        "2026-07-02",
-        "2026-07-20",
-        "2026-01-13",
-        "2026-01-27"
+        "2026-03-05",
+        "2026-03-13",
+        "2026-03-24",
+        "2026-04-06",
+        "2026-04-17",
+        "2026-05-04"
       ],
       "party": [
+        "Southgate Ltd",
+        "Eastvale Trading Ltd",
+        "Westbrook Services Ltd",
+        "Harbourline Freight Ltd",
         "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd",
-        "Quayside Packaging Ltd",
-        "Ravensworth Utilities Ltd"
+        "Marlowe Consulting Ltd"
       ],
       "ref": [
-        "STM-15239",
-        "REM-15246",
-        "INV-15253",
-        "PO-15260",
-        "CN-15267"
+        "INV-14203",
+        "PO-14210",
+        "CN-14217",
+        "STM-14224",
+        "REM-14231"
       ]
     }
   ]

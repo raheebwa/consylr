@@ -142,18 +142,38 @@ SETTLED = [
 #: distinct across templates.
 POOL = {"party": 6, "amount": 7, "date": 6, "ref": 5}
 
-#: Templates per family. Weighted for the same reason the frozen set is: eleven
-#: of fourteen families answer "clearly supported", so an equal split lands near
-#: 80% against RFC-0002's 40-50% band. Lower than the frozen set's counts
-#: because each template now yields many cases rather than one to three.
+#: Templates per family, and the arithmetic is different from the frozen set's.
+#:
+#: There, yield varied by family — `clean_match`, `batched_vs_itemised` and
+#: `decoy` gave one distinct case per template where others gave three — so the
+#: template counts were weighted to compensate. A pattern template yields the
+#: same thirty regardless, so **family share is now simply template share** and
+#: the old weighting stopped meaning what it meant.
+#:
+#: The first build was refused for exactly that: clearly-supported cases came out
+#: at 65.1% against RFC-0002's 40-50% ceiling, and `cause_not_established` at
+#: 9.3% against its 10% floor. The quota gate caught it before a line reached
+#: disk.
+#:
+#: **Eleven families produce a clearly-supported answer, not ten.**
+#: `missing_record` is the one that is easy to miss: it abstains through its
+#: `open` entry while its matches are genuinely supported, so it counts here.
+#: Including it, nominal supported was 224 of 344 — 65.1%, the measured figure
+#: to the decimal, which is how the diagnosis was confirmed rather than guessed.
+#:
+#: Below: supported 180/400 = 45.0%, mid-band. `cause_not_established` 50/400 =
+#: 12.5%, mid-band. The two hard families carry the balance, which is the quota's
+#: whole point — a model trained on a mix that is four-fifths clean learns that
+#: most things reconcile.
 PER_FAMILY = {
-    "clean_match": 40,
-    "batched_vs_itemised": 40,
-    "cause_not_established": 32,
-    "ambiguous_pair": 40,
-    "decoy": 48,
+    "clean_match": 24,
+    "batched_vs_itemised": 24,
+    "missing_record": 20,
+    "cause_not_established": 50,
+    "ambiguous_pair": 85,
+    "decoy": 85,
 }
-DEFAULT_PER_FAMILY = 16
+DEFAULT_PER_FAMILY = 14
 
 
 def _window(source: list[str], start: int, size: int) -> list[str]:
