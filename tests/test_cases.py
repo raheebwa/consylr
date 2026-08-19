@@ -1038,3 +1038,25 @@ def test_a_cause_still_stated_elsewhere_is_refused() -> None:
 def test_withholding_a_cause_a_family_never_had_is_refused() -> None:
     with pytest.raises(ValueError, match="no cause to withhold"):
         built(Template.from_mapping(template_body(family="clean_match", withhold_cause=True)))
+
+
+def test_a_surviving_line_that_denies_the_cause_is_still_the_cause() -> None:
+    """A denial names the cause too, and the packet still settles the case.
+
+    "The settlement fee is not waived" tells a reader the fee applies. Exempting
+    denials from the absence check let a packet plainly state the cause while the
+    answer key declined it — the defect the check exists to prevent, wearing the
+    word `not`.
+    """
+    body = template_body(family="fee_at_source")
+    body["policy"] = [
+        *body["policy"],
+        {"id": "P-3", "text": "The settlement fee is not waived for any counterparty."},
+    ]
+    with pytest.raises(ValueError, match="still states"):
+        built(Template.from_mapping({**body, "withhold_cause": True}))
+
+
+def test_twin_of_without_withholding_is_refused() -> None:
+    with pytest.raises(ValueError, match="only a withheld twin"):
+        built(Template.from_mapping({**template_body(family="fee_at_source"), "twin_of": "t-000"}))
