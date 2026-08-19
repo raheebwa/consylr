@@ -2,7 +2,7 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 133."
+      "text": "Remittance advice, batch 205."
     }
   ],
   "family": "duplicate",
@@ -27,19 +27,19 @@
         "2026-07-13"
       ],
       "party": [
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
         "Fenwick Instruments Ltd",
-        "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd"
+        "Northwind Ltd"
       ],
       "ref": [
-        "STM-14921",
-        "REM-14928",
-        "INV-14935",
-        "PO-14942",
-        "CN-14949"
+        "INV-17585",
+        "PO-17592",
+        "CN-17599",
+        "STM-17606",
+        "REM-17613"
       ]
     },
     {
@@ -61,19 +61,19 @@
         "2026-01-08"
       ],
       "party": [
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
         "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd"
+        "Southgate Ltd"
       ],
       "ref": [
-        "REM-14932",
-        "INV-14939",
-        "PO-14946",
-        "CN-14953",
-        "STM-14960"
+        "PO-17596",
+        "CN-17603",
+        "STM-17610",
+        "REM-17617",
+        "INV-17624"
       ]
     },
     {
@@ -95,19 +95,19 @@
         "2026-01-21"
       ],
       "party": [
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
         "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd"
+        "Eastvale Trading Ltd"
       ],
       "ref": [
-        "INV-14943",
-        "PO-14950",
-        "CN-14957",
-        "STM-14964",
-        "REM-14971"
+        "CN-17607",
+        "STM-17614",
+        "REM-17621",
+        "INV-17628",
+        "PO-17635"
       ]
     }
   ],
@@ -137,19 +137,19 @@
         "2026-07-20"
       ],
       "party": [
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
         "Fenwick Instruments Ltd",
-        "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd"
+        "Northwind Ltd"
       ],
       "ref": [
-        "STM-14921",
-        "REM-14928",
-        "INV-14935",
-        "PO-14942",
-        "CN-14949"
+        "INV-17585",
+        "PO-17592",
+        "CN-17599",
+        "STM-17606",
+        "REM-17613"
       ]
     },
     {
@@ -171,19 +171,19 @@
         "2026-01-13"
       ],
       "party": [
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
         "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd"
+        "Southgate Ltd"
       ],
       "ref": [
-        "REM-14932",
-        "INV-14939",
-        "PO-14946",
-        "CN-14953",
-        "STM-14960"
+        "PO-17596",
+        "CN-17603",
+        "STM-17610",
+        "REM-17617",
+        "INV-17624"
       ]
     },
     {
@@ -205,19 +205,19 @@
         "2026-01-27"
       ],
       "party": [
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
         "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd"
+        "Eastvale Trading Ltd"
       ],
       "ref": [
-        "INV-14943",
-        "PO-14950",
-        "CN-14957",
-        "STM-14964",
-        "REM-14971"
+        "CN-17607",
+        "STM-17614",
+        "REM-17621",
+        "INV-17628",
+        "PO-17635"
       ]
     }
   ]
