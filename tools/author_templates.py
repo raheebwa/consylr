@@ -115,7 +115,7 @@ FAMILIES = [
 
 #: Scenarios per family, deliberately unequal.
 #:
-#: RFC-0002 puts clearly-supported cases at 40-50% of the training mix and
+#: RFC-0002 puts clearly-supported cases at 65-75% of the training mix and
 #: `cause_not_established` at 10-15%. Eleven of the fourteen families produce a
 #: clearly-supported answer, so an equal split gives 80% supported — nearly
 #: double the band. A corpus that meets the quota needs a template set weighted

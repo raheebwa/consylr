@@ -541,7 +541,10 @@ WITHHELD: dict[str, Callable[[Draft, Random], dict[str, Any]]] = {
 
 
 def _withhold_cause(
-    template: Template, policy: list[dict[str, Any]], declared: str
+    template: Template,
+    policy: list[dict[str, Any]],
+    declared: str,
+    documents: Sequence[Mapping[str, Any]] = (),
 ) -> list[dict[str, Any]]:
     """The policy with the cause removed, and the removal proven complete.
 
@@ -559,13 +562,17 @@ def _withhold_cause(
     if terms is None:
         raise ValueError(f"{template.family} names no cause, so there is no cause to withhold")
 
+    # Documents are scanned as well as policy. The `open` entry this same change
+    # emits reads "the policy line **or document** explaining the difference", so
+    # a document stating the cause settles the case exactly as a policy line
+    # would — and the answer key would still decline it.
     kept = [line for line in policy if str(line.get("id")) != declared]
     if not kept:
         raise ValueError(
             f"{template.family} would withhold its only policy line, leaving a packet with no "
             "policy at all; the case would test an empty schedule rather than an absent cause"
         )
-    for line in kept:
+    for line in [*kept, *documents]:
         words = set(
             _text(str(line.get("text", "")))
             .lower()
@@ -847,8 +854,9 @@ def build(
     # be shown to be the cause while it is still there, and a case whose cause was
     # never stated is a different artefact from one whose cause was withheld.
     warrant = _prove_cause(resolved, policy_lines)
+    documents = [dict(d) for d in resolved.body.get("documents", [])]
     if resolved.body.get("withhold_cause"):
-        policy_lines = _withhold_cause(resolved, policy_lines, warrant)
+        policy_lines = _withhold_cause(resolved, policy_lines, warrant, documents)
         warrant = ""
         # `_withhold_cause` has already refused any family outside `CAUSE_TERMS`,
         # and `WITHHELD` is keyed on exactly those families, so this cannot miss.
@@ -859,7 +867,7 @@ def build(
         b=right,
         cause=warrant,
         policy=policy_lines,
-        documents=[dict(d) for d in resolved.body.get("documents", [])],
+        documents=documents,
         # From the recorded order rather than from position, because after a
         # permutation position is no longer the correspondence. `Draft.pairs`
         # already existed to hold this explicitly — a deformation reading

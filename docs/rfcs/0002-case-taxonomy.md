@@ -165,6 +165,7 @@ rule names.
 | 2026-08-19 | `cause_not_established` family | 12.5% of templates | 4.0% | Consequence of the row above. The family and the withheld twins now share one 10–15% budget; the twins keep their pre-registered 10% because they are the lever under test, and the family absorbs the cut. The cases are not lost — they are taught better, wearing a settled family's shape so the answer cannot be reached by recognising the family. |
 | 2026-08-19 | `decoy` | 21.3% of templates | 6.0% | Was cut to 2.5% in a first pass with no line here and no band to gate it. Restored to 6% and banded. `decoy` is the only family producing `unsupported` certainty, so its share *is* the unsupported share. |
 | 2026-08-19 | `ambiguous_pair` | 21.3% of templates | 10.0% | Recorded so a move in its exact match can be read against the change. It is the family the tuned model never once declined on, at any checkpoint, while carrying the largest share of the corpus — which is the evidence that its mass was never the lever. |
+| 2026-08-19 | the eight settled families with no line of their own | 14 templates each (`DEFAULT_PER_FAMILY`) | 25–26 each | Consequence of the supported band, listed rather than left implicit: `duplicate`, `name_variant`, `partial_payment`, `reference_mangled` and `reversal` go 14 → 25 templates (3.5% → 6.25% of the set), `missing_record` 20 → 26, `clean_match` 24 → 26, `batched_vs_itemised` 24 → 25. The band moved and this is where the mass went. `DEFAULT_PER_FAMILY` is removed with them: a family falling through to a default takes a count nobody chose, which is the silent change the rule names. |
 | 2026-08-19 | clearly supported | 40–50% | 65–75%, target 70% | Not a gauge reading. The band was re-derived from the deployment claim above after the gauges were found to be uninformative about it: on run 4's checkpoints **both** fire at once — false abstention 38.8% and correct abstention 73.7% at 6,000 iterations, 8.8% and 35.1% at 4,000 — which rule 2 states means the ratio is not the cause. The evidence for what *is* the cause is recorded against the decoupling change in RFC-0003: certainty is currently a deterministic function of family in every corpus this project has built, so a model can score certainty perfectly by recognising the family and never reading a policy line. The mix moves here because the deployment claim says it should, not because a gauge asked for it. |
 
 Rule 4 is what makes the other three safe. Without it, tuning a training ratio against a threshold
@@ -204,7 +205,7 @@ Consequences the generator must honour:
 
 - **Per-family quota audit** on every generated corpus, failing the build when a family falls
   below its floor.
-- **Certainty-band audit**, asserting the 40–50% supported floor and the current
+- **Certainty-band audit**, asserting the 65–75% supported band and the current
   `cause_not_established` ratio.
 - **Template-crossing check**: no scenario template contributes to both roles.
 - **Every case validates against [RFC-0001](0001-output-schema.md)**, using the validator that
