@@ -45,7 +45,6 @@ import hashlib
 import json
 from pathlib import Path
 
-from consylr.canonical import ordered
 from consylr.passthrough import CHAT_TEMPLATE, TEMPLATE_FILE
 from consylr.prompt import DIGEST, render
 
@@ -132,12 +131,14 @@ def emit(
         # nothing is between them at inference either. Separators match the
         # packet's own serialisation, so the model is trained to produce the
         # shape the validator reads.
-        # Canonically ordered, because the corpus's own order is arbitrary and a
-        # model cannot derive it from the packet — training on it spends capacity
-        # memorising a permutation. The corpus on disk is untouched: it is the
-        # audited artefact, and the exam's provenance rests on regenerating it
-        # byte for byte.
-        answer = json.dumps(ordered(expected), sort_keys=True, separators=(",", ":"))
+        # NOT canonically ordered, though the scorer now compares that way.
+        # Sorting a target's lists would put them back in packet order — record
+        # ids are assigned after the shuffle, so an id IS a position — restoring
+        # on 12 of 14 families the positional regularity permutation exists to
+        # destroy. It would also contradict the frozen prompt, whose one-shot
+        # example shows `do` as request-then-accept where a sort gives
+        # accept-then-request, in the same token stream. See #63.
+        answer = json.dumps(expected, sort_keys=True, separators=(",", ":"))
         rendered = render(packet)
         body = {"prompt": rendered, "completion": answer} if masked else {"text": rendered + answer}
         row = json.dumps({**body, "template_id": template_id})

@@ -21,6 +21,18 @@ installing.
 
 ### Added
 
+- `consylr.canonical` — one order for an answer, for comparing answers. RFC-0001's answer is
+  sets wearing lists, and every list is sorted recursively by its own entry's canonical JSON
+  so that two answers holding the same entries compare equal whichever order they arrived in.
+  It is deliberately not applied to training targets: record ids are assigned after the
+  shuffle, so an id is a packet position, and ordering a target by it restores on twelve of
+  fourteen families the positional regularity the corpus is permuted to destroy.
+- `tools/rescore.py` — the metrics a stored run was reported with, beside the ones today's
+  scorer gives, read from the run record rather than by re-running the model. It refuses a
+  record whose `exam_digest` is not the exam's, refuses a metric it has no baseline for
+  instead of defaulting it to zero, and prints the null control beside correspondence F1.
+- `tools/` is now type-checked. Four defects reached one branch in a single unchecked file.
+
 - `consylr.schema` — validation of model output against RFC-0001. The same validator is
   intended to ship in the product and to validate the training corpus, so that a corpus is
   not checked by a second implementation that only tests itself. It reports every violation
@@ -79,6 +91,16 @@ installing.
   `.json` template, where each previously produced an empty list.
 
 ### Fixed
+
+- Exact match compared whole answers, and dict equality reads a list in order, while the gold's
+  own order is arbitrary — 3.6% of training targets and 49.5% of the exam list their matches in
+  the order the packet lists the records, so no model can derive it. On one checkpoint 46
+  answers of 204 were exactly right apart from sequence and a whole family was reported at 0%
+  with all fourteen of its cases correct. Answers are now compared through a canonical order.
+  The figures published before this are not withdrawn; both are recorded.
+- The answer comparison sat outside the guard that catches an unparseable answer, so a deeply
+  nested output would have ended an evaluation run and discarded every raw answer retained on
+  it, rather than counting as one bad case.
 
 - The paraphrase-invariant identity the grouped split rests on was computed over field names
   belonging to no template the generator can build, so it stripped nothing and equalled the

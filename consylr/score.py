@@ -154,7 +154,16 @@ def _tally(answer: Answer, into: Sequence[Tally]) -> None:
     # arbitrary — see `consylr.canonical`. Without it a correct answer scores
     # zero for listing its matches in a different sequence, which on rung 6000
     # cost 46 of 204 and reported `decoy` at 0% with all fourteen right.
-    same = ordered(produced) == ordered(answer.expected)
+    #
+    # Inside the same guard as the parse, because `ordered` recurses over raw
+    # model output. A deep enough answer would raise past the caller and end the
+    # run, discarding every raw answer `record` exists to keep — a whole
+    # evaluation lost to one bad case, which is the opposite of the module's
+    # rule that an unparseable answer is counted and not scored.
+    try:
+        same = ordered(produced) == ordered(answer.expected)
+    except RecursionError:
+        return
     for tally in into:
         tally.parsed += 1
         if not schema.validate(produced, answer.packet):
