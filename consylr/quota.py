@@ -37,7 +37,10 @@ class Plan:
 
     families: frozenset[str]
     family_floor: int = 20
-    supported_share: tuple[float, float] = (0.40, 0.50)
+    #: RFC-0002 §The supported band. A deployment prior — most packets the
+    #: product is shown are settleable from the evidence in them — and not the
+    #: exam's composition, which the RFC states must never be cited for it.
+    supported_share: tuple[float, float] = (0.65, 0.75)
     abstention_share: tuple[float, float] = (0.10, 0.15)
 
 

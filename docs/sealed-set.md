@@ -34,7 +34,7 @@ Frozen 2026-08-18, from 540 templates.
 | Seed | `7` |
 | Cases | **903, every one distinct**, from 442 templates |
 | Duplicates refused | 1,749 of 2,652 asked |
-| Clearly supported | **48%** — RFC-0002 wants 40–50% |
+| Clearly supported | **48%** — under the 65–75% RFC-0002 now states; train-v2 predates the band |
 | `cause_not_established` | **11%** — RFC-0002 wants 10–15% |
 | Smallest family | 36 cases, against a floor of 20 |
 | Corpus digest | `consylr.corpus.content_digest(<corpus dir>)` |

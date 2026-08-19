@@ -112,7 +112,7 @@ ENFORCED = [
     ),
     Constraint(
         "RFC-0002",
-        "clearly-supported cases are 40-50% of the mix",
+        "clearly-supported cases are 65-75% of the mix",
         "consylr.quota.check",
         "supported_share_low / supported_share_high",
     ),

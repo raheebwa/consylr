@@ -27,7 +27,7 @@ packets, another with half its packets outside the specified record range.
 | RFC-0001 | rendered prompt within its token cap | `consylr.budget.check` | prompt_over_budget |
 | RFC-0001 | generation headroom reserved | `consylr.budget.check` | headroom_lost |
 | RFC-0002 | a case belongs to exactly one family | `consylr.templates.check` | unknown_family; one family per template by construction |
-| RFC-0002 | clearly-supported cases are 40-50% of the mix | `consylr.quota.check` | supported_share_low / supported_share_high |
+| RFC-0002 | clearly-supported cases are 65-75% of the mix | `consylr.quota.check` | supported_share_low / supported_share_high |
 | RFC-0002 | cause_not_established is 10-15% of the mix | `consylr.quota.check` | abstention_share_low / abstention_share_high |
 | RFC-0002 | every family present in measurable numbers | `consylr.quota.check` | family_below_floor |
 | RFC-0002 | a family's answer cannot contradict its certainty | `consylr.quota.check` | contradictory_certainty |

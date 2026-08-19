@@ -246,7 +246,7 @@ def test_a_quota_breach_stops_the_corpus_when_a_plan_is_given(tmp_path: Path) ->
     rows = [built(t, case_index=0, role="train") for t in templates]
     plan = Plan(families=frozenset({"clean_match"}), family_floor=1)
     # Every case here is clean_match/supported: 100% clearly supported, well
-    # above RFC-0002's 40-50% band.
+    # above RFC-0002's 65-75% band.
     with pytest.raises(ValueError, match="supported_share_high"):
         write(tmp_path, rows, templates=templates, plan=plan)
 
