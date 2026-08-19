@@ -79,7 +79,7 @@ SUBPROCESS_MODES: tuple[str, ...] = tuple(
 )
 
 
-def llama_kwargs(model: str) -> dict[str, Any]:
+def llama_kwargs(model: str, *, gpu_layers: int = GPU_LAYERS) -> dict[str, Any]:
     """What the in-process backend constructs and generates with.
 
     Returned as data rather than applied inline so the window and the offload
@@ -88,7 +88,7 @@ def llama_kwargs(model: str) -> dict[str, Any]:
     return {
         "model_path": str(model),
         "n_ctx": WINDOW,
-        "n_gpu_layers": GPU_LAYERS,
+        "n_gpu_layers": gpu_layers,
         "temperature": 0.0,
         "max_tokens": MAX_TOKENS,
         "seed": SEED,
@@ -96,7 +96,12 @@ def llama_kwargs(model: str) -> dict[str, Any]:
 
 
 def command(
-    mode: str, *, model: str, prompt_file: str, binary: str = "llama-completion"
+    mode: str,
+    *,
+    model: str,
+    prompt_file: str,
+    binary: str = "llama-completion",
+    gpu_layers: int = GPU_LAYERS,
 ) -> list[str]:
     """The argv for a subprocess mode. Raises for a mode that has no argv."""
     conversation = MODES[mode].conversation
@@ -111,7 +116,7 @@ def command(
         "-n",
         str(MAX_TOKENS),
         "-ngl",
-        str(GPU_LAYERS),
+        str(gpu_layers),
         "--temp",
         "0",
         "-s",
@@ -172,11 +177,11 @@ def said(stdout: str) -> str:
     return stdout.strip().removesuffix(END_MARKER).strip()
 
 
-def _in_process(model: str, rendered: list[str]) -> list[str]:
+def _in_process(model: str, rendered: list[str], gpu_layers: int = GPU_LAYERS) -> list[str]:
     """Generate every answer through the profiler's own call."""
     from llama_cpp import Llama  # type: ignore[import-not-found]
 
-    kwargs = llama_kwargs(model)
+    kwargs = llama_kwargs(model, gpu_layers=gpu_layers)
     llm = Llama(
         model_path=kwargs["model_path"],
         n_ctx=kwargs["n_ctx"],
@@ -193,7 +198,9 @@ def _in_process(model: str, rendered: list[str]) -> list[str]:
     return out
 
 
-def _subprocess(mode: str, model: str, rendered: list[str], binary: str) -> list[str]:
+def _subprocess(
+    mode: str, model: str, rendered: list[str], binary: str, gpu_layers: int = GPU_LAYERS
+) -> list[str]:
     """Generate every answer by running the binary once per packet.
 
     The prompt goes through a file rather than `-p`: a rendered packet is
@@ -207,7 +214,13 @@ def _subprocess(mode: str, model: str, rendered: list[str], binary: str) -> list
         for n, text in enumerate(rendered, start=1):
             path.write_text(text, encoding="utf-8")
             proc = subprocess.run(
-                command(mode, model=model, prompt_file=str(path), binary=binary),
+                command(
+                    mode,
+                    model=model,
+                    prompt_file=str(path),
+                    binary=binary,
+                    gpu_layers=gpu_layers,
+                ),
                 capture_output=True,
                 text=True,
                 check=False,
@@ -240,6 +253,10 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     limit = int(flags.get("--limit", "0"))
     subset = int(flags.get("--stratified", "0"))
+    # Diagnostic only. Comparing two quantisations of the same weights is about
+    # the quantisation, and an hour per arm on the CPU buys nothing -- but an
+    # offloaded reading is not the audit's system, so it travels in the record.
+    gpu_layers = int(flags.get("--gpu-layers", str(GPU_LAYERS)))
     bindir = flags.get("--bin", "")
     rest = [a for a in args[2:] if not a.startswith("--")]
 
@@ -280,10 +297,10 @@ def main(argv: list[str] | None = None) -> int:
 
     started = time.time()
     if MODES[mode].conversation is None:
-        produced = _in_process(model, rendered)
+        produced = _in_process(model, rendered, gpu_layers)
     else:
         binary = str(Path(bindir) / "llama-completion") if bindir else "llama-completion"
-        produced = _subprocess(mode, model, rendered, binary)
+        produced = _subprocess(mode, model, rendered, binary, gpu_layers)
     elapsed = time.time() - started
 
     answers = [
@@ -328,7 +345,7 @@ def main(argv: list[str] | None = None) -> int:
                 runtime="llama.cpp",
                 window=WINDOW,
                 subset_rule=SUBSET_RULE if subset else "",
-                gpu_layers=GPU_LAYERS,
+                gpu_layers=gpu_layers,
                 seconds_per_case=round(elapsed / max(len(answers), 1), 2),
                 null_correspondence_f1=null.correspondence_f1,
                 null_exact_match=null.exact_match,
