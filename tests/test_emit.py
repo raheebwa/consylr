@@ -199,3 +199,35 @@ def test_a_model_whose_template_is_not_the_passthrough_is_refused(tmp_path: Path
 
     with pytest.raises(ValueError, match="passthrough"):
         emit(corpus, tmp_path / "train.jsonl", masked=True, model=wrong)
+
+
+def test_the_emitted_answer_carries_a_canonical_list_order(tmp_path: Path) -> None:
+    """The target's list order is arbitrary, so it must not be part of the target.
+
+    A case's `expected.json` lists its matches in whatever order the generator
+    produced them — 3.6% of the training corpus in packet order, so effectively
+    none. A model cannot derive that order from the packet, which makes it noise
+    the training signal carries and the model has to memorise. Emitting a
+    canonical order removes the noise, and it makes the emitted answer agree with
+    the way the scorer now compares one.
+
+    The corpus on disk is left exactly as written. It is the audited artefact,
+    and the exam's provenance rests on regenerating it byte for byte.
+    """
+    from consylr.canonical import ordered
+
+    corpus = a_corpus(tmp_path / "corpus", n=1)
+    out = tmp_path / "train.jsonl"
+    emit(corpus, out)
+
+    case = next(p for p in sorted(corpus.iterdir()) if (p / "packet.json").exists())
+    packet = json.loads((case / "packet.json").read_text())
+    expected = json.loads((case / "expected.json").read_text())
+    text = json.loads(out.read_text().splitlines()[0])["text"]
+    answer = json.loads(text[len(render(packet)) :])
+
+    assert answer == expected, "canonical order reorders an answer; it never changes one"
+    assert json.dumps(answer, sort_keys=True, separators=(",", ":")) == json.dumps(
+        ordered(expected), sort_keys=True, separators=(",", ":")
+    )
+    assert json.loads((case / "expected.json").read_text()) == expected
