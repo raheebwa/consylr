@@ -37,6 +37,7 @@ import subprocess
 import sys
 import tempfile
 import time
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -129,6 +130,35 @@ def command(
         # interface the profiler actually sends.
         argv.append("-no-cnv")
     return argv
+
+
+#: Stated in the result file, because a subset whose rule is not recorded is a
+#: number nobody can reproduce or argue with.
+SUBSET_RULE = (
+    "round-robin across families in sorted order, cases within a family in "
+    "sorted order, until the requested count is reached"
+)
+
+
+def stratified(cases: Sequence[tuple[str, str]], n: int) -> list[tuple[str, str]]:
+    """`n` cases spread evenly over the families present.
+
+    Taking the first `n` by file order would over-sample whichever families
+    sort early and miss others entirely — and a divergence confined to a family
+    the subset never asked about reads as agreement.
+    """
+    by_family: dict[str, list[tuple[str, str]]] = {}
+    for case in sorted(cases):
+        by_family.setdefault(case[1], []).append(case)
+    picked: list[tuple[str, str]] = []
+    families = sorted(by_family)
+    depth = 0
+    while len(picked) < n and any(len(v) > depth for v in by_family.values()):
+        for family in families:
+            if len(by_family[family]) > depth and len(picked) < n:
+                picked.append(by_family[family][depth])
+        depth += 1
+    return picked
 
 
 #: How the binary announces that generation terminated. It is not part of the
