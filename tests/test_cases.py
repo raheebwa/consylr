@@ -1060,3 +1060,46 @@ def test_a_surviving_line_that_denies_the_cause_is_still_the_cause() -> None:
 def test_twin_of_without_withholding_is_refused() -> None:
     with pytest.raises(ValueError, match="only a withheld twin"):
         built(Template.from_mapping({**template_body(family="fee_at_source"), "twin_of": "t-000"}))
+
+
+def test_a_document_stating_the_cause_defeats_the_withholding() -> None:
+    """The `open` entry says "policy line or document", so both must be scanned.
+
+    Removing the policy line while a document still explains the deduction leaves
+    a packet that settles the case under an answer key that declines it. Today's
+    templates carry only innocuous remittance lines, so this was latent — which is
+    the kind that ships.
+    """
+    body = template_body(family="fee_at_source")
+    body["documents"] = [
+        *body["documents"],
+        {"id": "D-2", "text": "Remittance advice: settlement fee deducted at source."},
+    ]
+    with pytest.raises(ValueError, match="still states"):
+        built(Template.from_mapping({**body, "withhold_cause": True}))
+
+
+def test_withholding_a_templates_only_policy_line_is_refused() -> None:
+    """A packet with no schedule tests an empty policy, not an absent cause."""
+    body = template_body(family="fee_at_source")
+    body["policy"] = [{"id": "P-2", "text": CAUSE_LINES["fee_at_source"]}]
+    with pytest.raises(ValueError, match="only policy line"):
+        built(Template.from_mapping({**body, "withhold_cause": True}))
+
+
+def test_a_non_boolean_withhold_cause_is_refused() -> None:
+    with pytest.raises(ValueError, match="not true or false"):
+        built(
+            Template.from_mapping(
+                {**template_body(family="fee_at_source"), "withhold_cause": "yes"}
+            )
+        )
+
+
+def test_a_malformed_twin_of_is_refused() -> None:
+    with pytest.raises(ValueError, match="not the id of a template"):
+        built(
+            Template.from_mapping(
+                {**template_body(family="fee_at_source"), "withhold_cause": True, "twin_of": 7}
+            )
+        )

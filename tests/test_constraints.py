@@ -118,9 +118,15 @@ ENFORCED = [
     ),
     Constraint(
         "RFC-0002",
-        "cause_not_established is 10-15% of the mix",
+        "cases declining for an unestablished cause are 10-15% of the mix, counted from the answer",
         "consylr.quota.check",
         "abstention_share_low / abstention_share_high",
+    ),
+    Constraint(
+        "RFC-0002",
+        "unsupported cases are 3-10% of the mix",
+        "consylr.quota.check",
+        "unsupported_share_low / unsupported_share_high",
     ),
     Constraint(
         "RFC-0002",
