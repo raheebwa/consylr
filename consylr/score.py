@@ -29,6 +29,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from consylr import schema
+from consylr.canonical import ordered
 
 #: The families whose correct answer is a refusal, per RFC-0002. Named here
 #: because the scorer must know which direction of abstention a case tests.
@@ -149,11 +150,16 @@ def _tally(answer: Answer, into: Sequence[Tally]) -> None:
     if not isinstance(produced, dict):
         return
 
+    # Compared through a canonical list order, because the gold's own order is
+    # arbitrary — see `consylr.canonical`. Without it a correct answer scores
+    # zero for listing its matches in a different sequence, which on rung 6000
+    # cost 46 of 204 and reported `decoy` at 0% with all fourteen right.
+    same = ordered(produced) == ordered(answer.expected)
     for tally in into:
         tally.parsed += 1
         if not schema.validate(produced, answer.packet):
             tally.valid += 1
-        if produced == answer.expected:
+        if same:
             tally.exact += 1
 
     claimed = _correspondences(produced)
