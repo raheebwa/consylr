@@ -2,11 +2,11 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 313."
+      "text": "Remittance advice, batch 353."
     }
   ],
-  "family": "cause_not_established",
-  "id": "cause_not_established-033",
+  "family": "ambiguous_pair",
+  "id": "ambiguous_pair-033",
   "left": [
     {
       "amount": [
@@ -35,11 +35,11 @@
         "Harbourline Freight Ltd"
       ],
       "ref": [
-        "STM-21581",
-        "REM-21588",
-        "INV-21595",
-        "PO-21602",
-        "CN-21609"
+        "STM-23061",
+        "REM-23068",
+        "INV-23075",
+        "PO-23082",
+        "CN-23089"
       ]
     },
     {
@@ -69,11 +69,11 @@
         "Copperfield Supply Ltd"
       ],
       "ref": [
-        "REM-21592",
-        "INV-21599",
-        "PO-21606",
-        "CN-21613",
-        "STM-21620"
+        "REM-23072",
+        "INV-23079",
+        "PO-23086",
+        "CN-23093",
+        "STM-23100"
       ]
     },
     {
@@ -103,11 +103,11 @@
         "Marlowe Consulting Ltd"
       ],
       "ref": [
-        "INV-21603",
-        "PO-21610",
-        "CN-21617",
-        "STM-21624",
-        "REM-21631"
+        "INV-23083",
+        "PO-23090",
+        "CN-23097",
+        "STM-23104",
+        "REM-23111"
       ]
     }
   ],
@@ -145,11 +145,11 @@
         "Harbourline Freight Ltd"
       ],
       "ref": [
-        "STM-21581",
-        "REM-21588",
-        "INV-21595",
-        "PO-21602",
-        "CN-21609"
+        "STM-23061",
+        "REM-23068",
+        "INV-23075",
+        "PO-23082",
+        "CN-23089"
       ]
     },
     {
@@ -179,11 +179,11 @@
         "Copperfield Supply Ltd"
       ],
       "ref": [
-        "REM-21592",
-        "INV-21599",
-        "PO-21606",
-        "CN-21613",
-        "STM-21620"
+        "REM-23072",
+        "INV-23079",
+        "PO-23086",
+        "CN-23093",
+        "STM-23100"
       ]
     },
     {
@@ -213,11 +213,11 @@
         "Marlowe Consulting Ltd"
       ],
       "ref": [
-        "INV-21603",
-        "PO-21610",
-        "CN-21617",
-        "STM-21624",
-        "REM-21631"
+        "INV-23083",
+        "PO-23090",
+        "CN-23097",
+        "STM-23104",
+        "REM-23111"
       ]
     }
   ]

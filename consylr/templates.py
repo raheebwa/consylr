@@ -37,7 +37,17 @@ REQUIRED = ("id", "family", "left", "right", "policy")
 #: makes the classification complete by construction, which is the same
 #: principle the ground truth already rests on.
 BODY_FIELDS = frozenset(
-    {"id", "family", "left", "right", "policy", "documents", "cause", "withhold_cause"}
+    {
+        "id",
+        "family",
+        "left",
+        "right",
+        "policy",
+        "documents",
+        "cause",
+        "withhold_cause",
+        "twin_of",
+    }
 )
 RECORD_FIELDS = frozenset({"ref", "party", "date", "amount"})
 CITATION_FIELDS = frozenset({"id", "text"})
@@ -186,6 +196,30 @@ def shape_violations(template: Template) -> list[Violation]:
     # withhold. Set on a family that names none, it would read as a decoupled
     # case and emit an ordinary one — the flag silently doing nothing is worse
     # than the flag being refused.
+    # `twin_of` names the template this one seeds from, which is how a withheld
+    # twin resolves the same pools to the same values as its settled pair. On a
+    # template that is not withholding, it would silently emit a second copy of
+    # another template's cases — distinct only by id, and refused later as
+    # duplicates with nothing naming the cause.
+    twin = body.get("twin_of")
+    if twin is not None and not (isinstance(twin, str) and twin):
+        out.append(
+            Violation(
+                "malformed_field",
+                f"{name}: 'twin_of' is {twin!r}, not the id of a template to seed from",
+                template.id or None,
+            )
+        )
+    elif twin and not body.get("withhold_cause"):
+        out.append(
+            Violation(
+                "twin_without_withholding",
+                f"{name}: 'twin_of' seeds one template from another, which only a withheld "
+                "twin does; without 'withhold_cause' it would re-emit that template's cases",
+                template.id or None,
+            )
+        )
+
     withheld = body.get("withhold_cause")
     if withheld is not None:
         if not isinstance(withheld, bool):
@@ -348,6 +382,22 @@ def check(templates: Iterable[Template], families: frozenset[str]) -> list[Viola
                 f"{len(named)} template(s) have no {missing!r}: {', '.join(named)}",
             )
         )
+
+    # A twin that names nothing seeds from an id no template carries. It still
+    # builds, and it still builds deterministically — it simply is not the twin
+    # of anything, so the pair it was authored to form does not exist and the
+    # contrastive property is silently absent.
+    for t in items:
+        twin = str(t.body.get("twin_of") or "")
+        if twin and twin not in by_id:
+            violations.append(
+                Violation(
+                    "twin_not_found",
+                    f"{t.id}: 'twin_of' names {twin!r}, which is not a template in this set; "
+                    "it would seed from nothing and form no pair",
+                    t.id or None,
+                )
+            )
 
     for template_id in sorted(i for i, ts in by_id.items() if len(ts) > 1):
         violations.append(

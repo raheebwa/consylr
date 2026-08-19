@@ -2,11 +2,11 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 310."
+      "text": "Remittance advice, batch 350."
     }
   ],
-  "family": "cause_not_established",
-  "id": "cause_not_established-030",
+  "family": "ambiguous_pair",
+  "id": "ambiguous_pair-030",
   "left": [
     {
       "amount": [
@@ -35,11 +35,11 @@
         "Bramfield Haulage Ltd"
       ],
       "ref": [
-        "INV-21470",
-        "PO-21477",
-        "CN-21484",
-        "STM-21491",
-        "REM-21498"
+        "INV-22950",
+        "PO-22957",
+        "CN-22964",
+        "STM-22971",
+        "REM-22978"
       ]
     },
     {
@@ -69,11 +69,11 @@
         "Calderstone Foods Ltd"
       ],
       "ref": [
-        "PO-21481",
-        "CN-21488",
-        "STM-21495",
-        "REM-21502",
-        "INV-21509"
+        "PO-22961",
+        "CN-22968",
+        "STM-22975",
+        "REM-22982",
+        "INV-22989"
       ]
     },
     {
@@ -103,11 +103,11 @@
         "Dunmore Electrical Ltd"
       ],
       "ref": [
-        "CN-21492",
-        "STM-21499",
-        "REM-21506",
-        "INV-21513",
-        "PO-21520"
+        "CN-22972",
+        "STM-22979",
+        "REM-22986",
+        "INV-22993",
+        "PO-23000"
       ]
     }
   ],
@@ -145,11 +145,11 @@
         "Bramfield Haulage Ltd"
       ],
       "ref": [
-        "INV-21470",
-        "PO-21477",
-        "CN-21484",
-        "STM-21491",
-        "REM-21498"
+        "INV-22950",
+        "PO-22957",
+        "CN-22964",
+        "STM-22971",
+        "REM-22978"
       ]
     },
     {
@@ -179,11 +179,11 @@
         "Calderstone Foods Ltd"
       ],
       "ref": [
-        "PO-21481",
-        "CN-21488",
-        "STM-21495",
-        "REM-21502",
-        "INV-21509"
+        "PO-22961",
+        "CN-22968",
+        "STM-22975",
+        "REM-22982",
+        "INV-22989"
       ]
     },
     {
@@ -213,11 +213,11 @@
         "Dunmore Electrical Ltd"
       ],
       "ref": [
-        "CN-21492",
-        "STM-21499",
-        "REM-21506",
-        "INV-21513",
-        "PO-21520"
+        "CN-22972",
+        "STM-22979",
+        "REM-22986",
+        "INV-22993",
+        "PO-23000"
       ]
     }
   ]

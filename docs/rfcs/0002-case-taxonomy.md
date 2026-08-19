@@ -86,8 +86,15 @@ a family.
 | Band | Share of the SFT mix |
 |---|---|
 | Clearly supported | **65–75%**, target 70% — a deployment prior, see §The supported band |
-| `cause_not_established` cases | **10–15%** — opening value, see §Tuning |
-| Remaining ambiguous / unsupported / residue-bearing | the balance |
+| Cases declining for an unestablished cause | **10–15%** — opening value, see §Tuning. **Counted from the answer, not the family**: a case that declines because nothing in its packet establishes the cause belongs here whatever family it wears |
+| Unsupported cases | **3–10%** |
+| Remaining ambiguous / residue-bearing | the balance |
+
+The unsupported band exists because a class without one can be halved and nothing says so. It
+was: a mix change cut `decoy` — the only family producing `unsupported` — from 21.3% of the
+template set to 2.5% in a single commit, in the same change whose own text says a ratio moved
+without a log line moved silently. Nothing gated it, because nothing had a band to gate it
+against.
 
 ### The supported band, and why it moved
 
@@ -154,6 +161,10 @@ rule names.
 
 | Date | Ratio | From | To | Measurement that drove it |
 |---|---|---|---|---|
+| 2026-08-19 | declining for an unestablished cause | family count, 10–15% | **answer** count, 10–15% | Not a gauge reading — a measurement defect. The band counted cases in the `cause_not_established` *family*, and a decoupled corpus carries that answer under settled families too. Measured on the first decoupled build: the gate read 11.0% and passed while cases whose answer key carried a `cause_not_established` exception were **21.0%**, against a 15% ceiling meant to stop exactly the false abstention this run exists to reduce. The band did not move; what it counts did. |
+| 2026-08-19 | `cause_not_established` family | 12.5% of templates | 4.0% | Consequence of the row above. The family and the withheld twins now share one 10–15% budget; the twins keep their pre-registered 10% because they are the lever under test, and the family absorbs the cut. The cases are not lost — they are taught better, wearing a settled family's shape so the answer cannot be reached by recognising the family. |
+| 2026-08-19 | `decoy` | 21.3% of templates | 6.0% | Was cut to 2.5% in a first pass with no line here and no band to gate it. Restored to 6% and banded. `decoy` is the only family producing `unsupported` certainty, so its share *is* the unsupported share. |
+| 2026-08-19 | `ambiguous_pair` | 21.3% of templates | 10.0% | Recorded so a move in its exact match can be read against the change. It is the family the tuned model never once declined on, at any checkpoint, while carrying the largest share of the corpus — which is the evidence that its mass was never the lever. |
 | 2026-08-19 | clearly supported | 40–50% | 65–75%, target 70% | Not a gauge reading. The band was re-derived from the deployment claim above after the gauges were found to be uninformative about it: on run 4's checkpoints **both** fire at once — false abstention 38.8% and correct abstention 73.7% at 6,000 iterations, 8.8% and 35.1% at 4,000 — which rule 2 states means the ratio is not the cause. The evidence for what *is* the cause is recorded against the decoupling change in RFC-0003: certainty is currently a deterministic function of family in every corpus this project has built, so a model can score certainty perfectly by recognising the family and never reading a policy line. The mix moves here because the deployment claim says it should, not because a gauge asked for it. |
 
 Rule 4 is what makes the other three safe. Without it, tuning a training ratio against a threshold

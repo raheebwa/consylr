@@ -359,10 +359,22 @@ answer that is correct for a packet which shows a difference and explains nothin
 `ambiguous` correspondence, an `unsupported` exception of kind `cause_not_established` citing
 nothing, and an `open` entry naming what would settle it.
 
-The two cases are **contrastive by construction**. One template body produces both, and they
-differ in exactly one policy line — same records, same amounts, same dates, same documents. A
-model cannot tell them apart from the ledger, which is the point: if withholding also moved a
-record, the shortcut would simply be rebuilt one coordinate over.
+The two cases are **contrastive by construction**, and that takes one more thing than it looks
+like. `case_seed` mixes the template id into the seed, and that seed drives which candidate each
+pool resolves to, which pair the deformation chooses, and how the records are permuted — so a
+twin under its own id shares its pools and resolves to entirely different amounts, dates and
+counterparties. **A withheld twin therefore declares `twin_of` and seeds from its settled twin**:
+one draw, two policies.
+
+The first authored set did not, and every pair in it differed in every field the pools vary. The
+unit test could not see it, because it built both halves from one body under one id and the seeds
+coincided by construction — a test asserting a property the shipped artefact did not have. The
+property is now checked on the real two-id path, with a deliberately seed-diverged pair as the
+planted failure.
+
+With it, the pair differs in exactly one policy line — same records, same amounts, same dates,
+same documents. A model cannot tell them apart from the ledger, which is the point: if
+withholding also moved a record, the shortcut would simply be rebuilt one coordinate over.
 
 #### Ground truth stays proven, in both directions
 
@@ -393,10 +405,12 @@ what makes family stop predicting certainty; recording it as `cause_not_establis
 the shortcut rather than remove it. Per-family metrics stay meaningful, and a family now
 reports a mix of settled and unsettleable cases — which is what the deployed model will see.
 
-The quota's abstention band still counts by family, so withheld cases fall in the balance rather
-than in the `cause_not_established` share. That is a known asymmetry, recorded rather than
-worked around: the band governs how much of one *family* the corpus carries, and these cases are
-not in it.
+**The abstention band counts the answer, not the family.** It did not, and the asymmetry was
+recorded here without its magnitude — which is a hazard named rather than measured. Measured: on
+the first decoupled build the gate read 11.0% and passed while cases whose answer key carried a
+`cause_not_established` exception were **21.0%**, against a 15% ceiling meant to stop exactly the
+false abstention this change exists to reduce. The builder now stamps `unestablished` on a case's
+metadata from its emitted exceptions, and `quota.check` counts that.
 
 **The sealed exam is not rebuilt.** It shares the coupling, so it cannot see the shortcut
 directly — but a model that reads evidence answers its cases correctly anyway. The asymmetry is

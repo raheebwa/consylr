@@ -28,7 +28,8 @@ packets, another with half its packets outside the specified record range.
 | RFC-0001 | generation headroom reserved | `consylr.budget.check` | headroom_lost |
 | RFC-0002 | a case belongs to exactly one family | `consylr.templates.check` | unknown_family; one family per template by construction |
 | RFC-0002 | clearly-supported cases are 65-75% of the mix | `consylr.quota.check` | supported_share_low / supported_share_high |
-| RFC-0002 | cause_not_established is 10-15% of the mix | `consylr.quota.check` | abstention_share_low / abstention_share_high |
+| RFC-0002 | cases declining for an unestablished cause are 10-15% of the mix, counted from the answer | `consylr.quota.check` | abstention_share_low / abstention_share_high |
+| RFC-0002 | unsupported cases are 3-10% of the mix | `consylr.quota.check` | unsupported_share_low / unsupported_share_high |
 | RFC-0002 | every family present in measurable numbers | `consylr.quota.check` | family_below_floor |
 | RFC-0002 | a family's answer cannot contradict its certainty | `consylr.quota.check` | contradictory_certainty |
 | RFC-0003 | a template is a closed world | `consylr.templates.shape_violations` | unknown_field / missing_field / bad_type |

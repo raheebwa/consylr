@@ -37,7 +37,7 @@ from collections.abc import Mapping, Sequence
 from copy import deepcopy
 from typing import Any
 
-from consylr.cases import case_seed
+from consylr.cases import case_seed, seed_id
 from consylr.templates import RECORD_FIELDS, Template
 
 #: The sides whose records carry drawable fields. Policy and document text are
@@ -85,7 +85,11 @@ def instantiate(template: Template, *, root_seed: int, case_index: int) -> Templ
         return template
 
     body = deepcopy(dict(template.body))
-    seed = case_seed(root_seed, template.id, case_index)
+    # `seed_id`, not `template.id`: a withheld twin seeds from its settled twin so
+    # the pair draws the same candidate from every pool. Seeding on the id here
+    # while the builder seeded on the twin would resolve one pair two ways, which
+    # is the defect this whole indirection exists to remove.
+    seed = case_seed(root_seed, seed_id(template), case_index)
 
     for side in SIDES:
         records = body.get(side)

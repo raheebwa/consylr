@@ -2,11 +2,11 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 314."
+      "text": "Remittance advice, batch 346."
     }
   ],
-  "family": "cause_not_established",
-  "id": "cause_not_established-034",
+  "family": "ambiguous_pair",
+  "id": "ambiguous_pair-026",
   "left": [
     {
       "amount": [
@@ -27,19 +27,19 @@
         "2026-04-27"
       ],
       "party": [
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd",
         "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd"
+        "Westbrook Services Ltd"
       ],
       "ref": [
-        "REM-21618",
-        "INV-21625",
-        "PO-21632",
-        "CN-21639",
-        "STM-21646"
+        "PO-22802",
+        "CN-22809",
+        "STM-22816",
+        "REM-22823",
+        "INV-22830"
       ]
     },
     {
@@ -61,19 +61,19 @@
         "2026-05-08"
       ],
       "party": [
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd",
+        "Eastvale Trading Ltd",
         "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd"
+        "Harbourline Freight Ltd"
       ],
       "ref": [
-        "INV-21629",
-        "PO-21636",
-        "CN-21643",
-        "STM-21650",
-        "REM-21657"
+        "CN-22813",
+        "STM-22820",
+        "REM-22827",
+        "INV-22834",
+        "PO-22841"
       ]
     },
     {
@@ -95,19 +95,19 @@
         "2026-05-21"
       ],
       "party": [
+        "Northwind Ltd",
+        "Southgate Ltd",
+        "Eastvale Trading Ltd",
+        "Westbrook Services Ltd",
         "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd",
-        "Quayside Packaging Ltd"
+        "Copperfield Supply Ltd"
       ],
       "ref": [
-        "PO-21640",
-        "CN-21647",
-        "STM-21654",
-        "REM-21661",
-        "INV-21668"
+        "STM-22824",
+        "REM-22831",
+        "INV-22838",
+        "PO-22845",
+        "CN-22852"
       ]
     }
   ],
@@ -137,19 +137,19 @@
         "2026-05-04"
       ],
       "party": [
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd",
         "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd"
+        "Westbrook Services Ltd"
       ],
       "ref": [
-        "REM-21618",
-        "INV-21625",
-        "PO-21632",
-        "CN-21639",
-        "STM-21646"
+        "PO-22802",
+        "CN-22809",
+        "STM-22816",
+        "REM-22823",
+        "INV-22830"
       ]
     },
     {
@@ -171,19 +171,19 @@
         "2026-05-12"
       ],
       "party": [
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd",
+        "Eastvale Trading Ltd",
         "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd"
+        "Harbourline Freight Ltd"
       ],
       "ref": [
-        "INV-21629",
-        "PO-21636",
-        "CN-21643",
-        "STM-21650",
-        "REM-21657"
+        "CN-22813",
+        "STM-22820",
+        "REM-22827",
+        "INV-22834",
+        "PO-22841"
       ]
     },
     {
@@ -205,19 +205,19 @@
         "2026-05-26"
       ],
       "party": [
+        "Northwind Ltd",
+        "Southgate Ltd",
+        "Eastvale Trading Ltd",
+        "Westbrook Services Ltd",
         "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd",
-        "Quayside Packaging Ltd"
+        "Copperfield Supply Ltd"
       ],
       "ref": [
-        "PO-21640",
-        "CN-21647",
-        "STM-21654",
-        "REM-21661",
-        "INV-21668"
+        "STM-22824",
+        "REM-22831",
+        "INV-22838",
+        "PO-22845",
+        "CN-22852"
       ]
     }
   ]

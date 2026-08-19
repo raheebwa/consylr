@@ -2,11 +2,11 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 320."
+      "text": "Remittance advice, batch 312."
     }
   ],
-  "family": "cause_not_established",
-  "id": "cause_not_established-040",
+  "family": "decoy",
+  "id": "decoy-016",
   "left": [
     {
       "amount": [
@@ -27,19 +27,19 @@
         "2026-03-11"
       ],
       "party": [
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
         "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd"
+        "Southgate Ltd"
       ],
       "ref": [
-        "INV-21840",
-        "PO-21847",
-        "CN-21854",
-        "STM-21861",
-        "REM-21868"
+        "CN-21544",
+        "STM-21551",
+        "REM-21558",
+        "INV-21565",
+        "PO-21572"
       ]
     },
     {
@@ -61,19 +61,19 @@
         "2026-03-19"
       ],
       "party": [
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
         "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd"
+        "Eastvale Trading Ltd"
       ],
       "ref": [
-        "PO-21851",
-        "CN-21858",
-        "STM-21865",
-        "REM-21872",
-        "INV-21879"
+        "STM-21555",
+        "REM-21562",
+        "INV-21569",
+        "PO-21576",
+        "CN-21583"
       ]
     },
     {
@@ -95,19 +95,19 @@
         "2026-04-02"
       ],
       "party": [
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd",
         "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd"
+        "Westbrook Services Ltd"
       ],
       "ref": [
-        "CN-21862",
-        "STM-21869",
-        "REM-21876",
-        "INV-21883",
-        "PO-21890"
+        "REM-21566",
+        "INV-21573",
+        "PO-21580",
+        "CN-21587",
+        "STM-21594"
       ]
     }
   ],
@@ -137,19 +137,19 @@
         "2026-03-13"
       ],
       "party": [
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
         "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd"
+        "Southgate Ltd"
       ],
       "ref": [
-        "INV-21840",
-        "PO-21847",
-        "CN-21854",
-        "STM-21861",
-        "REM-21868"
+        "CN-21544",
+        "STM-21551",
+        "REM-21558",
+        "INV-21565",
+        "PO-21572"
       ]
     },
     {
@@ -171,19 +171,19 @@
         "2026-03-24"
       ],
       "party": [
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
         "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd"
+        "Eastvale Trading Ltd"
       ],
       "ref": [
-        "PO-21851",
-        "CN-21858",
-        "STM-21865",
-        "REM-21872",
-        "INV-21879"
+        "STM-21555",
+        "REM-21562",
+        "INV-21569",
+        "PO-21576",
+        "CN-21583"
       ]
     },
     {
@@ -205,19 +205,19 @@
         "2026-04-06"
       ],
       "party": [
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd",
         "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd"
+        "Westbrook Services Ltd"
       ],
       "ref": [
-        "CN-21862",
-        "STM-21869",
-        "REM-21876",
-        "INV-21883",
-        "PO-21890"
+        "REM-21566",
+        "INV-21573",
+        "PO-21580",
+        "CN-21587",
+        "STM-21594"
       ]
     }
   ]

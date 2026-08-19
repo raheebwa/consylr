@@ -2,11 +2,11 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 299."
+      "text": "Remittance advice, batch 355."
     }
   ],
-  "family": "cause_not_established",
-  "id": "cause_not_established-019",
+  "family": "ambiguous_pair",
+  "id": "ambiguous_pair-035",
   "left": [
     {
       "amount": [
@@ -27,19 +27,19 @@
         "2026-05-21"
       ],
       "party": [
-        "Dunmore Electrical Ltd",
-        "Elmsworth Joinery Ltd",
-        "Fenwick Instruments Ltd",
-        "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd"
+        "Copperfield Supply Ltd",
+        "Marlowe Consulting Ltd",
+        "Ashgrove Logistics Ltd",
+        "Pennine Metals Ltd",
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd"
       ],
       "ref": [
-        "REM-21063",
-        "INV-21070",
-        "PO-21077",
-        "CN-21084",
-        "STM-21091"
+        "INV-23135",
+        "PO-23142",
+        "CN-23149",
+        "STM-23156",
+        "REM-23163"
       ]
     },
     {
@@ -61,19 +61,19 @@
         "2026-06-03"
       ],
       "party": [
-        "Elmsworth Joinery Ltd",
-        "Fenwick Instruments Ltd",
-        "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd"
+        "Marlowe Consulting Ltd",
+        "Ashgrove Logistics Ltd",
+        "Pennine Metals Ltd",
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd",
+        "Thornbury Chemicals Ltd"
       ],
       "ref": [
-        "INV-21074",
-        "PO-21081",
-        "CN-21088",
-        "STM-21095",
-        "REM-21102"
+        "PO-23146",
+        "CN-23153",
+        "STM-23160",
+        "REM-23167",
+        "INV-23174"
       ]
     },
     {
@@ -95,19 +95,19 @@
         "2026-06-16"
       ],
       "party": [
-        "Fenwick Instruments Ltd",
-        "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd"
+        "Ashgrove Logistics Ltd",
+        "Pennine Metals Ltd",
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd",
+        "Thornbury Chemicals Ltd",
+        "Ullswater Textiles Ltd"
       ],
       "ref": [
-        "PO-21085",
-        "CN-21092",
-        "STM-21099",
-        "REM-21106",
-        "INV-21113"
+        "CN-23157",
+        "STM-23164",
+        "REM-23171",
+        "INV-23178",
+        "PO-23185"
       ]
     }
   ],
@@ -137,19 +137,19 @@
         "2026-05-26"
       ],
       "party": [
-        "Dunmore Electrical Ltd",
-        "Elmsworth Joinery Ltd",
-        "Fenwick Instruments Ltd",
-        "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd"
+        "Copperfield Supply Ltd",
+        "Marlowe Consulting Ltd",
+        "Ashgrove Logistics Ltd",
+        "Pennine Metals Ltd",
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd"
       ],
       "ref": [
-        "REM-21063",
-        "INV-21070",
-        "PO-21077",
-        "CN-21084",
-        "STM-21091"
+        "INV-23135",
+        "PO-23142",
+        "CN-23149",
+        "STM-23156",
+        "REM-23163"
       ]
     },
     {
@@ -171,19 +171,19 @@
         "2026-06-09"
       ],
       "party": [
-        "Elmsworth Joinery Ltd",
-        "Fenwick Instruments Ltd",
-        "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd"
+        "Marlowe Consulting Ltd",
+        "Ashgrove Logistics Ltd",
+        "Pennine Metals Ltd",
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd",
+        "Thornbury Chemicals Ltd"
       ],
       "ref": [
-        "INV-21074",
-        "PO-21081",
-        "CN-21088",
-        "STM-21095",
-        "REM-21102"
+        "PO-23146",
+        "CN-23153",
+        "STM-23160",
+        "REM-23167",
+        "INV-23174"
       ]
     },
     {
@@ -205,19 +205,19 @@
         "2026-06-22"
       ],
       "party": [
-        "Fenwick Instruments Ltd",
-        "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd"
+        "Ashgrove Logistics Ltd",
+        "Pennine Metals Ltd",
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd",
+        "Thornbury Chemicals Ltd",
+        "Ullswater Textiles Ltd"
       ],
       "ref": [
-        "PO-21085",
-        "CN-21092",
-        "STM-21099",
-        "REM-21106",
-        "INV-21113"
+        "CN-23157",
+        "STM-23164",
+        "REM-23171",
+        "INV-23178",
+        "PO-23185"
       ]
     }
   ]

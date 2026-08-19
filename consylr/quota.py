@@ -41,6 +41,10 @@ class Plan:
     #: product is shown are settleable from the evidence in them — and not the
     #: exam's composition, which the RFC states must never be cited for it.
     supported_share: tuple[float, float] = (0.65, 0.75)
+    #: RFC-0002 Constraint A. `decoy` is the only family producing it, and it had
+    #: no band until a mix change cut it 8.5× with nothing to say so. A class
+    #: without a band is a class that can be silently halved.
+    unsupported_share: tuple[float, float] = (0.03, 0.10)
     abstention_share: tuple[float, float] = (0.10, 0.15)
 
 
@@ -56,7 +60,22 @@ def check(cases: Iterable[Mapping[str, str]], plan: Plan) -> list[Violation]:
 
     total = len(rows)
     by_family = Counter(str(r.get("family")) for r in rows)
-    abstention = by_family.get(ABSTENTION_FAMILY, 0)
+    # Counted from the ANSWER, not from the family. A withheld twin keeps its
+    # settled family and declines because nothing in its packet establishes the
+    # cause, so a family count read 11% on the first decoupled corpus where the
+    # answers said 21% — against a ceiling of 15% whose whole purpose is that
+    # above it abstention becomes cheap and false abstention rises. The corpus
+    # was aimed at the failure the band exists to prevent, and the gate said yes.
+    #
+    # `unestablished` is stamped by the builder from the emitted exceptions.
+    # Falling back to the family keeps older rows readable rather than counting
+    # them as zero, which would have been the same blindness in a new place.
+    abstention = sum(
+        1
+        for r in rows
+        if r.get("unestablished")
+        or (r.get("unestablished") is None and r.get("family") == ABSTENTION_FAMILY)
+    )
 
     # The abstention family is the one place the two axes are not independent:
     # it is *defined* by the packet failing to explain the difference, so a row
@@ -109,16 +128,36 @@ def check(cases: Iterable[Mapping[str, str]], plan: Plan) -> list[Violation]:
         violations.append(
             Violation(
                 "abstention_share_low",
-                f"{ABSTENTION_FAMILY} is {got:.1%} of {total}; the floor is {lo:.0%} — "
-                "below it the family is learned as a rare escape hatch rather than an answer",
+                f"cases declining for an unestablished cause are {got:.1%} of {total}; "
+                f"the floor is {lo:.0%} — below it the answer is learned as a rare escape "
+                "hatch rather than an answer",
             )
         )
     elif got > hi:
         violations.append(
             Violation(
                 "abstention_share_high",
-                f"{ABSTENTION_FAMILY} is {got:.1%} of {total}; the ceiling is {hi:.0%} — "
-                "above it abstention becomes cheap and false abstention rises",
+                f"cases declining for an unestablished cause are {got:.1%} of {total}; "
+                f"the ceiling is {hi:.0%} — above it abstention becomes cheap and false "
+                "abstention rises",
+            )
+        )
+
+    lo, hi = plan.unsupported_share
+    got = _share(sum(1 for r in rows if r.get("certainty") == "unsupported"), total)
+    if got < lo:
+        violations.append(
+            Violation(
+                "unsupported_share_low",
+                f"unsupported cases are {got:.1%} of {total}; the floor is {lo:.0%} — "
+                "a class the model rarely sees is a class it answers by shape",
+            )
+        )
+    elif got > hi:
+        violations.append(
+            Violation(
+                "unsupported_share_high",
+                f"unsupported cases are {got:.1%} of {total}; the ceiling is {hi:.0%}",
             )
         )
 
