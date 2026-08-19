@@ -16,7 +16,7 @@ import collections
 import json
 from pathlib import Path
 
-from consylr.cases import build
+from consylr.cases import Case, build
 from consylr.identity import scenario
 from consylr.prompt import render
 from consylr.templates import Template, check, load, shape_violations
@@ -160,4 +160,85 @@ def _certainty_of(template: Template) -> str:
             render=render,
             budget=FAKE_BUDGET,
         ).meta["certainty"]
+    )
+
+
+def test_a_withheld_twin_resolves_to_the_same_case() -> None:
+    """The property RFC-0003 claims, checked on the artefact rather than a fixture.
+
+    The unit test for this builds both cases from one body under one id, so the
+    seeds coincide and the records match by construction — it asserts a property
+    the authored set does not have to possess. Here the two real templates are
+    built, ids and all, which is the only place the claim can actually fail.
+
+    It did fail: `case_seed` mixes in the template id, and the id seeds the pool
+    draw, the deformation's choice of pair and the permutation. The twins shared
+    pools and resolved to entirely different amounts, dates and counterparties,
+    so the policy line was one difference among many rather than the only one.
+    """
+    by_id = {t.id: t for t in load(TRAIN)}
+    pairs = [
+        (by_id[str(t.id).replace("-withheld-", "-")], t)
+        for t in by_id.values()
+        if t.body.get("withhold_cause")
+    ]
+    assert pairs
+
+    for settled, withheld in pairs[:SAMPLE]:
+        a = _case(settled)
+        b = _case(withheld)
+        assert a.packet["records"] == b.packet["records"], f"{settled.id} vs {withheld.id}"
+        assert a.packet["documents"] == b.packet["documents"]
+        dropped = [p for p in a.packet["policy"] if p not in b.packet["policy"]]
+        assert len(dropped) == 1, dropped
+
+
+def test_the_twin_check_can_actually_fail() -> None:
+    """The planted failure for the test above, because it once passed on a defect.
+
+    The unit-level version built both halves from one body under one id, so the
+    seeds coincided and the records matched by construction — green on a set whose
+    twins differed in every field their pools vary. Here a twin is deliberately
+    stripped of `twin_of`, which is exactly the state the authored set was in, and
+    the property must fail.
+    """
+    by_id = {t.id: t for t in load(TRAIN)}
+    withheld = next(t for t in by_id.values() if t.body.get("withhold_cause"))
+    settled = by_id[str(withheld.id).replace("-withheld-", "-")]
+    diverged = Template.from_mapping({k: v for k, v in withheld.body.items() if k != "twin_of"})
+
+    assert _case(settled).packet["records"] == _case(withheld).packet["records"]
+    assert _case(settled).packet["records"] != _case(diverged).packet["records"]
+
+
+def test_a_twin_pair_is_not_a_contradiction() -> None:
+    """Two packets, two answers, and the writer must not read that as a conflict.
+
+    `corpus.write` refuses a corpus holding one packet under two different
+    answers. A twin pair is the near-miss: same records, same documents, opposite
+    answers — legitimate precisely because the packets differ by the policy line.
+    Asserted rather than assumed, because the distance between "differs by one
+    line" and "identical" is one bug in the emitter.
+    """
+    from consylr.corpus import check as corpus_check
+
+    by_id = {t.id: t for t in load(TRAIN)}
+    withheld = next(t for t in by_id.values() if t.body.get("withhold_cause"))
+    settled = by_id[str(withheld.id).replace("-withheld-", "-")]
+    pair = [settled, withheld]
+    codes = {v.code for v in corpus_check([_case(t) for t in pair], templates=pair)}
+    assert "contradictory_ground_truth" not in codes
+    assert "duplicate_packet" not in codes
+
+
+def _case(template: Template) -> Case:
+    return build(
+        template,
+        root_seed=7,
+        case_index=0,
+        role="train",
+        tokeniser=PerCharacter(),
+        render=render,
+        budget=FAKE_BUDGET,
+        permute=True,
     )

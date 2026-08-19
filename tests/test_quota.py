@@ -375,3 +375,58 @@ def test_abstention_is_counted_from_the_answer_not_the_family() -> None:
 
     by_family = sum(1 for r in corpus if r["family"] == "cause_not_established") / len(corpus)
     assert by_family == 0.05, "the old count would have passed this corpus"
+
+
+def test_the_default_unsupported_band_is_the_one_rfc_0002_states() -> None:
+    """Pinned like the supported band, for the reason the band itself exists.
+
+    It was added because a class without a band can be silently halved — `decoy`
+    fell 8.5× with nothing to say so. Shipped without a test, the band could be
+    silently deleted, which is the same failure one level up.
+    """
+    assert Plan(families=frozenset({"clean_match"})).unsupported_share == (0.03, 0.10)
+
+
+def test_a_corpus_below_the_unsupported_floor_is_reported() -> None:
+    corpus = cases(
+        clean_match__supported=70,
+        fee_at_source__ambiguous=16,
+        cause_not_established__ambiguous=12,
+        decoy__unsupported=2,
+    )
+    v = next(x for x in check(corpus, PLAN) if x.code == "unsupported_share_low")
+    assert "2.0%" in v.detail and "3%" in v.detail
+
+
+def test_a_corpus_above_the_unsupported_ceiling_is_reported() -> None:
+    corpus = cases(
+        clean_match__supported=70,
+        fee_at_source__ambiguous=7,
+        cause_not_established__ambiguous=12,
+        decoy__unsupported=11,
+    )
+    v = next(x for x in check(corpus, PLAN) if x.code == "unsupported_share_high")
+    assert "11.0%" in v.detail and "10%" in v.detail
+
+
+def test_a_string_valued_row_does_not_read_as_abstention() -> None:
+    """`unestablished` is a bool, and a row source that stringifies it lies.
+
+    Every live caller passes in-memory metadata, so this is a guard on the shape
+    the signature invites rather than on one anything produces today — but
+    `"False"` is truthy, and a whole corpus counting as abstention is the kind of
+    wrong that looks like a real measurement.
+    """
+    corpus: list[dict[str, Any]] = [
+        *(
+            {"family": "clean_match", "certainty": "supported", "unestablished": "False"}
+            for _ in range(70)
+        ),
+        *({"family": "decoy", "certainty": "unsupported"} for _ in range(6)),
+        *({"family": "fee_at_source", "certainty": "ambiguous"} for _ in range(12)),
+        *(
+            {"family": "cause_not_established", "certainty": "ambiguous", "unestablished": True}
+            for _ in range(12)
+        ),
+    ]
+    assert not [x for x in check(corpus, PLAN) if x.code.startswith("abstention_share")]
