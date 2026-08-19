@@ -202,3 +202,75 @@ def test_the_null_answer_leaves_an_unpaired_record_as_residue() -> None:
 
     assert len(produced["matches"]) == 1
     assert produced["residue"] == {"l": ["A-002"], "r": []}
+
+
+# --- canonical answer order -------------------------------------------------
+#
+# Exact match compares the whole answer, and dict equality reads lists in order.
+# The gold's own order is arbitrary — only 3.6% of the training corpus lists its
+# matches in packet order and 49.5% of the exam — so nothing in a packet lets a
+# model derive it. Scoring it counted a correct answer wrong 46 times in 204 on
+# one checkpoint, and reported a family at 0% when every case in it was right.
+#
+# The order is dropped from the comparison, not from the answer: `matches` is a
+# set of correspondences by RFC-0001, and `_correspondences` already scores it as
+# one. The risk in doing so is the opposite error — a comparison so forgiving
+# that two different answers become equal — which is what the second test is for.
+
+PAIR_PACKET = {
+    "records": [{"id": "A-001"}, {"id": "A-002"}, {"id": "B-001"}, {"id": "B-002"}],
+    "policy": [{"id": "P-1"}],
+    "documents": [],
+}
+TWO: dict[str, Any] = {
+    "matches": [
+        {"l": ["A-001"], "r": ["B-001"], "c": "supported", "why": ["A-001", "B-001"]},
+        {"l": ["A-002"], "r": ["B-002"], "c": "supported", "why": ["A-002", "B-002"]},
+    ],
+    "residue": {"l": [], "r": []},
+    "do": [{"act": "accept", "on": ["A-001", "A-002", "B-001", "B-002"]}],
+}
+
+
+def pair_answer(text: str, expected: dict[str, Any]) -> Answer:
+    return Answer(packet=PAIR_PACKET, expected=expected, produced=text, family="clean_match")
+
+
+def test_a_reordered_answer_is_the_same_answer() -> None:
+    shuffled = {**TWO, "matches": list(reversed(TWO["matches"]))}
+    report = score([pair_answer(json.dumps(shuffled), TWO)])
+    assert report.exact_match == 1.0
+
+
+def test_reordering_does_not_make_two_different_answers_equal() -> None:
+    """The guard on the fix above: one element differs, order or not."""
+    altered = {
+        **TWO,
+        "matches": [
+            TWO["matches"][1],
+            {**TWO["matches"][0], "r": ["B-002"]},
+        ],
+    }
+    report = score([pair_answer(json.dumps(altered), TWO)])
+    assert report.exact_match == 0.0
+
+
+def test_the_canonical_order_is_derived_from_content_alone() -> None:
+    """Pinned so the sort key cannot drift into a positional one.
+
+    The key is the entry's own canonical JSON. Two answers holding the same
+    entries order alike whatever order they arrived in, and nothing about where a
+    record sits in the packet reaches the comparison — the crutch permutation was
+    added to remove.
+    """
+    from consylr.canonical import ordered
+
+    entries = [{"l": ["A-002"], "c": "supported"}, {"l": ["A-001"], "c": "supported"}]
+    assert ordered(entries) == [
+        {"c": "supported", "l": ["A-001"]},
+        {"c": "supported", "l": ["A-002"]},
+    ]
+    assert ordered(entries) == ordered(list(reversed(entries)))
+    assert ordered({"do": [{"act": "hold"}, {"act": "accept"}]}) == {
+        "do": [{"act": "accept"}, {"act": "hold"}]
+    }
