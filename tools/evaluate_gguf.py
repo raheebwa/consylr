@@ -117,6 +117,11 @@ def command(
         str(SEED),
         "-f",
         str(prompt_file),
+        # The binary echoes the prompt before continuing it, and the echo is not
+        # byte-identical to what was sent -- so stripping it by prefix match
+        # leaves the whole packet in front of the answer and every case scores
+        # unparseable. Suppressing it at the source removes the guess.
+        "--no-display-prompt",
     ]
     if not conversation:
         # Conversation mode is auto-enabled whenever the GGUF carries a chat
@@ -124,6 +129,17 @@ def command(
         # interface the profiler actually sends.
         argv.append("-no-cnv")
     return argv
+
+
+#: How the binary announces that generation terminated. It is not part of the
+#: answer, and a run that hit the token cap never prints it -- so it is trimmed
+#: only when present, and a truncated answer stays truncated as evidence.
+END_MARKER = "[end of text]"
+
+
+def said(stdout: str) -> str:
+    """The answer, out of what the binary wrote."""
+    return stdout.strip().removesuffix(END_MARKER).strip()
 
 
 def _in_process(model: str, rendered: list[str]) -> list[str]:
@@ -173,8 +189,7 @@ def _subprocess(mode: str, model: str, rendered: list[str], binary: str) -> list
                 # that died.
                 out.append(f"__RUNTIME_FAILED__ rc={proc.returncode}\n{proc.stderr[-2000:]}")
             else:
-                # The binary echoes the prompt before continuing it.
-                out.append(proc.stdout.removeprefix(text))
+                out.append(said(proc.stdout))
             if n % 25 == 0:
                 print(f"  {n}/{len(rendered)}", flush=True)
     return out
