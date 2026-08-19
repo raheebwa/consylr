@@ -252,16 +252,24 @@ def test_reordering_does_not_make_two_different_answers_equal() -> None:
         ],
     }
     report = score([pair_answer(json.dumps(altered), TWO)])
+    # Anchored on the parse: `exact_match == 0.0` is also what an answer that
+    # never parsed scores, so without this the guard would stay green for a
+    # typo in the fixture or a refactor that made `ordered` raise first —
+    # proving nothing about strictness.
+    assert report.parse_rate == 1.0
     assert report.exact_match == 0.0
 
 
 def test_the_canonical_order_is_derived_from_content_alone() -> None:
-    """Pinned so the sort key cannot drift into a positional one.
+    """Pinned so the sort key cannot drift.
 
-    The key is the entry's own canonical JSON. Two answers holding the same
-    entries order alike whatever order they arrived in, and nothing about where a
-    record sits in the packet reaches the comparison — the crutch permutation was
-    added to remove.
+    The key is the entry's own canonical JSON, so two answers holding the same
+    entries order alike whatever order they arrived in.
+
+    It is emphatically NOT a packet-independent order: ids are assigned after the
+    shuffle, so sorting by id sorts by position. That is harmless here, where
+    both sides are sorted the same way, and it is why `consylr.emit` must not use
+    this on a training target — see the module docstring.
     """
     from consylr.canonical import ordered
 
