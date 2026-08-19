@@ -12,7 +12,7 @@ that a mode can never be reported under another mode's name.
 import pytest
 
 from consylr import prompt
-from tools.evaluate_gguf import MODES, SUBPROCESS_MODES, command, llama_kwargs
+from tools.evaluate_gguf import MODES, SUBPROCESS_MODES, command, llama_kwargs, said
 
 
 def test_the_window_is_the_harness_s_and_never_the_model_s() -> None:
@@ -70,3 +70,27 @@ def test_each_mode_records_under_its_own_name() -> None:
 def test_an_unknown_mode_is_refused_rather_than_defaulted() -> None:
     with pytest.raises(KeyError):
         command("scaffolded", model="m.gguf", prompt_file="p.txt")
+
+
+def test_the_binary_is_told_not_to_echo_the_prompt() -> None:
+    """llama-completion prints the prompt before continuing it, and the echo is
+    not byte-identical to what was sent — so stripping it by prefix match
+    silently leaves the whole packet in front of the answer, and every case
+    scores as unparseable. Suppressing the echo at the source removes the guess
+    rather than improving it."""
+    for mode in SUBPROCESS_MODES:
+        assert "--no-display-prompt" in command(mode, model="m.gguf", prompt_file="p.txt")
+
+
+def test_the_end_of_text_marker_is_not_part_of_the_answer() -> None:
+    """The binary announces termination in the output stream. Left in place it
+    turns a complete answer into trailing garbage after the closing brace."""
+    assert said('{"matches":[]} [end of text]\n\n') == '{"matches":[]}'
+    assert said('  {"matches":[]}  ') == '{"matches":[]}'
+
+
+def test_an_answer_without_the_marker_survives_intact() -> None:
+    """A run that hit the token cap never prints the marker, and its truncated
+    answer is evidence — trimming something that is not there must not trim
+    anything that is."""
+    assert said('{"matches":[{"l":["A-1"]') == '{"matches":[{"l":["A-1"]'
