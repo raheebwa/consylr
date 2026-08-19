@@ -136,16 +136,28 @@ def test_every_withheld_template_has_a_settled_twin() -> None:
     for t in withheld:
         twin = by_id.get(str(t.id).replace("-withheld-", "-"))
         assert twin is not None, f"{t.id} has no settled twin"
-        assert {k: v for k, v in t.body.items() if k not in ("id", "withhold_cause")} == {
-            k: v for k, v in twin.body.items() if k != "id"
-        }
+        assert {
+            k: v for k, v in t.body.items() if k not in ("id", "withhold_cause", "twin_of")
+        } == {k: v for k, v in twin.body.items() if k != "id"}
+        assert t.body["twin_of"] == twin.id
 
 
 def _certainty_of(template: Template) -> str:
-    if template.body.get("withhold_cause"):
-        return "ambiguous"
-    if template.family in ("ambiguous_pair", "cause_not_established"):
-        return "ambiguous"
-    if template.family == "decoy":
-        return "unsupported"
-    return "supported"
+    """The certainty this template actually emits, from a build.
+
+    Not from a family table. A table would hardcode the family-to-certainty map
+    this whole change exists to break, and would keep passing while the real
+    corpus failed `quota.check` at the end of a 12,000-case build — the exact
+    failure the test above says it prevents.
+    """
+    return str(
+        build(
+            template,
+            root_seed=7,
+            case_index=0,
+            role="train",
+            tokeniser=PerCharacter(),
+            render=render,
+            budget=FAKE_BUDGET,
+        ).meta["certainty"]
+    )

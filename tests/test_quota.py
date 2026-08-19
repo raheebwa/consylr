@@ -6,6 +6,8 @@ family — a fee case with a supporting policy line *is* a clearly-supported cas
 — so conflating the certainty allocation with family coverage double-counts.
 """
 
+from typing import Any
+
 from consylr.quota import ABSTENTION_FAMILY, Plan, check, satisfiable
 
 
@@ -18,8 +20,12 @@ def cases(**counts: int) -> list[dict[str, str]]:
     return out
 
 
+#: `decoy` is present in every fixture because the plan now bands the unsupported
+#: class as well, floor included — a class with only a ceiling can still be
+#: silently halved, which is how `decoy` fell 8.5× with nothing to say so.
 PLAN = Plan(
-    families=frozenset({"clean_match", "fee_at_source", "cause_not_established"}), family_floor=2
+    families=frozenset({"clean_match", "fee_at_source", "cause_not_established", "decoy"}),
+    family_floor=2,
 )
 
 
@@ -27,8 +33,9 @@ def test_a_corpus_meeting_both_constraints_passes() -> None:
     corpus = cases(
         clean_match__supported=62,
         fee_at_source__supported=8,
-        cause_not_established__unsupported=12,
-        fee_at_source__ambiguous=18,
+        cause_not_established__ambiguous=12,
+        fee_at_source__ambiguous=13,
+        decoy__unsupported=5,
     )
     assert check(corpus, PLAN) == []
 
@@ -77,7 +84,7 @@ def test_a_family_below_its_floor_is_reported_by_name() -> None:
     )
     plan = Plan(families=PLAN.families | {"reversal"}, family_floor=2)
     v = [x for x in check(corpus, plan) if x.code == "family_below_floor"]
-    assert v and "reversal" in v[0].detail
+    assert any("reversal" in x.detail for x in v)
 
 
 def test_a_family_the_plan_does_not_name_is_reported() -> None:
@@ -159,18 +166,17 @@ def test_double_counting_cannot_rescue_a_corpus_short_of_the_supported_floor() -
     assert "supported_share_low" in codes
 
 
-def test_abstention_is_counted_by_family_not_by_certainty() -> None:
-    # `decoy`'s correct answer is an `unsupported` match (RFC-0002), so a corpus
-    # can hold plenty of `unsupported` rows that are not abstention at all.
-    # Folding the two axes into one would read this corpus as 52% abstention.
-    plan = Plan(families=PLAN.families | {"decoy"}, family_floor=2)
+def test_unsupported_certainty_is_not_abstention() -> None:
+    # `decoy`'s correct answer is an `unsupported` match (RFC-0002), and it settles
+    # the case rather than declining it. Folding the two axes into one would read
+    # this corpus as 20% abstention against a 15% ceiling and refuse it.
     corpus = cases(
         clean_match__supported=70,
-        decoy__unsupported=15,
-        cause_not_established__unsupported=12,
-        fee_at_source__ambiguous=3,
+        decoy__unsupported=8,
+        cause_not_established__ambiguous=12,
+        fee_at_source__ambiguous=10,
     )
-    assert check(corpus, plan) == []
+    assert check(corpus, PLAN) == []
 
 
 # --- the boundaries themselves, because a band is only its two edges ---------
@@ -183,8 +189,9 @@ def test_abstention_is_counted_by_family_not_by_certainty() -> None:
 def test_the_supported_floor_is_inclusive() -> None:
     corpus = cases(
         clean_match__supported=65,
-        fee_at_source__ambiguous=23,
-        cause_not_established__unsupported=12,
+        fee_at_source__ambiguous=18,
+        cause_not_established__ambiguous=12,
+        decoy__unsupported=5,
     )
     assert check(corpus, PLAN) == []
 
@@ -201,8 +208,9 @@ def test_one_case_below_the_supported_floor_fails() -> None:
 def test_the_supported_ceiling_is_inclusive() -> None:
     corpus = cases(
         clean_match__supported=75,
-        fee_at_source__ambiguous=13,
-        cause_not_established__unsupported=12,
+        fee_at_source__ambiguous=8,
+        cause_not_established__ambiguous=12,
+        decoy__unsupported=5,
     )
     assert check(corpus, PLAN) == []
 
@@ -220,37 +228,43 @@ def test_one_case_above_the_supported_ceiling_fails_and_names_the_ceiling() -> N
 def test_the_abstention_floor_is_inclusive() -> None:
     corpus = cases(
         clean_match__supported=70,
-        fee_at_source__ambiguous=20,
-        cause_not_established__unsupported=10,
+        fee_at_source__ambiguous=15,
+        cause_not_established__ambiguous=10,
+        decoy__unsupported=5,
     )
     assert check(corpus, PLAN) == []
 
 
 def test_one_case_below_the_abstention_floor_fails_and_names_the_family() -> None:
     corpus = cases(
-        clean_match__supported=45, fee_at_source__ambiguous=46, cause_not_established__unsupported=9
+        clean_match__supported=70,
+        fee_at_source__ambiguous=16,
+        cause_not_established__ambiguous=9,
+        decoy__unsupported=5,
     )
     v = next(x for x in check(corpus, PLAN) if x.code == "abstention_share_low")
-    assert ABSTENTION_FAMILY in v.detail and "9.0%" in v.detail and "10%" in v.detail
+    assert "unestablished cause" in v.detail and "9.0%" in v.detail and "10%" in v.detail
 
 
 def test_the_abstention_ceiling_is_inclusive() -> None:
     corpus = cases(
         clean_match__supported=70,
-        fee_at_source__ambiguous=15,
-        cause_not_established__unsupported=15,
+        fee_at_source__ambiguous=10,
+        cause_not_established__ambiguous=15,
+        decoy__unsupported=5,
     )
     assert check(corpus, PLAN) == []
 
 
 def test_one_case_above_the_abstention_ceiling_fails_and_names_the_family() -> None:
     corpus = cases(
-        clean_match__supported=45,
-        fee_at_source__ambiguous=39,
-        cause_not_established__unsupported=16,
+        clean_match__supported=70,
+        fee_at_source__ambiguous=9,
+        cause_not_established__ambiguous=16,
+        decoy__unsupported=5,
     )
     v = next(x for x in check(corpus, PLAN) if x.code == "abstention_share_high")
-    assert ABSTENTION_FAMILY in v.detail and "16.0%" in v.detail and "15%" in v.detail
+    assert "unestablished cause" in v.detail and "16.0%" in v.detail and "15%" in v.detail
 
 
 def test_a_family_exactly_at_a_binding_floor_passes() -> None:
@@ -258,9 +272,10 @@ def test_a_family_exactly_at_a_binding_floor_passes() -> None:
     # the coverage constraint was never tested anywhere near where it binds.
     plan = Plan(families=PLAN.families, family_floor=12)
     corpus = cases(
-        clean_match__supported=70,
-        fee_at_source__ambiguous=18,
-        cause_not_established__unsupported=12,
+        clean_match__supported=140,
+        fee_at_source__ambiguous=24,
+        cause_not_established__ambiguous=24,
+        decoy__unsupported=12,
     )
     assert check(corpus, plan) == []
 
@@ -327,3 +342,36 @@ def test_the_default_supported_band_is_the_one_rfc_0002_states() -> None:
     changing RFC-0002 is the silent retuning rule 3 names.
     """
     assert Plan(families=frozenset({"clean_match"})).supported_share == (0.65, 0.75)
+
+
+def test_abstention_is_counted_from_the_answer_not_the_family() -> None:
+    """A withheld case wears a settled family and declines for an absent cause.
+
+    Counting by family made the gate blind to half the abstention mass in the
+    first decoupled corpus: it read 11% and passed while cases whose answer key
+    carried a `cause_not_established` exception were 21%, against a ceiling of 15%
+    whose stated purpose is that above it abstention becomes cheap and false
+    abstention rises. The corpus was aimed at the failure the band exists to
+    prevent, and the gate said yes.
+
+    Planted at 16% — one point over — and the second assertion is the one that
+    matters: counting families reads 5% and would have let it through.
+    """
+    corpus: list[dict[str, Any]] = [
+        *({"family": "clean_match", "certainty": "supported"} for _ in range(70)),
+        *({"family": "decoy", "certainty": "unsupported"} for _ in range(5)),
+        *({"family": "fee_at_source", "certainty": "ambiguous"} for _ in range(9)),
+        *(
+            {"family": "fee_at_source", "certainty": "ambiguous", "unestablished": True}
+            for _ in range(11)
+        ),
+        *(
+            {"family": "cause_not_established", "certainty": "ambiguous", "unestablished": True}
+            for _ in range(5)
+        ),
+    ]
+    v = next(x for x in check(corpus, PLAN) if x.code == "abstention_share_high")
+    assert "16.0%" in v.detail
+
+    by_family = sum(1 for r in corpus if r["family"] == "cause_not_established") / len(corpus)
+    assert by_family == 0.05, "the old count would have passed this corpus"
