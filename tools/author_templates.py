@@ -21,6 +21,7 @@ from __future__ import annotations
 import json
 from decimal import Decimal
 from pathlib import Path
+from typing import cast
 
 OUT = Path(__file__).resolve().parent.parent / "templates"
 
@@ -201,12 +202,14 @@ def main() -> None:
             path.write_text(json.dumps(body, indent=2, sort_keys=True) + "\n", encoding="utf-8")
             written += 1
 
-    total = sum(
-        Decimal(r["amount"])
-        for f in FAMILIES
-        for i in range(count_for(f))
-        for r in template(f, i)["left"]
-    )  # type: ignore[union-attr,index]
+    # `template` returns a body of mixed types, so the left side is narrowed
+    # rather than ignored — the ignore that used to sit here was hiding the fact
+    # that nothing checked this arithmetic reads a list of records at all.
+    total = Decimal(0)
+    for f in FAMILIES:
+        for i in range(count_for(f)):
+            left = cast(list[dict[str, str]], template(f, i)["left"])
+            total += sum(Decimal(r["amount"]) for r in left)
     print(f"{written} templates in {OUT}")
     print(f"{len(FAMILIES)} families, weighted for the quota; left-side total {total}")
 
