@@ -337,6 +337,71 @@ cannot be handed to anyone as a recipe. If that price ever looks worse than the 
 buys, the right answer is to leave it off — and a corpus where some cases passed through another
 model and some did not is two corpora unless the record says which.
 
+### Withheld causes, and the shortcut they close
+
+**Certainty was a deterministic function of family in every corpus this generator had
+produced.** `ambiguous` meant `ambiguous_pair` or `cause_not_established`, `unsupported` meant
+`decoy`, and the remaining eleven families meant `supported` — with no overlap anywhere in
+12,000 cases, and the same property in the sealed exam.
+
+A corpus with that property teaches a shortcut. **"Recognise the family" scores certainty
+perfectly without reading a single policy line**, and a model tuned on it learned exactly that:
+declining on nine of fourteen families at a rate of 100% and on the other five at 0%, with no
+family anywhere in between, and never once declining on `ambiguous_pair` despite that family
+being 21% of the training corpus. Mass was not the lever. Family identity was.
+
+It is the positional-pairing defect in another coordinate: a regularity that is perfectly
+predictive on our own data, useless on the task, and invisible to an exam that shares it.
+
+**A template may declare `withhold_cause`.** The generator then removes the policy line the
+family's answer would rest on, applies the family's own deformation unchanged, and emits the
+answer that is correct for a packet which shows a difference and explains nothing: an
+`ambiguous` correspondence, an `unsupported` exception of kind `cause_not_established` citing
+nothing, and an `open` entry naming what would settle it.
+
+The two cases are **contrastive by construction**. One template body produces both, and they
+differ in exactly one policy line — same records, same amounts, same dates, same documents. A
+model cannot tell them apart from the ledger, which is the point: if withholding also moved a
+record, the shortcut would simply be rebuilt one coordinate over.
+
+#### Ground truth stays proven, in both directions
+
+Withholding does not bypass `_prove_cause`; it runs **after** it and adds a second proof.
+
+1. **The line being removed must state the cause.** `_prove_cause` runs first, on the full
+   policy, exactly as it does for an ordinary case. A line can only be shown to be the cause
+   while it is still there — and a case whose cause was never stated is a different artefact
+   from one whose cause was withheld.
+2. **Nothing remaining may state it.** Every surviving line is checked against the same cause
+   terms and the same normalisation. A second line saying the same thing would leave the packet
+   able to settle the case while the answer key declines it — an answer asserting *less* than
+   the packet supports, which is the same class of defect as one asserting more, and the
+   direction a reader is least likely to check.
+3. **A template may not withhold its only policy line.** The result would be a packet with no
+   schedule at all, which tests an empty policy rather than an absent cause.
+4. `_prove_effect` is unchanged and still applies: the packet must actually carry the difference
+   the answer describes.
+
+**The flag is refused where it would mean nothing.** `withhold_cause` on a family that declares
+no cause is a shape violation, not a silent no-op — the audit and the builder read it from one
+definition, as they do every other field.
+
+#### What it does not change
+
+The case keeps its family. A withheld `fee_at_source` case is still `fee_at_source`, which is
+what makes family stop predicting certainty; recording it as `cause_not_established` would move
+the shortcut rather than remove it. Per-family metrics stay meaningful, and a family now
+reports a mix of settled and unsettleable cases — which is what the deployed model will see.
+
+The quota's abstention band still counts by family, so withheld cases fall in the balance rather
+than in the `cause_not_established` share. That is a known asymmetry, recorded rather than
+worked around: the band governs how much of one *family* the corpus carries, and these cases are
+not in it.
+
+**The sealed exam is not rebuilt.** It shares the coupling, so it cannot see the shortcut
+directly — but a model that reads evidence answers its cases correctly anyway. The asymmetry is
+a limitation of the exam and belongs in the report, not a reason to touch a frozen artefact.
+
 ### Audit depth
 
 `audit` must be able to fail a corpus **it did not generate** — otherwise an externally-supplied

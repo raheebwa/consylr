@@ -36,7 +36,9 @@ REQUIRED = ("id", "family", "left", "right", "policy")
 #: scenario became two and the split had no way to know. Refusing the unknown
 #: makes the classification complete by construction, which is the same
 #: principle the ground truth already rests on.
-BODY_FIELDS = frozenset({"id", "family", "left", "right", "policy", "documents", "cause"})
+BODY_FIELDS = frozenset(
+    {"id", "family", "left", "right", "policy", "documents", "cause", "withhold_cause"}
+)
 RECORD_FIELDS = frozenset({"ref", "party", "date", "amount"})
 CITATION_FIELDS = frozenset({"id", "text"})
 
@@ -178,6 +180,31 @@ def shape_violations(template: Template) -> list[Violation]:
                 template.id or None,
             )
         )
+
+    # `withhold_cause` decides whether the packet carries the line its family's
+    # answer would rest on, so it is only meaningful where there is a cause to
+    # withhold. Set on a family that names none, it would read as a decoupled
+    # case and emit an ordinary one — the flag silently doing nothing is worse
+    # than the flag being refused.
+    withheld = body.get("withhold_cause")
+    if withheld is not None:
+        if not isinstance(withheld, bool):
+            out.append(
+                Violation(
+                    "malformed_field",
+                    f"{name}: 'withhold_cause' is {withheld!r}, not true or false",
+                    template.id or None,
+                )
+            )
+        elif withheld and not body.get("cause"):
+            out.append(
+                Violation(
+                    "no_cause_to_withhold",
+                    f"{name}: {template.family!r} declares no cause, so there is "
+                    "no cause to withhold and the flag would change nothing",
+                    template.id or None,
+                )
+            )
 
     for side in ("left", "right"):
         for n, record in enumerate(body.get(side, []) or [], start=1):
