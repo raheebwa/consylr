@@ -86,3 +86,66 @@ def test_a_pattern_yields_many_distinct_cases() -> None:
             packets.add(json.dumps(case.packet, sort_keys=True))
 
         assert len(packets) == CASES, f"{template.id} produced {len(packets)} of {CASES} distinct"
+
+
+# --- the mix the set is authored to, checked before a corpus is built --------
+
+
+def test_the_authored_mix_lands_inside_the_rfc_band() -> None:
+    """Pre-registered rather than discovered afterwards.
+
+    Every case a template yields carries that template's certainty, so the mix a
+    corpus will have is a property of the template set and can be asserted here —
+    before a build spends anything. The last corpus met a band that has since
+    moved; this fails the moment the counts drift out of the one RFC-0002 now
+    states, instead of a writer refusing 12,000 cases at the end of a build.
+    """
+    from consylr.quota import Plan
+
+    templates = load(TRAIN)
+    band = Plan(families=frozenset()).supported_share
+    supported = sum(1 for t in templates if _certainty_of(t) == "supported")
+    share = supported / len(templates)
+    assert band[0] <= share <= band[1], f"{share:.1%} supported against {band}"
+
+
+def test_a_withheld_twin_exists_for_every_cause_bearing_family() -> None:
+    """The decoupling is worthless if it covers one family.
+
+    Certainty stops being a function of family only for the families that carry
+    both forms. A set with withheld cases in `fee_at_source` alone teaches that
+    `fee_at_source` is uncertain, which is the same shortcut with one more rule.
+    """
+    withheld = collections.Counter(
+        str(t.family) for t in load(TRAIN) if t.body.get("withhold_cause")
+    )
+    assert set(withheld) == {"fee_at_source", "withholding", "timing_cutoff"}
+    assert all(n >= 10 for n in withheld.values()), withheld
+
+
+def test_every_withheld_template_has_a_settled_twin() -> None:
+    """Contrastive by construction, at the level of the set rather than the case.
+
+    A withheld template whose body differs from its twin in more than the flag
+    lets the model tell them apart without reading the policy — the shortcut
+    rebuilt one coordinate over, which is the thing this whole change is about.
+    """
+    by_id = {t.id: t for t in load(TRAIN)}
+    withheld = [t for t in by_id.values() if t.body.get("withhold_cause")]
+    assert withheld
+    for t in withheld:
+        twin = by_id.get(str(t.id).replace("-withheld-", "-"))
+        assert twin is not None, f"{t.id} has no settled twin"
+        assert {k: v for k, v in t.body.items() if k not in ("id", "withhold_cause")} == {
+            k: v for k, v in twin.body.items() if k != "id"
+        }
+
+
+def _certainty_of(template: Template) -> str:
+    if template.body.get("withhold_cause"):
+        return "ambiguous"
+    if template.family in ("ambiguous_pair", "cause_not_established"):
+        return "ambiguous"
+    if template.family == "decoy":
+        return "unsupported"
+    return "supported"
