@@ -85,9 +85,36 @@ a family.
 
 | Band | Share of the SFT mix |
 |---|---|
-| Clearly supported | **40–50%** — fixed floor, see [#21](https://github.com/raheebwa/consylr/issues/21) |
+| Clearly supported | **65–75%**, target 70% — a deployment prior, see §The supported band |
 | `cause_not_established` cases | **10–15%** — opening value, see §Tuning |
 | Remaining ambiguous / unsupported / residue-bearing | the balance |
+
+### The supported band, and why it moved
+
+**The 40–50% band was a training-signal-density choice.** Eleven of the fourteen families
+produce a clearly-supported answer, so an equal template split gives roughly 80% supported and
+the hard cases arrive too rarely to be learned. Holding supported down to half forced mass onto
+the families the model finds difficult. That reasoning was sound for what it was solving.
+
+**65–75% is a deployment-prior choice, and it is a different question.** The product is an
+exception analyst reading reconciliation packets that have already passed through an upstream
+filter. In the work it is built for, most packets it is shown *are* settleable from the evidence
+inside them — the ledger rows and the remittance data are present, and the analyst's job is to
+close them and say why. The cases it cannot settle — a document that is not there, a difference
+whose cause nothing states, two counterparts equally consistent with one record — are the
+minority that gets escalated to a person. Seven in ten closeable and three in ten escalated is
+the operating shape being claimed, so it is the shape the training mix should carry.
+
+**The exam's own 78.9% supported is not the justification and must never be cited as one.**
+sealed-v4 is near-uniform across families because it was built to measure every family, not to
+model deployment; that its supported share lands near this band is a coincidence of arithmetic,
+and tuning a training mix toward a holdout's composition is optimising the test — the failure
+rule 4 below exists to prevent. If the deployment claim above is wrong, this band is wrong, and
+the exam has nothing to say about it either way.
+
+**Density has not stopped mattering.** Constraint B is unchanged and every family still clears
+its floor. A supported share this high is only safe while the hard families remain individually
+measurable, which is why the two constraints are still asserted jointly rather than traded.
 
 **Constraint B — family coverage.** Every family in the table above is represented in sufficient
 number to be measured *on its own*, because per-family metrics are reported and a family with a
@@ -118,6 +145,16 @@ quantity, and these four rules are what stop it degrading back into a preference
    quantity degrades into a vibe.**
 4. **The sealed set's family distribution is frozen independently and never moves with the
    training mix.** *Tune the mix; never the exam.*
+
+### Tuning log
+
+Every change to a mix ratio, with the measurement that drove it. Rule 3 above requires the line;
+this is where it goes. A ratio with no line here was changed silently, which is the failure the
+rule names.
+
+| Date | Ratio | From | To | Measurement that drove it |
+|---|---|---|---|---|
+| 2026-08-19 | clearly supported | 40–50% | 65–75%, target 70% | Not a gauge reading. The band was re-derived from the deployment claim above after the gauges were found to be uninformative about it: on run 4's checkpoints **both** fire at once — false abstention 38.8% and correct abstention 73.7% at 6,000 iterations, 8.8% and 35.1% at 4,000 — which rule 2 states means the ratio is not the cause. The evidence for what *is* the cause is recorded against the decoupling change in RFC-0003: certainty is currently a deterministic function of family in every corpus this project has built, so a model can score certainty perfectly by recognising the family and never reading a policy line. The mix moves here because the deployment claim says it should, not because a gauge asked for it. |
 
 Rule 4 is what makes the other three safe. Without it, tuning a training ratio against a threshold
 measured on the sealed set is optimising the test — the ratio would converge on whatever flatters

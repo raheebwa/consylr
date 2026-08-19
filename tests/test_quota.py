@@ -25,10 +25,10 @@ PLAN = Plan(
 
 def test_a_corpus_meeting_both_constraints_passes() -> None:
     corpus = cases(
-        clean_match__supported=40,
+        clean_match__supported=62,
         fee_at_source__supported=8,
         cause_not_established__unsupported=12,
-        fee_at_source__ambiguous=40,
+        fee_at_source__ambiguous=18,
     )
     assert check(corpus, PLAN) == []
 
@@ -97,7 +97,7 @@ def test_the_report_names_the_shortfall_and_its_size() -> None:
         cause_not_established__unsupported=12,
     )
     v = next(x for x in check(corpus, PLAN) if x.code == "supported_share_low")
-    assert "10.0%" in v.detail and "40" in v.detail
+    assert "10.0%" in v.detail and "65" in v.detail
 
 
 # --- satisfiability is checked before a corpus is written, not after ----------
@@ -105,7 +105,7 @@ def test_the_report_names_the_shortfall_and_its_size() -> None:
 
 def test_a_plan_that_cannot_be_met_at_a_size_is_refused_up_front() -> None:
     # Twelve families at a floor of ten cannot fit in a hundred cases while also
-    # leaving 40-50% clearly supported. Building it and failing the audit wastes
+    # leaving 65-75% clearly supported. Building it and failing the audit wastes
     # the build; refusing names the constraint that cannot be met.
     plan = Plan(families=frozenset(f"f{i}" for i in range(12)), family_floor=10)
     problems = satisfiable(size=100, plan=plan)
@@ -165,8 +165,8 @@ def test_abstention_is_counted_by_family_not_by_certainty() -> None:
     # Folding the two axes into one would read this corpus as 52% abstention.
     plan = Plan(families=PLAN.families | {"decoy"}, family_floor=2)
     corpus = cases(
-        clean_match__supported=45,
-        decoy__unsupported=40,
+        clean_match__supported=70,
+        decoy__unsupported=15,
         cause_not_established__unsupported=12,
         fee_at_source__ambiguous=3,
     )
@@ -182,8 +182,8 @@ def test_abstention_is_counted_by_family_not_by_certainty() -> None:
 
 def test_the_supported_floor_is_inclusive() -> None:
     corpus = cases(
-        clean_match__supported=40,
-        fee_at_source__ambiguous=48,
+        clean_match__supported=65,
+        fee_at_source__ambiguous=23,
         cause_not_established__unsupported=12,
     )
     assert check(corpus, PLAN) == []
@@ -191,8 +191,8 @@ def test_the_supported_floor_is_inclusive() -> None:
 
 def test_one_case_below_the_supported_floor_fails() -> None:
     corpus = cases(
-        clean_match__supported=39,
-        fee_at_source__ambiguous=49,
+        clean_match__supported=64,
+        fee_at_source__ambiguous=24,
         cause_not_established__unsupported=12,
     )
     assert "supported_share_low" in [v.code for v in check(corpus, PLAN)]
@@ -200,8 +200,8 @@ def test_one_case_below_the_supported_floor_fails() -> None:
 
 def test_the_supported_ceiling_is_inclusive() -> None:
     corpus = cases(
-        clean_match__supported=50,
-        fee_at_source__ambiguous=38,
+        clean_match__supported=75,
+        fee_at_source__ambiguous=13,
         cause_not_established__unsupported=12,
     )
     assert check(corpus, PLAN) == []
@@ -209,18 +209,18 @@ def test_the_supported_ceiling_is_inclusive() -> None:
 
 def test_one_case_above_the_supported_ceiling_fails_and_names_the_ceiling() -> None:
     corpus = cases(
-        clean_match__supported=51,
-        fee_at_source__ambiguous=37,
+        clean_match__supported=76,
+        fee_at_source__ambiguous=12,
         cause_not_established__unsupported=12,
     )
     v = next(x for x in check(corpus, PLAN) if x.code == "supported_share_high")
-    assert "51.0%" in v.detail and "50%" in v.detail
+    assert "76.0%" in v.detail and "75%" in v.detail
 
 
 def test_the_abstention_floor_is_inclusive() -> None:
     corpus = cases(
-        clean_match__supported=45,
-        fee_at_source__ambiguous=45,
+        clean_match__supported=70,
+        fee_at_source__ambiguous=20,
         cause_not_established__unsupported=10,
     )
     assert check(corpus, PLAN) == []
@@ -236,8 +236,8 @@ def test_one_case_below_the_abstention_floor_fails_and_names_the_family() -> Non
 
 def test_the_abstention_ceiling_is_inclusive() -> None:
     corpus = cases(
-        clean_match__supported=45,
-        fee_at_source__ambiguous=40,
+        clean_match__supported=70,
+        fee_at_source__ambiguous=15,
         cause_not_established__unsupported=15,
     )
     assert check(corpus, PLAN) == []
@@ -258,8 +258,8 @@ def test_a_family_exactly_at_a_binding_floor_passes() -> None:
     # the coverage constraint was never tested anywhere near where it binds.
     plan = Plan(families=PLAN.families, family_floor=12)
     corpus = cases(
-        clean_match__supported=45,
-        fee_at_source__ambiguous=43,
+        clean_match__supported=70,
+        fee_at_source__ambiguous=18,
         cause_not_established__unsupported=12,
     )
     assert check(corpus, plan) == []
@@ -315,3 +315,15 @@ def test_the_empty_corpus_and_contradiction_reports_say_what_is_wrong() -> None:
     )
     v = next(x for x in check(corpus, PLAN) if x.code == "contradictory_certainty")
     assert "15" in v.detail and ABSTENTION_FAMILY in v.detail
+
+
+def test_the_default_supported_band_is_the_one_rfc_0002_states() -> None:
+    """The plan's default IS the specification, so it is pinned to the document.
+
+    A band that lives only as a default drifts by being convenient. This one moved
+    once already — from a training-signal-density argument to a deployment-prior
+    argument — and the move is only defensible because it was written down with
+    its reasoning and its tuning-log line first. Changing the number here without
+    changing RFC-0002 is the silent retuning rule 3 names.
+    """
+    assert Plan(families=frozenset({"clean_match"})).supported_share == (0.65, 0.75)
