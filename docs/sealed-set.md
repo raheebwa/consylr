@@ -34,7 +34,7 @@ Frozen 2026-08-18, from 540 templates.
 | Seed | `7` |
 | Cases | **903, every one distinct**, from 442 templates |
 | Duplicates refused | 1,749 of 2,652 asked |
-| Clearly supported | **48%** — under the 65–75% RFC-0002 now states; train-v2 predates the band |
+| Clearly supported | **48%** — train-v1 met the 40–50% band in force when it was built; RFC-0002 now states 65–75% |
 | `cause_not_established` | **11%** — RFC-0002 wants 10–15% |
 | Smallest family | 36 cases, against a floor of 20 |
 | Corpus digest | `consylr.corpus.content_digest(<corpus dir>)` |
@@ -55,12 +55,12 @@ A scoring run asserts the value it computes, not a value someone typed.
 ## The template mix is deliberately unequal
 
 Eleven of the fourteen families produce a clearly-supported answer, so an equal
-split gives 80% supported — nearly double RFC-0002's band. A corpus that meets
+split gives 80% supported, above RFC-0002's 65-75% band. A corpus that meets
 the quota needs a template set weighted toward the cases the model finds hard,
 which is the quota's whole point: a model trained on a mix that is four-fifths
 clean learns that most things reconcile.
 
-`clean_match`, `batched_vs_itemised` and `decoy` carry the most templates for a
+`clean_match` and `batched_vs_itemised` carried the most templates for a
 different reason — their deformations ignore the case index, so each template
 yields exactly one distinct case where others yield three. Twenty templates gave
 six training cases against a floor of twenty, and the quota gate refused the

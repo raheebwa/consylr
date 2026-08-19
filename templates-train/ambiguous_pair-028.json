@@ -2,11 +2,11 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 316."
+      "text": "Remittance advice, batch 348."
     }
   ],
-  "family": "cause_not_established",
-  "id": "cause_not_established-036",
+  "family": "ambiguous_pair",
+  "id": "ambiguous_pair-028",
   "left": [
     {
       "amount": [
@@ -27,19 +27,19 @@
         "2026-06-16"
       ],
       "party": [
+        "Harbourline Freight Ltd",
+        "Copperfield Supply Ltd",
+        "Marlowe Consulting Ltd",
+        "Ashgrove Logistics Ltd",
         "Pennine Metals Ltd",
-        "Quayside Packaging Ltd",
-        "Ravensworth Utilities Ltd",
-        "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd",
-        "Vantage Print Ltd"
+        "Quayside Packaging Ltd"
       ],
       "ref": [
-        "PO-21692",
-        "CN-21699",
-        "STM-21706",
-        "REM-21713",
-        "INV-21720"
+        "STM-22876",
+        "REM-22883",
+        "INV-22890",
+        "PO-22897",
+        "CN-22904"
       ]
     },
     {
@@ -61,19 +61,19 @@
         "2026-06-29"
       ],
       "party": [
+        "Copperfield Supply Ltd",
+        "Marlowe Consulting Ltd",
+        "Ashgrove Logistics Ltd",
+        "Pennine Metals Ltd",
         "Quayside Packaging Ltd",
-        "Ravensworth Utilities Ltd",
-        "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd",
-        "Vantage Print Ltd",
-        "Wexford Agriculture Ltd"
+        "Ravensworth Utilities Ltd"
       ],
       "ref": [
-        "CN-21703",
-        "STM-21710",
-        "REM-21717",
-        "INV-21724",
-        "PO-21731"
+        "REM-22887",
+        "INV-22894",
+        "PO-22901",
+        "CN-22908",
+        "STM-22915"
       ]
     },
     {
@@ -95,19 +95,19 @@
         "2026-07-13"
       ],
       "party": [
+        "Marlowe Consulting Ltd",
+        "Ashgrove Logistics Ltd",
+        "Pennine Metals Ltd",
+        "Quayside Packaging Ltd",
         "Ravensworth Utilities Ltd",
-        "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd",
-        "Vantage Print Ltd",
-        "Wexford Agriculture Ltd",
-        "Bramfield Haulage Ltd"
+        "Thornbury Chemicals Ltd"
       ],
       "ref": [
-        "STM-21714",
-        "REM-21721",
-        "INV-21728",
-        "PO-21735",
-        "CN-21742"
+        "INV-22898",
+        "PO-22905",
+        "CN-22912",
+        "STM-22919",
+        "REM-22926"
       ]
     }
   ],
@@ -137,19 +137,19 @@
         "2026-06-22"
       ],
       "party": [
+        "Harbourline Freight Ltd",
+        "Copperfield Supply Ltd",
+        "Marlowe Consulting Ltd",
+        "Ashgrove Logistics Ltd",
         "Pennine Metals Ltd",
-        "Quayside Packaging Ltd",
-        "Ravensworth Utilities Ltd",
-        "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd",
-        "Vantage Print Ltd"
+        "Quayside Packaging Ltd"
       ],
       "ref": [
-        "PO-21692",
-        "CN-21699",
-        "STM-21706",
-        "REM-21713",
-        "INV-21720"
+        "STM-22876",
+        "REM-22883",
+        "INV-22890",
+        "PO-22897",
+        "CN-22904"
       ]
     },
     {
@@ -171,19 +171,19 @@
         "2026-07-02"
       ],
       "party": [
+        "Copperfield Supply Ltd",
+        "Marlowe Consulting Ltd",
+        "Ashgrove Logistics Ltd",
+        "Pennine Metals Ltd",
         "Quayside Packaging Ltd",
-        "Ravensworth Utilities Ltd",
-        "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd",
-        "Vantage Print Ltd",
-        "Wexford Agriculture Ltd"
+        "Ravensworth Utilities Ltd"
       ],
       "ref": [
-        "CN-21703",
-        "STM-21710",
-        "REM-21717",
-        "INV-21724",
-        "PO-21731"
+        "REM-22887",
+        "INV-22894",
+        "PO-22901",
+        "CN-22908",
+        "STM-22915"
       ]
     },
     {
@@ -205,19 +205,19 @@
         "2026-07-20"
       ],
       "party": [
+        "Marlowe Consulting Ltd",
+        "Ashgrove Logistics Ltd",
+        "Pennine Metals Ltd",
+        "Quayside Packaging Ltd",
         "Ravensworth Utilities Ltd",
-        "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd",
-        "Vantage Print Ltd",
-        "Wexford Agriculture Ltd",
-        "Bramfield Haulage Ltd"
+        "Thornbury Chemicals Ltd"
       ],
       "ref": [
-        "STM-21714",
-        "REM-21721",
-        "INV-21728",
-        "PO-21735",
-        "CN-21742"
+        "INV-22898",
+        "PO-22905",
+        "CN-22912",
+        "STM-22919",
+        "REM-22926"
       ]
     }
   ]

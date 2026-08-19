@@ -58,6 +58,26 @@ def case_seed(root_seed: int, template_id: str, case_index: int) -> int:
     return int.from_bytes(digest[:8], "big")
 
 
+def seed_id(template: Template) -> str:
+    """The id a case seeds from, which is not always the template's own.
+
+    `case_seed` mixes the template id into the seed, and that seed drives three
+    things at once: which candidate `instantiate` draws from each pool, which
+    pair a deformation chooses, and how `permute` shuffles the records. So two
+    templates with different ids resolve to different cases even when they
+    declare identical pools.
+
+    A withheld twin declares `twin_of` and seeds from its settled twin, which is
+    what makes the pair a minimal one: one draw, two policies. Without it the
+    twins differed in every field their pools vary — amounts, dates,
+    counterparties — and the missing policy line was one difference among many
+    rather than the only one. The unit test could not see it, because it built
+    both halves from one body under one id and the seeds coincided by
+    construction; only building the two real templates shows it.
+    """
+    return str(template.body.get("twin_of") or template.id)
+
+
 @dataclass(frozen=True)
 class Case:
     packet: dict[str, Any]
@@ -132,7 +152,10 @@ CUT_RATE = Decimal("0.02")
 CAUSE_TERMS: dict[str, frozenset[str]] = {
     "fee_at_source": frozenset({"fee", "charge", "commission"}),
     "withholding": frozenset({"withhold", "withholding", "tax"}),
-    "timing_cutoff": frozenset({"cut-off", "cutoff", "period", "closes", "close"}),
+    # No hyphenated term here: both readers normalise with `.replace("-", " ")`
+    # before splitting, so "cut-off" becomes the words "cut" and "off" and a
+    # hyphenated entry can never match anything. It sat here unreachable.
+    "timing_cutoff": frozenset({"cut", "cutoff", "period", "closes", "close"}),
 }
 
 
@@ -227,14 +250,37 @@ def _clean_match(draft: Draft, rng: Random) -> dict[str, Any]:
     return _finish(draft, _clean(draft))
 
 
+def _cut_amount(kind: str) -> Callable[[Draft, str], None]:
+    """Reduce a right-side amount by the proportion the policy describes."""
+
+    def mutate(draft: Draft, right: str) -> None:
+        record = draft.record(right)
+        whole = _money(record["amount"])
+        record["amount"] = _amount(whole - _reduced_by(whole, CUT_RATE, kind))
+
+    return mutate
+
+
+def _shift_date(draft: Draft, right: str) -> None:
+    draft.record(right)["date"] = "2026-04-01"
+
+
+#: The packet change each cause-bearing family makes, named once. The settled
+#: deformation and its withheld twin both build from this, because a copy that
+#: drifts stops the pair being a minimal one and nothing downstream would say so.
+MUTATIONS: dict[str, Callable[[Draft, str], None]] = {
+    "fee_at_source": _cut_amount("fee_at_source"),
+    "withholding": _cut_amount("withholding"),
+    "timing_cutoff": _shift_date,
+}
+
+
 def _reduced_on_the_right(kind: str) -> Callable[[Draft, Random], dict[str, Any]]:
     """A right-side amount reduced by something the policy describes."""
 
     def deform(draft: Draft, rng: Random) -> dict[str, Any]:
         left, right = rng.choice(draft.pairs)
-        record = draft.record(right)
-        whole = _money(record["amount"])
-        record["amount"] = _amount(whole - _reduced_by(whole, CUT_RATE, kind))
+        MUTATIONS[kind](draft, right)
         matches = [*_clean(draft, skip=left), _supported([left], [right], [draft.warrant])]
         exception = {"on": [right], "kind": kind, "c": "supported", "why": [draft.warrant]}
         return _finish(draft, matches, [exception])
@@ -244,7 +290,7 @@ def _reduced_on_the_right(kind: str) -> Callable[[Draft, Random], dict[str, Any]
 
 def _timing_cutoff(draft: Draft, rng: Random) -> dict[str, Any]:
     left, right = rng.choice(draft.pairs)
-    draft.record(right)["date"] = "2026-04-01"
+    MUTATIONS["timing_cutoff"](draft, right)
     matches = [*_clean(draft, skip=left), _supported([left], [right], [draft.warrant])]
     exception = {"on": [right], "kind": "timing_cutoff", "c": "supported", "why": [draft.warrant]}
     return _finish(draft, matches, [exception])
@@ -417,19 +463,6 @@ def _cause_withheld(
     return deform
 
 
-def _cut_amount(kind: str) -> Callable[[Draft, str], None]:
-    def mutate(draft: Draft, right: str) -> None:
-        record = draft.record(right)
-        whole = _money(record["amount"])
-        record["amount"] = _amount(whole - _reduced_by(whole, CUT_RATE, kind))
-
-    return mutate
-
-
-def _shift_date(draft: Draft, right: str) -> None:
-    draft.record(right)["date"] = "2026-04-01"
-
-
 def _decoy(draft: Draft, rng: Random) -> dict[str, Any]:
     amount = _amount(_money(draft.a[0]["amount"]) + Decimal("11.00"))
     left = {
@@ -503,9 +536,7 @@ DEFORMATIONS: dict[str, Callable[[Draft, Random], dict[str, Any]]] = {
 #: body — that is what makes the two cases contrastive rather than merely
 #: different.
 WITHHELD: dict[str, Callable[[Draft, Random], dict[str, Any]]] = {
-    "fee_at_source": _cause_withheld(_cut_amount("fee_at_source")),
-    "withholding": _cause_withheld(_cut_amount("withholding")),
-    "timing_cutoff": _cause_withheld(_shift_date),
+    kind: _cause_withheld(mutate) for kind, mutate in MUTATIONS.items()
 }
 
 
@@ -542,7 +573,11 @@ def _withhold_cause(
             .translate(_PUNCTUATION)
             .split()
         )
-        if terms & words and not (_DENIALS & words):
+        # No exemption for a denial. "The settlement fee is not waived" names the
+        # cause and tells a reader the fee applies, so the packet still settles a
+        # case the answer key declines — the defect this check exists to prevent,
+        # wearing the word `not`.
+        if terms & words:
             raise ValueError(
                 f"{template.family} withholds {declared!r} but {str(line.get('id'))!r} still "
                 f"states the cause: {line.get('text')!r}. The packet would settle the case "
@@ -800,7 +835,8 @@ def build(
     if not isinstance(policy, list) or not policy:
         raise ValueError("template 'policy' must be a non-empty list")
 
-    order = _order(resolved.body, root_seed, template.id, case_index, permute)
+    identity_for_seed = seed_id(resolved)
+    order = _order(resolved.body, root_seed, identity_for_seed, case_index, permute)
     left = _records(resolved.body, "left", "A", order.left)
     right = _records(resolved.body, "right", "B", order.right)
     if len(left) != len(right):
@@ -814,13 +850,9 @@ def build(
     if resolved.body.get("withhold_cause"):
         policy_lines = _withhold_cause(resolved, policy_lines, warrant)
         warrant = ""
-        withheld = WITHHELD.get(template.family)
-        if withheld is None:
-            raise ValueError(
-                f"{template.family} has no withheld form; only a family whose answer rests on "
-                "a policy line can have that line withheld"
-            )
-        deform = withheld
+        # `_withhold_cause` has already refused any family outside `CAUSE_TERMS`,
+        # and `WITHHELD` is keyed on exactly those families, so this cannot miss.
+        deform = WITHHELD[template.family]
 
     draft = Draft(
         a=left,
@@ -841,7 +873,7 @@ def build(
     # should not have, while naming an overhead of zero for a 308-token wrapper.
     budget = (prompt.BUDGET if budget is None else budget).validate()
 
-    seed = case_seed(root_seed, template.id, case_index)
+    seed = case_seed(root_seed, identity_for_seed, case_index)
     before = {r["id"]: deepcopy(r) for r in (*draft.a, *draft.b)}
     expected = deform(draft, Random(seed))
     _prove_effect(before, {r["id"]: r for r in (*draft.a, *draft.b)}, expected, template.family)
@@ -853,6 +885,13 @@ def build(
         # digest is the authored artefact drift detection watches; the resolved
         # body is what this case actually was. With only the second, "which
         # pattern produced this case" is an archaeology rather than a lookup.
+        # Read off the answer, not the family. A withheld twin keeps its settled
+        # family and declines for an absent cause, so a quota counting families
+        # saw half the abstention mass in the first decoupled corpus: 11% where
+        # the answers said 21%, against a 15% ceiling.
+        "unestablished": any(
+            e.get("kind") == "cause_not_established" for e in expected.get("exceptions", []) or []
+        ),
         "template_fingerprint": template.fingerprint,
         "case_fingerprint": resolved.fingerprint,
         "family": template.family,

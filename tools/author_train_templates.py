@@ -150,24 +150,23 @@ POOL = {"party": 6, "amount": 7, "date": 6, "ref": 5}
 #: same thirty regardless, so **family share is now simply template share** and
 #: the old weighting stopped meaning what it meant.
 #:
-#: The first build was refused for exactly that: clearly-supported cases came out
-#: at 65.1% against RFC-0002's 40-50% ceiling, and `cause_not_established` at
-#: 9.3% against its 10% floor. The quota gate caught it before a line reached
+#: The first build under the old band was refused for exactly that: clearly
+#: supported came out at 65.1% against a 50% ceiling, and `cause_not_established`
+#: at 9.3% against its 10% floor. The quota gate caught it before a line reached
 #: disk.
 #:
 #: **Eleven families produce a clearly-supported answer, not ten.**
 #: `missing_record` is the one that is easy to miss: it abstains through its
-#: `open` entry while its matches are genuinely supported, so it counts here.
-#: Including it, nominal supported was 224 of 344 — 65.1%, the measured figure
-#: to the decimal, which is how the diagnosis was confirmed rather than guessed.
+#: `open` entry while its matches are genuinely supported, so it counts as
+#: supported here and as declining in behaviour. The two are different questions.
 #:
-#: Below: supported 180/400 = 45.0%, mid-band. `cause_not_established` 50/400 =
-#: 12.5%, mid-band. The two hard families carry the balance, which is the quota's
-#: whole point — a model trained on a mix that is four-fifths clean learns that
-#: most things reconcile.
+#: Below: supported 280/400 = 70.0%, the target of RFC-0002's 65-75% band.
+#: Abstention is no longer a family count — the 16 `cause_not_established`
+#: templates and the 40 withheld twins both carry that answer, and together they
+#: are 14.0% inside a 10-15% band.
 PER_FAMILY = {
-    # The eleven settled families, 280 templates between them: at 30 cases each
-    # that is 8,400 of 12,000, the 70% RFC-0002 §The supported band asks for.
+    # The eleven settled families take 280 templates. At 30 cases each that is
+    # 8,400 of 12,000 — the 70% RFC-0002 §The supported band asks for.
     "clean_match": 26,
     "batched_vs_itemised": 25,
     "duplicate": 25,
@@ -179,17 +178,27 @@ PER_FAMILY = {
     "fee_at_source": 26,
     "withholding": 26,
     "timing_cutoff": 26,
-    # The rest. `cause_not_established` at 44 templates is 11% of the mix, inside
-    # RFC-0002's 10-15% and off the floor rather than on it.
-    "cause_not_established": 44,
-    "ambiguous_pair": 26,
-    "decoy": 10,
+    # `cause_not_established` at 16 templates is 4% of the mix, not the 11% a
+    # first pass gave it. The band it sits in is measured from the ANSWER now,
+    # and the 40 withheld twins carry a `cause_not_established` answer too — so
+    # the two compete for one 10-15% budget and together make 14%. The family
+    # loses the mass rather than the twins, because a withheld twin is the same
+    # lesson taught better: it wears a settled family's shape, so the model
+    # cannot reach the answer by recognising the family.
+    "cause_not_established": 16,
+    # 40 templates, 1,200 cases, 10% — down from 21% of train-v2. Recorded so a
+    # move in its exact match can be read against the change rather than guessed
+    # at. It is the family the tuned model never once declined on.
+    "ambiguous_pair": 40,
+    # 24 templates, 720 cases, 6%. It was cut to 10 templates in a first pass
+    # with no tuning-log line and nothing to gate it, because the unsupported
+    # class had no band. It has one now.
+    "decoy": 24,
 }
-DEFAULT_PER_FAMILY = 25
 
 #: Withheld twins, per RFC-0003 §Withheld causes. Each is the settled template of
-#: the same index with its cause line removed, so the pair differs in exactly one
-#: policy line and a model cannot tell them apart from the ledger.
+#: the same index with its cause line removed and `twin_of` naming that template,
+#: so the pair seeds identically and differs in exactly one policy line.
 #:
 #: All three cause-bearing families, deliberately. Withholding in one family only
 #: would teach that *that* family is uncertain — the same shortcut with one more
@@ -209,7 +218,9 @@ def _window(source: list[str], start: int, size: int) -> list[str]:
 
 
 def count_for(family: str) -> int:
-    return PER_FAMILY.get(family, DEFAULT_PER_FAMILY)
+    # No default. A family that falls through would take a count nobody chose and
+    # move the mix silently, which is how `decoy` lost 8.5× of its mass.
+    return PER_FAMILY[family]
 
 
 def template(family: str, index: int) -> dict[str, Any]:
@@ -275,6 +286,13 @@ def main() -> None:
                 **template(family, index),
                 "id": f"{family}-withheld-{index:03d}",
                 "withhold_cause": True,
+                # Seeds from its settled twin, so the pair resolves the same
+                # pools to the same values, deforms the same pair and permutes
+                # the same way. Without it the id feeds `case_seed` and the two
+                # differ in every field their pools vary — the policy line stops
+                # being the only difference and the pair stops being a minimal
+                # one, with every test still green.
+                "twin_of": f"{family}-{index:03d}",
             }
             path = OUT / f"{body['id']}.json"
             path.write_text(json.dumps(body, indent=2, sort_keys=True) + "\n", encoding="utf-8")
