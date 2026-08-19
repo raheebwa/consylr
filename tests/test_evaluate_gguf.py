@@ -1,0 +1,72 @@
+# SPDX-License-Identifier: MIT
+"""Tests for running the shipped GGUF, per #23's four modes.
+
+Every number this project has reported so far came out of MLX. The artefact
+that gets judged is a GGUF in llama.cpp, and a result in one runtime is not
+evidence about the other. These tests defend the three things that make a
+cross-mode comparison mean anything: that the window is the harness's rather
+than the model's, that the layers stay where the audit box can run them, and
+that a mode can never be reported under another mode's name.
+"""
+
+import pytest
+
+from consylr import prompt
+from tools.evaluate_gguf import MODES, SUBPROCESS_MODES, command, llama_kwargs
+
+
+def test_the_window_is_the_harness_s_and_never_the_model_s() -> None:
+    """The GGUF declares a 262,144-token context and llama.cpp's `-c` defaults
+    to "loaded from model". An omitted `-c` therefore does not fall back to
+    something small — it asks for a KV cache orders of magnitude past the
+    memory ceiling, on a box where exceeding the ceiling is disqualification.
+
+    Both backends are checked, because the window has to be declared twice and
+    a tool that got it right in one place would still report the other."""
+    for mode in SUBPROCESS_MODES:
+        argv = command(mode, model="m.gguf", prompt_file="p.txt")
+        assert "-c" in argv, f"{mode} would take the model's own context"
+        assert argv[argv.index("-c") + 1] == str(prompt.BUDGET.context)
+    assert llama_kwargs("m.gguf")["n_ctx"] == prompt.BUDGET.context
+
+
+def test_the_audit_box_has_no_gpu_so_the_layers_stay_on_the_cpu() -> None:
+    """`-ngl` defaults to `auto`, which offloads to Metal here and to nothing on
+    the audit VM. The offloaded configuration reads 2.4 GB lighter — the
+    direction that hides a memory failure rather than causing one — and it is
+    not the system the judges run."""
+    for mode in SUBPROCESS_MODES:
+        argv = command(mode, model="m.gguf", prompt_file="p.txt")
+        assert argv[argv.index("-ngl") + 1] == "0"
+    assert llama_kwargs("m.gguf")["n_gpu_layers"] == 0
+
+
+def test_completion_mode_refuses_conversation_and_chat_mode_does_not() -> None:
+    """The whole difference between mode 2 and mode 3 is whether llama.cpp
+    applies the GGUF's chat template. Conversation mode is auto-enabled when a
+    template is present, and this artefact carries one — so mode 2 has to say
+    no explicitly, and mode 3 exists precisely to let it happen."""
+    assert "-no-cnv" in command("completion", model="m.gguf", prompt_file="p.txt")
+    assert "-no-cnv" not in command("chat", model="m.gguf", prompt_file="p.txt")
+
+
+def test_generation_is_deterministic_in_every_mode() -> None:
+    """The harness reads at temperature zero. A sampled run would make a
+    divergence between modes unattributable to the interface."""
+    for mode in SUBPROCESS_MODES:
+        argv = command(mode, model="m.gguf", prompt_file="p.txt")
+        assert argv[argv.index("--temp") + 1] == "0"
+    assert llama_kwargs("m.gguf")["temperature"] == 0.0
+
+
+def test_each_mode_records_under_its_own_name() -> None:
+    """A chat-mode number reported as a profiler-mode number is the one error
+    this issue exists to prevent."""
+    assert len({MODES[m].label for m in MODES}) == len(MODES)
+    for name in MODES:
+        assert name in MODES[name].label
+
+
+def test_an_unknown_mode_is_refused_rather_than_defaulted() -> None:
+    with pytest.raises(KeyError):
+        command("scaffolded", model="m.gguf", prompt_file="p.txt")
