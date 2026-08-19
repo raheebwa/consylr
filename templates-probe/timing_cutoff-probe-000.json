@@ -1,0 +1,231 @@
+{
+  "cause": "P-2",
+  "documents": [
+    {
+      "id": "D-1",
+      "text": "Remittance advice, batch 578."
+    }
+  ],
+  "family": "timing_cutoff",
+  "id": "timing_cutoff-probe-000",
+  "left": [
+    {
+      "amount": [
+        "3075.25",
+        "4820.90",
+        "6300.00",
+        "9145.75",
+        "12480.00",
+        "17400.00",
+        "23650.50"
+      ],
+      "date": [
+        "2026-03-02",
+        "2026-03-11",
+        "2026-03-19",
+        "2026-04-02",
+        "2026-04-14",
+        "2026-04-27"
+      ],
+      "party": [
+        "Wexford Agriculture Ltd",
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd"
+      ],
+      "ref": [
+        "STM-31386",
+        "REM-31393",
+        "INV-31400",
+        "PO-31407",
+        "CN-31414"
+      ]
+    },
+    {
+      "amount": [
+        "6300.00",
+        "9145.75",
+        "12480.00",
+        "17400.00",
+        "23650.50",
+        "29840.00",
+        "36215.80"
+      ],
+      "date": [
+        "2026-03-11",
+        "2026-03-19",
+        "2026-04-02",
+        "2026-04-14",
+        "2026-04-27",
+        "2026-05-08"
+      ],
+      "party": [
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd"
+      ],
+      "ref": [
+        "REM-31397",
+        "INV-31404",
+        "PO-31411",
+        "CN-31418",
+        "STM-31425"
+      ]
+    },
+    {
+      "amount": [
+        "12480.00",
+        "17400.00",
+        "23650.50",
+        "29840.00",
+        "36215.80",
+        "42150.00",
+        "12.60"
+      ],
+      "date": [
+        "2026-03-19",
+        "2026-04-02",
+        "2026-04-14",
+        "2026-04-27",
+        "2026-05-08",
+        "2026-05-21"
+      ],
+      "party": [
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd"
+      ],
+      "ref": [
+        "INV-31408",
+        "PO-31415",
+        "CN-31422",
+        "STM-31429",
+        "REM-31436"
+      ]
+    }
+  ],
+  "policy": [
+    {
+      "id": "P-1",
+      "text": "Invoices settle at face value unless a deduction is stated in this schedule."
+    },
+    {
+      "id": "P-2",
+      "text": "The period closes on the last business day; a later value date falls after."
+    }
+  ],
+  "right": [
+    {
+      "amount": [
+        "3075.25",
+        "4820.90",
+        "6300.00",
+        "9145.75",
+        "12480.00",
+        "17400.00",
+        "23650.50"
+      ],
+      "date": [
+        "2026-03-05",
+        "2026-03-13",
+        "2026-03-24",
+        "2026-04-06",
+        "2026-04-17",
+        "2026-05-04"
+      ],
+      "party": [
+        "Wexford Agriculture Ltd",
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd"
+      ],
+      "ref": [
+        "STM-31386",
+        "REM-31393",
+        "INV-31400",
+        "PO-31407",
+        "CN-31414"
+      ]
+    },
+    {
+      "amount": [
+        "6300.00",
+        "9145.75",
+        "12480.00",
+        "17400.00",
+        "23650.50",
+        "29840.00",
+        "36215.80"
+      ],
+      "date": [
+        "2026-03-13",
+        "2026-03-24",
+        "2026-04-06",
+        "2026-04-17",
+        "2026-05-04",
+        "2026-05-12"
+      ],
+      "party": [
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd"
+      ],
+      "ref": [
+        "REM-31397",
+        "INV-31404",
+        "PO-31411",
+        "CN-31418",
+        "STM-31425"
+      ]
+    },
+    {
+      "amount": [
+        "12480.00",
+        "17400.00",
+        "23650.50",
+        "29840.00",
+        "36215.80",
+        "42150.00",
+        "12.60"
+      ],
+      "date": [
+        "2026-03-24",
+        "2026-04-06",
+        "2026-04-17",
+        "2026-05-04",
+        "2026-05-12",
+        "2026-05-26"
+      ],
+      "party": [
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd"
+      ],
+      "ref": [
+        "INV-31408",
+        "PO-31415",
+        "CN-31422",
+        "STM-31429",
+        "REM-31436"
+      ]
+    }
+  ],
+  "twin_of": "timing_cutoff-500",
+  "withhold_cause": true
+}

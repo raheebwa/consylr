@@ -1,0 +1,229 @@
+{
+  "cause": "P-2",
+  "documents": [
+    {
+      "id": "D-1",
+      "text": "Remittance advice, batch 527."
+    }
+  ],
+  "family": "fee_at_source",
+  "id": "fee_at_source-501",
+  "left": [
+    {
+      "amount": [
+        "17400.00",
+        "23650.50",
+        "29840.00",
+        "36215.80",
+        "42150.00",
+        "12.60",
+        "42.05"
+      ],
+      "date": [
+        "2026-06-29",
+        "2026-07-13",
+        "2026-01-08",
+        "2026-01-21",
+        "2026-02-03",
+        "2026-02-17"
+      ],
+      "party": [
+        "Southgate Ltd",
+        "Eastvale Trading Ltd",
+        "Westbrook Services Ltd",
+        "Harbourline Freight Ltd",
+        "Copperfield Supply Ltd",
+        "Marlowe Consulting Ltd"
+      ],
+      "ref": [
+        "CN-29499",
+        "STM-29506",
+        "REM-29513",
+        "INV-29520",
+        "PO-29527"
+      ]
+    },
+    {
+      "amount": [
+        "29840.00",
+        "36215.80",
+        "42150.00",
+        "12.60",
+        "42.05",
+        "63.15",
+        "88.75"
+      ],
+      "date": [
+        "2026-07-13",
+        "2026-01-08",
+        "2026-01-21",
+        "2026-02-03",
+        "2026-02-17",
+        "2026-03-02"
+      ],
+      "party": [
+        "Eastvale Trading Ltd",
+        "Westbrook Services Ltd",
+        "Harbourline Freight Ltd",
+        "Copperfield Supply Ltd",
+        "Marlowe Consulting Ltd",
+        "Ashgrove Logistics Ltd"
+      ],
+      "ref": [
+        "STM-29510",
+        "REM-29517",
+        "INV-29524",
+        "PO-29531",
+        "CN-29538"
+      ]
+    },
+    {
+      "amount": [
+        "42150.00",
+        "12.60",
+        "42.05",
+        "63.15",
+        "88.75",
+        "142.30",
+        "480.00"
+      ],
+      "date": [
+        "2026-01-08",
+        "2026-01-21",
+        "2026-02-03",
+        "2026-02-17",
+        "2026-03-02",
+        "2026-03-11"
+      ],
+      "party": [
+        "Westbrook Services Ltd",
+        "Harbourline Freight Ltd",
+        "Copperfield Supply Ltd",
+        "Marlowe Consulting Ltd",
+        "Ashgrove Logistics Ltd",
+        "Pennine Metals Ltd"
+      ],
+      "ref": [
+        "REM-29521",
+        "INV-29528",
+        "PO-29535",
+        "CN-29542",
+        "STM-29549"
+      ]
+    }
+  ],
+  "policy": [
+    {
+      "id": "P-1",
+      "text": "Invoices settle at face value unless a deduction is stated in this schedule."
+    },
+    {
+      "id": "P-2",
+      "text": "A settlement fee is deducted at source on every remittance."
+    }
+  ],
+  "right": [
+    {
+      "amount": [
+        "17400.00",
+        "23650.50",
+        "29840.00",
+        "36215.80",
+        "42150.00",
+        "12.60",
+        "42.05"
+      ],
+      "date": [
+        "2026-07-02",
+        "2026-07-20",
+        "2026-01-13",
+        "2026-01-27",
+        "2026-02-09",
+        "2026-02-24"
+      ],
+      "party": [
+        "Southgate Ltd",
+        "Eastvale Trading Ltd",
+        "Westbrook Services Ltd",
+        "Harbourline Freight Ltd",
+        "Copperfield Supply Ltd",
+        "Marlowe Consulting Ltd"
+      ],
+      "ref": [
+        "CN-29499",
+        "STM-29506",
+        "REM-29513",
+        "INV-29520",
+        "PO-29527"
+      ]
+    },
+    {
+      "amount": [
+        "29840.00",
+        "36215.80",
+        "42150.00",
+        "12.60",
+        "42.05",
+        "63.15",
+        "88.75"
+      ],
+      "date": [
+        "2026-07-20",
+        "2026-01-13",
+        "2026-01-27",
+        "2026-02-09",
+        "2026-02-24",
+        "2026-03-05"
+      ],
+      "party": [
+        "Eastvale Trading Ltd",
+        "Westbrook Services Ltd",
+        "Harbourline Freight Ltd",
+        "Copperfield Supply Ltd",
+        "Marlowe Consulting Ltd",
+        "Ashgrove Logistics Ltd"
+      ],
+      "ref": [
+        "STM-29510",
+        "REM-29517",
+        "INV-29524",
+        "PO-29531",
+        "CN-29538"
+      ]
+    },
+    {
+      "amount": [
+        "42150.00",
+        "12.60",
+        "42.05",
+        "63.15",
+        "88.75",
+        "142.30",
+        "480.00"
+      ],
+      "date": [
+        "2026-01-13",
+        "2026-01-27",
+        "2026-02-09",
+        "2026-02-24",
+        "2026-03-05",
+        "2026-03-13"
+      ],
+      "party": [
+        "Westbrook Services Ltd",
+        "Harbourline Freight Ltd",
+        "Copperfield Supply Ltd",
+        "Marlowe Consulting Ltd",
+        "Ashgrove Logistics Ltd",
+        "Pennine Metals Ltd"
+      ],
+      "ref": [
+        "REM-29521",
+        "INV-29528",
+        "PO-29535",
+        "CN-29542",
+        "STM-29549"
+      ]
+    }
+  ]
+}
