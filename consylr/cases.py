@@ -382,6 +382,54 @@ def _cause_not_established(draft: Draft, rng: Random) -> dict[str, Any]:
     return _finish(draft, matches, [exception], opens)
 
 
+def _cause_withheld(
+    mutate: Callable[[Draft, str], None],
+) -> Callable[[Draft, Random], dict[str, Any]]:
+    """The family's own deformation, with the policy line that explains it absent.
+
+    The packet still shows the difference — the fee is still taken, the value date
+    still falls late — but nothing in it says why, so the correct answer is the
+    one `cause_not_established` gives: the correspondence is ambiguous, the
+    exception is unsupported and cites nothing, and an `open` entry says what
+    would settle it.
+
+    This is the whole point of the decoupling. Certainty used to be a
+    deterministic function of family, so a model could score it perfectly by
+    recognising the shape of a packet and never reading a policy line — and a
+    tuned model did exactly that, declining on nine families at 100% and on five
+    at 0% with nothing in between. Here the shape is unchanged and the answer is
+    the opposite one, so the only thing that distinguishes them is the policy.
+    """
+
+    def deform(draft: Draft, rng: Random) -> dict[str, Any]:
+        left, right = rng.choice(draft.pairs)
+        mutate(draft, right)
+        matches = [
+            *_clean(draft, skip=left),
+            {"l": [left], "r": [right], "c": "ambiguous", "why": [left, right]},
+        ]
+        # `why` is empty rather than absent, exactly as `_cause_not_established`
+        # emits it: a citation is what a cause would rest on, and there is none.
+        exception = {"on": [right], "kind": "cause_not_established", "c": "unsupported", "why": []}
+        opens = [{"on": [right], "need": "the policy line or document explaining the difference"}]
+        return _finish(draft, matches, [exception], opens)
+
+    return deform
+
+
+def _cut_amount(kind: str) -> Callable[[Draft, str], None]:
+    def mutate(draft: Draft, right: str) -> None:
+        record = draft.record(right)
+        whole = _money(record["amount"])
+        record["amount"] = _amount(whole - _reduced_by(whole, CUT_RATE, kind))
+
+    return mutate
+
+
+def _shift_date(draft: Draft, right: str) -> None:
+    draft.record(right)["date"] = "2026-04-01"
+
+
 def _decoy(draft: Draft, rng: Random) -> dict[str, Any]:
     amount = _amount(_money(draft.a[0]["amount"]) + Decimal("11.00"))
     left = {
@@ -447,6 +495,60 @@ DEFORMATIONS: dict[str, Callable[[Draft, Random], dict[str, Any]]] = {
     "decoy": _decoy,
     "ambiguous_pair": _ambiguous_pair,
 }
+
+
+#: The same families, answered as though nothing explained the difference. Keyed
+#: by family rather than folded into `DEFORMATIONS`, because a template chooses
+#: between them with `withhold_cause` and both must remain reachable from one
+#: body — that is what makes the two cases contrastive rather than merely
+#: different.
+WITHHELD: dict[str, Callable[[Draft, Random], dict[str, Any]]] = {
+    "fee_at_source": _cause_withheld(_cut_amount("fee_at_source")),
+    "withholding": _cause_withheld(_cut_amount("withholding")),
+    "timing_cutoff": _cause_withheld(_shift_date),
+}
+
+
+def _withhold_cause(
+    template: Template, policy: list[dict[str, Any]], declared: str
+) -> list[dict[str, Any]]:
+    """The policy with the cause removed, and the removal proven complete.
+
+    Removing the declared line is not the same as removing the cause. A second
+    line saying the same thing leaves the packet able to settle the case while the
+    answer key says it cannot — an answer asserting *less* than the packet
+    supports, which is the same class of defect as one asserting more, and the
+    direction a reader is least likely to check.
+
+    So the proof runs in both directions: `_prove_cause` has already established
+    that the line being removed does state the cause, and this establishes that
+    nothing left states it.
+    """
+    terms = CAUSE_TERMS.get(template.family)
+    if terms is None:
+        raise ValueError(f"{template.family} names no cause, so there is no cause to withhold")
+
+    kept = [line for line in policy if str(line.get("id")) != declared]
+    if not kept:
+        raise ValueError(
+            f"{template.family} would withhold its only policy line, leaving a packet with no "
+            "policy at all; the case would test an empty schedule rather than an absent cause"
+        )
+    for line in kept:
+        words = set(
+            _text(str(line.get("text", "")))
+            .lower()
+            .replace("-", " ")
+            .translate(_PUNCTUATION)
+            .split()
+        )
+        if terms & words and not (_DENIALS & words):
+            raise ValueError(
+                f"{template.family} withholds {declared!r} but {str(line.get('id'))!r} still "
+                f"states the cause: {line.get('text')!r}. The packet would settle the case "
+                "while the answer key declines it."
+            )
+    return kept
 
 
 def _prove_cause(template: Template, policy: list[dict[str, Any]]) -> str:
@@ -705,10 +807,25 @@ def build(
         raise ValueError("a template's two sides must describe the same clean pairs")
 
     policy_lines = [dict(p) for p in policy]
+    # Proven present first, then removed. The order is the proof: a line can only
+    # be shown to be the cause while it is still there, and a case whose cause was
+    # never stated is a different artefact from one whose cause was withheld.
+    warrant = _prove_cause(resolved, policy_lines)
+    if resolved.body.get("withhold_cause"):
+        policy_lines = _withhold_cause(resolved, policy_lines, warrant)
+        warrant = ""
+        withheld = WITHHELD.get(template.family)
+        if withheld is None:
+            raise ValueError(
+                f"{template.family} has no withheld form; only a family whose answer rests on "
+                "a policy line can have that line withheld"
+            )
+        deform = withheld
+
     draft = Draft(
         a=left,
         b=right,
-        cause=_prove_cause(resolved, policy_lines),
+        cause=warrant,
         policy=policy_lines,
         documents=[dict(d) for d in resolved.body.get("documents", [])],
         # From the recorded order rather than from position, because after a
