@@ -20,6 +20,7 @@ from __future__ import annotations
 from collections import Counter
 from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
+from typing import Any
 
 from consylr.violation import Violation
 
@@ -52,7 +53,7 @@ def _share(count: int, total: int) -> float:
     return count / total if total else 0.0
 
 
-def check(cases: Iterable[Mapping[str, str]], plan: Plan) -> list[Violation]:
+def check(cases: Iterable[Mapping[str, Any]], plan: Plan) -> list[Violation]:
     """Every way a corpus fails its plan, naming the shortfall and its size."""
     rows = list(cases)
     if not rows:
@@ -73,7 +74,10 @@ def check(cases: Iterable[Mapping[str, str]], plan: Plan) -> list[Violation]:
     abstention = sum(
         1
         for r in rows
-        if r.get("unestablished")
+        # `is True`, not truthiness. The row type invites a stringified source,
+        # and `"False"` is truthy — which would count every case as abstention
+        # and produce a number that looks like a measurement.
+        if r.get("unestablished") is True
         or (r.get("unestablished") is None and r.get("family") == ABSTENTION_FAMILY)
     )
 

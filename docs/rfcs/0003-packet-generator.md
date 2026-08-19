@@ -483,7 +483,7 @@ Test-driven, per `CONTRIBUTING.md`: the failing test first, then the code.
 - **Near-duplicate detection** across cases, so randomisation is not producing the same case twice
   under different ids.
 - **Per-family quota audit**, failing below a family's floor.
-- **Certainty-band audit**, asserting the 40–50% supported floor and the current
+- **Certainty-band audit**, asserting the 65–75% supported band and the current
   `cause_not_established` ratio.
 - **A human spot-check of roughly 100 examples**, spanning every family. It is the only check that
   catches a family whose definition is coherent and wrong, and it is not automatable — so it is
