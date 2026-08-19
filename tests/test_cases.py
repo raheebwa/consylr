@@ -26,7 +26,7 @@ from consylr.cases import (
 from consylr.cases import build as _build
 from consylr.prompt import render as prompt_render
 from consylr.templates import Template
-from tests.support import CAUSE_LINES, FAKE_BUDGET, PerCharacter
+from tests.support import CAUSE_LINES, FAKE_BUDGET, PerCharacter, built, template_body
 
 
 def build(template: Template, **over: Any) -> Case:
@@ -966,3 +966,75 @@ def test_a_packet_inside_the_range_is_not_reported(pairs: int) -> None:
     case = build(a_richer_template("clean_match", pairs=pairs), root_seed=ROOT)
     codes = [v.code for v in case.violations]
     assert "packet_too_small" not in codes and "packet_too_large" not in codes
+
+
+# --- a family that does not predict its answer, per RFC-0003 -----------------
+#
+# Certainty was a deterministic function of family in every corpus this project
+# had built: ambiguous meant `ambiguous_pair` or `cause_not_established`,
+# unsupported meant `decoy`, and the other eleven families meant supported, with
+# no overlap anywhere in 12,000 cases. So "recognise the family" scored certainty
+# perfectly without reading a policy line, and a tuned model learned exactly
+# that — declining on nine families at a rate of 100% and on five at 0%, with
+# nothing in between, and never once declining on `ambiguous_pair` despite it
+# being 21% of the corpus.
+#
+# `withhold_cause` breaks the function. The same body emits a supported case with
+# its cause line and an unsettleable one without it, so the only way to tell them
+# apart is to read the policy.
+
+
+def test_a_withheld_cause_declines_instead_of_naming_the_exception() -> None:
+    case = built(Template.from_mapping(template_body(family="fee_at_source", withhold_cause=True)))
+    kinds = {e["kind"] for e in case.expected["exceptions"]}
+    assert kinds == {"cause_not_established"}
+    assert all(e["c"] == "unsupported" and e["why"] == [] for e in case.expected["exceptions"])
+    assert case.expected["open"], "an unsettleable difference must say what would settle it"
+    assert case.meta["certainty"] != "supported"
+
+
+def test_a_withheld_cause_removes_the_line_that_stated_it() -> None:
+    """The packet cannot carry the distinction it is being graded on."""
+    case = built(Template.from_mapping(template_body(family="fee_at_source", withhold_cause=True)))
+    assert not any("fee" in str(line["text"]).lower() for line in case.packet["policy"]), (
+        case.packet["policy"]
+    )
+
+
+def test_the_flag_is_the_only_difference_between_the_two_cases() -> None:
+    """Contrastive by construction: one policy line apart, same everything else.
+
+    A pair the model cannot tell apart except by reading the policy is the whole
+    point. If withholding also moved a record, an amount or a date, the model
+    could learn the difference from the ledger and never look at the policy —
+    which is the shortcut being removed, rebuilt one coordinate over.
+    """
+    body = template_body(family="fee_at_source")
+    with_cause = built(Template.from_mapping(body))
+    without = built(Template.from_mapping({**body, "withhold_cause": True}))
+
+    assert with_cause.packet["records"] == without.packet["records"]
+    assert with_cause.packet["documents"] == without.packet["documents"]
+    dropped = [p for p in with_cause.packet["policy"] if p not in without.packet["policy"]]
+    assert len(dropped) == 1 and dropped[0]["id"] == body["cause"]
+
+
+def test_a_cause_still_stated_elsewhere_is_refused() -> None:
+    """Removing the declared line is not the same as removing the cause.
+
+    A second line saying the same thing leaves the packet able to settle the case
+    while the answer key says it cannot — an answer asserting less than the packet
+    supports, which is the same class of defect as one asserting more.
+    """
+    body = template_body(family="fee_at_source")
+    body["policy"] = [
+        *body["policy"],
+        {"id": "P-3", "text": "A settlement fee is deducted at source on every remittance."},
+    ]
+    with pytest.raises(ValueError, match="still states"):
+        built(Template.from_mapping({**body, "withhold_cause": True}))
+
+
+def test_withholding_a_cause_a_family_never_had_is_refused() -> None:
+    with pytest.raises(ValueError, match="no cause to withhold"):
+        built(Template.from_mapping(template_body(family="clean_match", withhold_cause=True)))
