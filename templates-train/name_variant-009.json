@@ -2,7 +2,7 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 089."
+      "text": "Remittance advice, batch 138."
     }
   ],
   "family": "name_variant",
@@ -10,81 +10,13 @@
   "left": [
     {
       "amount": [
-        "480.00",
-        "755.00",
-        "925.50",
-        "1250.00",
-        "1904.40",
-        "3075.25",
-        "4820.90"
-      ],
-      "date": [
-        "2026-02-03",
-        "2026-02-17",
-        "2026-03-02",
-        "2026-03-11",
-        "2026-03-19",
-        "2026-04-02"
-      ],
-      "party": [
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd",
-        "Quayside Packaging Ltd",
-        "Ravensworth Utilities Ltd",
-        "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd"
-      ],
-      "ref": [
-        "REM-13293",
-        "INV-13300",
-        "PO-13307",
-        "CN-13314",
-        "STM-13321"
-      ]
-    },
-    {
-      "amount": [
-        "925.50",
-        "1250.00",
-        "1904.40",
-        "3075.25",
-        "4820.90",
-        "6300.00",
-        "9145.75"
-      ],
-      "date": [
-        "2026-02-17",
-        "2026-03-02",
-        "2026-03-11",
-        "2026-03-19",
-        "2026-04-02",
-        "2026-04-14"
-      ],
-      "party": [
-        "Pennine Metals Ltd",
-        "Quayside Packaging Ltd",
-        "Ravensworth Utilities Ltd",
-        "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd",
-        "Vantage Print Ltd"
-      ],
-      "ref": [
-        "INV-13304",
-        "PO-13311",
-        "CN-13318",
-        "STM-13325",
-        "REM-13332"
-      ]
-    },
-    {
-      "amount": [
-        "1904.40",
         "3075.25",
         "4820.90",
         "6300.00",
         "9145.75",
         "12480.00",
-        "17400.00"
+        "17400.00",
+        "23650.50"
       ],
       "date": [
         "2026-03-02",
@@ -95,19 +27,121 @@
         "2026-04-27"
       ],
       "party": [
-        "Quayside Packaging Ltd",
-        "Ravensworth Utilities Ltd",
-        "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd",
-        "Vantage Print Ltd",
-        "Wexford Agriculture Ltd"
+        "Wexford Agriculture Ltd",
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd"
       ],
       "ref": [
-        "PO-13315",
-        "CN-13322",
-        "STM-13329",
-        "REM-13336",
-        "INV-13343"
+        "STM-15106",
+        "REM-15113",
+        "INV-15120",
+        "PO-15127",
+        "CN-15134"
+      ]
+    },
+    {
+      "amount": [
+        "6300.00",
+        "9145.75",
+        "12480.00",
+        "17400.00",
+        "23650.50",
+        "29840.00",
+        "36215.80"
+      ],
+      "date": [
+        "2026-03-11",
+        "2026-03-19",
+        "2026-04-02",
+        "2026-04-14",
+        "2026-04-27",
+        "2026-05-08"
+      ],
+      "party": [
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd"
+      ],
+      "ref": [
+        "REM-15117",
+        "INV-15124",
+        "PO-15131",
+        "CN-15138",
+        "STM-15145"
+      ]
+    },
+    {
+      "amount": [
+        "12480.00",
+        "17400.00",
+        "23650.50",
+        "29840.00",
+        "36215.80",
+        "42150.00",
+        "12.60"
+      ],
+      "date": [
+        "2026-03-19",
+        "2026-04-02",
+        "2026-04-14",
+        "2026-04-27",
+        "2026-05-08",
+        "2026-05-21"
+      ],
+      "party": [
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd"
+      ],
+      "ref": [
+        "INV-15128",
+        "PO-15135",
+        "CN-15142",
+        "STM-15149",
+        "REM-15156"
+      ]
+    },
+    {
+      "amount": [
+        "23650.50",
+        "29840.00",
+        "36215.80",
+        "42150.00",
+        "12.60",
+        "42.05",
+        "63.15"
+      ],
+      "date": [
+        "2026-04-02",
+        "2026-04-14",
+        "2026-04-27",
+        "2026-05-08",
+        "2026-05-21",
+        "2026-06-03"
+      ],
+      "party": [
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd",
+        "Eastvale Trading Ltd"
+      ],
+      "ref": [
+        "PO-15139",
+        "CN-15146",
+        "STM-15153",
+        "REM-15160",
+        "INV-15167"
       ]
     }
   ],
@@ -120,81 +154,13 @@
   "right": [
     {
       "amount": [
-        "480.00",
-        "755.00",
-        "925.50",
-        "1250.00",
-        "1904.40",
-        "3075.25",
-        "4820.90"
-      ],
-      "date": [
-        "2026-02-09",
-        "2026-02-24",
-        "2026-03-05",
-        "2026-03-13",
-        "2026-03-24",
-        "2026-04-06"
-      ],
-      "party": [
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd",
-        "Quayside Packaging Ltd",
-        "Ravensworth Utilities Ltd",
-        "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd"
-      ],
-      "ref": [
-        "REM-13293",
-        "INV-13300",
-        "PO-13307",
-        "CN-13314",
-        "STM-13321"
-      ]
-    },
-    {
-      "amount": [
-        "925.50",
-        "1250.00",
-        "1904.40",
-        "3075.25",
-        "4820.90",
-        "6300.00",
-        "9145.75"
-      ],
-      "date": [
-        "2026-02-24",
-        "2026-03-05",
-        "2026-03-13",
-        "2026-03-24",
-        "2026-04-06",
-        "2026-04-17"
-      ],
-      "party": [
-        "Pennine Metals Ltd",
-        "Quayside Packaging Ltd",
-        "Ravensworth Utilities Ltd",
-        "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd",
-        "Vantage Print Ltd"
-      ],
-      "ref": [
-        "INV-13304",
-        "PO-13311",
-        "CN-13318",
-        "STM-13325",
-        "REM-13332"
-      ]
-    },
-    {
-      "amount": [
-        "1904.40",
         "3075.25",
         "4820.90",
         "6300.00",
         "9145.75",
         "12480.00",
-        "17400.00"
+        "17400.00",
+        "23650.50"
       ],
       "date": [
         "2026-03-05",
@@ -205,19 +171,121 @@
         "2026-05-04"
       ],
       "party": [
-        "Quayside Packaging Ltd",
-        "Ravensworth Utilities Ltd",
-        "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd",
-        "Vantage Print Ltd",
-        "Wexford Agriculture Ltd"
+        "Wexford Agriculture Ltd",
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd"
       ],
       "ref": [
-        "PO-13315",
-        "CN-13322",
-        "STM-13329",
-        "REM-13336",
-        "INV-13343"
+        "STM-15106",
+        "REM-15113",
+        "INV-15120",
+        "PO-15127",
+        "CN-15134"
+      ]
+    },
+    {
+      "amount": [
+        "6300.00",
+        "9145.75",
+        "12480.00",
+        "17400.00",
+        "23650.50",
+        "29840.00",
+        "36215.80"
+      ],
+      "date": [
+        "2026-03-13",
+        "2026-03-24",
+        "2026-04-06",
+        "2026-04-17",
+        "2026-05-04",
+        "2026-05-12"
+      ],
+      "party": [
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd"
+      ],
+      "ref": [
+        "REM-15117",
+        "INV-15124",
+        "PO-15131",
+        "CN-15138",
+        "STM-15145"
+      ]
+    },
+    {
+      "amount": [
+        "12480.00",
+        "17400.00",
+        "23650.50",
+        "29840.00",
+        "36215.80",
+        "42150.00",
+        "12.60"
+      ],
+      "date": [
+        "2026-03-24",
+        "2026-04-06",
+        "2026-04-17",
+        "2026-05-04",
+        "2026-05-12",
+        "2026-05-26"
+      ],
+      "party": [
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd"
+      ],
+      "ref": [
+        "INV-15128",
+        "PO-15135",
+        "CN-15142",
+        "STM-15149",
+        "REM-15156"
+      ]
+    },
+    {
+      "amount": [
+        "23650.50",
+        "29840.00",
+        "36215.80",
+        "42150.00",
+        "12.60",
+        "42.05",
+        "63.15"
+      ],
+      "date": [
+        "2026-04-06",
+        "2026-04-17",
+        "2026-05-04",
+        "2026-05-12",
+        "2026-05-26",
+        "2026-06-09"
+      ],
+      "party": [
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd",
+        "Eastvale Trading Ltd"
+      ],
+      "ref": [
+        "PO-15139",
+        "CN-15146",
+        "STM-15153",
+        "REM-15160",
+        "INV-15167"
       ]
     }
   ]

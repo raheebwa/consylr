@@ -2,7 +2,7 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 109."
+      "text": "Remittance advice, batch 180."
     }
   ],
   "family": "batched_vs_itemised",
@@ -10,13 +10,81 @@
   "left": [
     {
       "amount": [
+        "12.60",
+        "42.05",
+        "63.15",
+        "88.75",
+        "142.30",
+        "480.00",
+        "755.00"
+      ],
+      "date": [
+        "2026-04-14",
+        "2026-04-27",
+        "2026-05-08",
+        "2026-05-21",
+        "2026-06-03",
+        "2026-06-16"
+      ],
+      "party": [
+        "Northwind Ltd",
+        "Southgate Ltd",
+        "Eastvale Trading Ltd",
+        "Westbrook Services Ltd",
+        "Harbourline Freight Ltd",
+        "Copperfield Supply Ltd"
+      ],
+      "ref": [
+        "INV-16660",
+        "PO-16667",
+        "CN-16674",
+        "STM-16681",
+        "REM-16688"
+      ]
+    },
+    {
+      "amount": [
+        "63.15",
+        "88.75",
+        "142.30",
+        "480.00",
+        "755.00",
+        "925.50",
+        "1250.00"
+      ],
+      "date": [
+        "2026-04-27",
+        "2026-05-08",
+        "2026-05-21",
+        "2026-06-03",
+        "2026-06-16",
+        "2026-06-29"
+      ],
+      "party": [
+        "Southgate Ltd",
+        "Eastvale Trading Ltd",
+        "Westbrook Services Ltd",
+        "Harbourline Freight Ltd",
+        "Copperfield Supply Ltd",
+        "Marlowe Consulting Ltd"
+      ],
+      "ref": [
+        "PO-16671",
+        "CN-16678",
+        "STM-16685",
+        "REM-16692",
+        "INV-16699"
+      ]
+    },
+    {
+      "amount": [
+        "142.30",
         "480.00",
         "755.00",
         "925.50",
         "1250.00",
         "1904.40",
-        "3075.25",
-        "4820.90"
+        "3075.25"
       ],
       "date": [
         "2026-05-08",
@@ -27,30 +95,30 @@
         "2026-07-13"
       ],
       "party": [
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd",
-        "Quayside Packaging Ltd",
-        "Ravensworth Utilities Ltd",
-        "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd"
+        "Eastvale Trading Ltd",
+        "Westbrook Services Ltd",
+        "Harbourline Freight Ltd",
+        "Copperfield Supply Ltd",
+        "Marlowe Consulting Ltd",
+        "Ashgrove Logistics Ltd"
       ],
       "ref": [
-        "REM-14033",
-        "INV-14040",
-        "PO-14047",
-        "CN-14054",
-        "STM-14061"
+        "CN-16682",
+        "STM-16689",
+        "REM-16696",
+        "INV-16703",
+        "PO-16710"
       ]
     },
     {
       "amount": [
+        "755.00",
         "925.50",
         "1250.00",
         "1904.40",
         "3075.25",
         "4820.90",
-        "6300.00",
-        "9145.75"
+        "6300.00"
       ],
       "date": [
         "2026-05-21",
@@ -61,53 +129,19 @@
         "2026-01-08"
       ],
       "party": [
-        "Pennine Metals Ltd",
-        "Quayside Packaging Ltd",
-        "Ravensworth Utilities Ltd",
-        "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd",
-        "Vantage Print Ltd"
+        "Westbrook Services Ltd",
+        "Harbourline Freight Ltd",
+        "Copperfield Supply Ltd",
+        "Marlowe Consulting Ltd",
+        "Ashgrove Logistics Ltd",
+        "Pennine Metals Ltd"
       ],
       "ref": [
-        "INV-14044",
-        "PO-14051",
-        "CN-14058",
-        "STM-14065",
-        "REM-14072"
-      ]
-    },
-    {
-      "amount": [
-        "1904.40",
-        "3075.25",
-        "4820.90",
-        "6300.00",
-        "9145.75",
-        "12480.00",
-        "17400.00"
-      ],
-      "date": [
-        "2026-06-03",
-        "2026-06-16",
-        "2026-06-29",
-        "2026-07-13",
-        "2026-01-08",
-        "2026-01-21"
-      ],
-      "party": [
-        "Quayside Packaging Ltd",
-        "Ravensworth Utilities Ltd",
-        "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd",
-        "Vantage Print Ltd",
-        "Wexford Agriculture Ltd"
-      ],
-      "ref": [
-        "PO-14055",
-        "CN-14062",
-        "STM-14069",
-        "REM-14076",
-        "INV-14083"
+        "STM-16693",
+        "REM-16700",
+        "INV-16707",
+        "PO-16714",
+        "CN-16721"
       ]
     }
   ],
@@ -120,13 +154,81 @@
   "right": [
     {
       "amount": [
+        "12.60",
+        "42.05",
+        "63.15",
+        "88.75",
+        "142.30",
+        "480.00",
+        "755.00"
+      ],
+      "date": [
+        "2026-04-17",
+        "2026-05-04",
+        "2026-05-12",
+        "2026-05-26",
+        "2026-06-09",
+        "2026-06-22"
+      ],
+      "party": [
+        "Northwind Ltd",
+        "Southgate Ltd",
+        "Eastvale Trading Ltd",
+        "Westbrook Services Ltd",
+        "Harbourline Freight Ltd",
+        "Copperfield Supply Ltd"
+      ],
+      "ref": [
+        "INV-16660",
+        "PO-16667",
+        "CN-16674",
+        "STM-16681",
+        "REM-16688"
+      ]
+    },
+    {
+      "amount": [
+        "63.15",
+        "88.75",
+        "142.30",
+        "480.00",
+        "755.00",
+        "925.50",
+        "1250.00"
+      ],
+      "date": [
+        "2026-05-04",
+        "2026-05-12",
+        "2026-05-26",
+        "2026-06-09",
+        "2026-06-22",
+        "2026-07-02"
+      ],
+      "party": [
+        "Southgate Ltd",
+        "Eastvale Trading Ltd",
+        "Westbrook Services Ltd",
+        "Harbourline Freight Ltd",
+        "Copperfield Supply Ltd",
+        "Marlowe Consulting Ltd"
+      ],
+      "ref": [
+        "PO-16671",
+        "CN-16678",
+        "STM-16685",
+        "REM-16692",
+        "INV-16699"
+      ]
+    },
+    {
+      "amount": [
+        "142.30",
         "480.00",
         "755.00",
         "925.50",
         "1250.00",
         "1904.40",
-        "3075.25",
-        "4820.90"
+        "3075.25"
       ],
       "date": [
         "2026-05-12",
@@ -137,30 +239,30 @@
         "2026-07-20"
       ],
       "party": [
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd",
-        "Quayside Packaging Ltd",
-        "Ravensworth Utilities Ltd",
-        "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd"
+        "Eastvale Trading Ltd",
+        "Westbrook Services Ltd",
+        "Harbourline Freight Ltd",
+        "Copperfield Supply Ltd",
+        "Marlowe Consulting Ltd",
+        "Ashgrove Logistics Ltd"
       ],
       "ref": [
-        "REM-14033",
-        "INV-14040",
-        "PO-14047",
-        "CN-14054",
-        "STM-14061"
+        "CN-16682",
+        "STM-16689",
+        "REM-16696",
+        "INV-16703",
+        "PO-16710"
       ]
     },
     {
       "amount": [
+        "755.00",
         "925.50",
         "1250.00",
         "1904.40",
         "3075.25",
         "4820.90",
-        "6300.00",
-        "9145.75"
+        "6300.00"
       ],
       "date": [
         "2026-05-26",
@@ -171,53 +273,19 @@
         "2026-01-13"
       ],
       "party": [
-        "Pennine Metals Ltd",
-        "Quayside Packaging Ltd",
-        "Ravensworth Utilities Ltd",
-        "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd",
-        "Vantage Print Ltd"
+        "Westbrook Services Ltd",
+        "Harbourline Freight Ltd",
+        "Copperfield Supply Ltd",
+        "Marlowe Consulting Ltd",
+        "Ashgrove Logistics Ltd",
+        "Pennine Metals Ltd"
       ],
       "ref": [
-        "INV-14044",
-        "PO-14051",
-        "CN-14058",
-        "STM-14065",
-        "REM-14072"
-      ]
-    },
-    {
-      "amount": [
-        "1904.40",
-        "3075.25",
-        "4820.90",
-        "6300.00",
-        "9145.75",
-        "12480.00",
-        "17400.00"
-      ],
-      "date": [
-        "2026-06-09",
-        "2026-06-22",
-        "2026-07-02",
-        "2026-07-20",
-        "2026-01-13",
-        "2026-01-27"
-      ],
-      "party": [
-        "Quayside Packaging Ltd",
-        "Ravensworth Utilities Ltd",
-        "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd",
-        "Vantage Print Ltd",
-        "Wexford Agriculture Ltd"
-      ],
-      "ref": [
-        "PO-14055",
-        "CN-14062",
-        "STM-14069",
-        "REM-14076",
-        "INV-14083"
+        "STM-16693",
+        "REM-16700",
+        "INV-16707",
+        "PO-16714",
+        "CN-16721"
       ]
     }
   ]

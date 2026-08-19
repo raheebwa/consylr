@@ -2,7 +2,7 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 113."
+      "text": "Remittance advice, batch 184."
     }
   ],
   "family": "batched_vs_itemised",
@@ -10,13 +10,81 @@
   "left": [
     {
       "amount": [
+        "12.60",
+        "42.05",
+        "63.15",
+        "88.75",
+        "142.30",
+        "480.00",
+        "755.00"
+      ],
+      "date": [
+        "2026-01-08",
+        "2026-01-21",
+        "2026-02-03",
+        "2026-02-17",
+        "2026-03-02",
+        "2026-03-11"
+      ],
+      "party": [
+        "Ullswater Textiles Ltd",
+        "Vantage Print Ltd",
+        "Wexford Agriculture Ltd",
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd"
+      ],
+      "ref": [
+        "REM-16808",
+        "INV-16815",
+        "PO-16822",
+        "CN-16829",
+        "STM-16836"
+      ]
+    },
+    {
+      "amount": [
+        "63.15",
+        "88.75",
+        "142.30",
+        "480.00",
+        "755.00",
+        "925.50",
+        "1250.00"
+      ],
+      "date": [
+        "2026-01-21",
+        "2026-02-03",
+        "2026-02-17",
+        "2026-03-02",
+        "2026-03-11",
+        "2026-03-19"
+      ],
+      "party": [
+        "Vantage Print Ltd",
+        "Wexford Agriculture Ltd",
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd"
+      ],
+      "ref": [
+        "INV-16819",
+        "PO-16826",
+        "CN-16833",
+        "STM-16840",
+        "REM-16847"
+      ]
+    },
+    {
+      "amount": [
+        "142.30",
         "480.00",
         "755.00",
         "925.50",
         "1250.00",
         "1904.40",
-        "3075.25",
-        "4820.90"
+        "3075.25"
       ],
       "date": [
         "2026-02-03",
@@ -27,30 +95,30 @@
         "2026-04-02"
       ],
       "party": [
-        "Fenwick Instruments Ltd",
-        "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd"
+        "Wexford Agriculture Ltd",
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd"
       ],
       "ref": [
-        "STM-14181",
-        "REM-14188",
-        "INV-14195",
-        "PO-14202",
-        "CN-14209"
+        "PO-16830",
+        "CN-16837",
+        "STM-16844",
+        "REM-16851",
+        "INV-16858"
       ]
     },
     {
       "amount": [
+        "755.00",
         "925.50",
         "1250.00",
         "1904.40",
         "3075.25",
         "4820.90",
-        "6300.00",
-        "9145.75"
+        "6300.00"
       ],
       "date": [
         "2026-02-17",
@@ -61,53 +129,19 @@
         "2026-04-14"
       ],
       "party": [
-        "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd"
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd"
       ],
       "ref": [
-        "REM-14192",
-        "INV-14199",
-        "PO-14206",
-        "CN-14213",
-        "STM-14220"
-      ]
-    },
-    {
-      "amount": [
-        "1904.40",
-        "3075.25",
-        "4820.90",
-        "6300.00",
-        "9145.75",
-        "12480.00",
-        "17400.00"
-      ],
-      "date": [
-        "2026-03-02",
-        "2026-03-11",
-        "2026-03-19",
-        "2026-04-02",
-        "2026-04-14",
-        "2026-04-27"
-      ],
-      "party": [
-        "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd"
-      ],
-      "ref": [
-        "INV-14203",
-        "PO-14210",
-        "CN-14217",
-        "STM-14224",
-        "REM-14231"
+        "CN-16841",
+        "STM-16848",
+        "REM-16855",
+        "INV-16862",
+        "PO-16869"
       ]
     }
   ],
@@ -120,13 +154,81 @@
   "right": [
     {
       "amount": [
+        "12.60",
+        "42.05",
+        "63.15",
+        "88.75",
+        "142.30",
+        "480.00",
+        "755.00"
+      ],
+      "date": [
+        "2026-01-13",
+        "2026-01-27",
+        "2026-02-09",
+        "2026-02-24",
+        "2026-03-05",
+        "2026-03-13"
+      ],
+      "party": [
+        "Ullswater Textiles Ltd",
+        "Vantage Print Ltd",
+        "Wexford Agriculture Ltd",
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd"
+      ],
+      "ref": [
+        "REM-16808",
+        "INV-16815",
+        "PO-16822",
+        "CN-16829",
+        "STM-16836"
+      ]
+    },
+    {
+      "amount": [
+        "63.15",
+        "88.75",
+        "142.30",
+        "480.00",
+        "755.00",
+        "925.50",
+        "1250.00"
+      ],
+      "date": [
+        "2026-01-27",
+        "2026-02-09",
+        "2026-02-24",
+        "2026-03-05",
+        "2026-03-13",
+        "2026-03-24"
+      ],
+      "party": [
+        "Vantage Print Ltd",
+        "Wexford Agriculture Ltd",
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd"
+      ],
+      "ref": [
+        "INV-16819",
+        "PO-16826",
+        "CN-16833",
+        "STM-16840",
+        "REM-16847"
+      ]
+    },
+    {
+      "amount": [
+        "142.30",
         "480.00",
         "755.00",
         "925.50",
         "1250.00",
         "1904.40",
-        "3075.25",
-        "4820.90"
+        "3075.25"
       ],
       "date": [
         "2026-02-09",
@@ -137,30 +239,30 @@
         "2026-04-06"
       ],
       "party": [
-        "Fenwick Instruments Ltd",
-        "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd"
+        "Wexford Agriculture Ltd",
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd"
       ],
       "ref": [
-        "STM-14181",
-        "REM-14188",
-        "INV-14195",
-        "PO-14202",
-        "CN-14209"
+        "PO-16830",
+        "CN-16837",
+        "STM-16844",
+        "REM-16851",
+        "INV-16858"
       ]
     },
     {
       "amount": [
+        "755.00",
         "925.50",
         "1250.00",
         "1904.40",
         "3075.25",
         "4820.90",
-        "6300.00",
-        "9145.75"
+        "6300.00"
       ],
       "date": [
         "2026-02-24",
@@ -171,53 +273,19 @@
         "2026-04-17"
       ],
       "party": [
-        "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd"
+        "Bramfield Haulage Ltd",
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd"
       ],
       "ref": [
-        "REM-14192",
-        "INV-14199",
-        "PO-14206",
-        "CN-14213",
-        "STM-14220"
-      ]
-    },
-    {
-      "amount": [
-        "1904.40",
-        "3075.25",
-        "4820.90",
-        "6300.00",
-        "9145.75",
-        "12480.00",
-        "17400.00"
-      ],
-      "date": [
-        "2026-03-05",
-        "2026-03-13",
-        "2026-03-24",
-        "2026-04-06",
-        "2026-04-17",
-        "2026-05-04"
-      ],
-      "party": [
-        "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd"
-      ],
-      "ref": [
-        "INV-14203",
-        "PO-14210",
-        "CN-14217",
-        "STM-14224",
-        "REM-14231"
+        "CN-16841",
+        "STM-16848",
+        "REM-16855",
+        "INV-16862",
+        "PO-16869"
       ]
     }
   ]

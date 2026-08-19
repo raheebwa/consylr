@@ -2,7 +2,7 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 137."
+      "text": "Remittance advice, batch 209."
     }
   ],
   "family": "duplicate",
@@ -27,19 +27,19 @@
         "2026-04-02"
       ],
       "party": [
+        "Ashgrove Logistics Ltd",
+        "Pennine Metals Ltd",
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd",
         "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd",
-        "Vantage Print Ltd",
-        "Wexford Agriculture Ltd",
-        "Bramfield Haulage Ltd",
-        "Calderstone Foods Ltd"
+        "Ullswater Textiles Ltd"
       ],
       "ref": [
-        "CN-15069",
-        "STM-15076",
-        "REM-15083",
-        "INV-15090",
-        "PO-15097"
+        "REM-17733",
+        "INV-17740",
+        "PO-17747",
+        "CN-17754",
+        "STM-17761"
       ]
     },
     {
@@ -61,19 +61,19 @@
         "2026-04-14"
       ],
       "party": [
+        "Pennine Metals Ltd",
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd",
+        "Thornbury Chemicals Ltd",
         "Ullswater Textiles Ltd",
-        "Vantage Print Ltd",
-        "Wexford Agriculture Ltd",
-        "Bramfield Haulage Ltd",
-        "Calderstone Foods Ltd",
-        "Dunmore Electrical Ltd"
+        "Vantage Print Ltd"
       ],
       "ref": [
-        "STM-15080",
-        "REM-15087",
-        "INV-15094",
-        "PO-15101",
-        "CN-15108"
+        "INV-17744",
+        "PO-17751",
+        "CN-17758",
+        "STM-17765",
+        "REM-17772"
       ]
     },
     {
@@ -95,19 +95,19 @@
         "2026-04-27"
       ],
       "party": [
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd",
+        "Thornbury Chemicals Ltd",
+        "Ullswater Textiles Ltd",
         "Vantage Print Ltd",
-        "Wexford Agriculture Ltd",
-        "Bramfield Haulage Ltd",
-        "Calderstone Foods Ltd",
-        "Dunmore Electrical Ltd",
-        "Elmsworth Joinery Ltd"
+        "Wexford Agriculture Ltd"
       ],
       "ref": [
-        "REM-15091",
-        "INV-15098",
-        "PO-15105",
-        "CN-15112",
-        "STM-15119"
+        "PO-17755",
+        "CN-17762",
+        "STM-17769",
+        "REM-17776",
+        "INV-17783"
       ]
     }
   ],
@@ -137,19 +137,19 @@
         "2026-04-06"
       ],
       "party": [
+        "Ashgrove Logistics Ltd",
+        "Pennine Metals Ltd",
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd",
         "Thornbury Chemicals Ltd",
-        "Ullswater Textiles Ltd",
-        "Vantage Print Ltd",
-        "Wexford Agriculture Ltd",
-        "Bramfield Haulage Ltd",
-        "Calderstone Foods Ltd"
+        "Ullswater Textiles Ltd"
       ],
       "ref": [
-        "CN-15069",
-        "STM-15076",
-        "REM-15083",
-        "INV-15090",
-        "PO-15097"
+        "REM-17733",
+        "INV-17740",
+        "PO-17747",
+        "CN-17754",
+        "STM-17761"
       ]
     },
     {
@@ -171,19 +171,19 @@
         "2026-04-17"
       ],
       "party": [
+        "Pennine Metals Ltd",
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd",
+        "Thornbury Chemicals Ltd",
         "Ullswater Textiles Ltd",
-        "Vantage Print Ltd",
-        "Wexford Agriculture Ltd",
-        "Bramfield Haulage Ltd",
-        "Calderstone Foods Ltd",
-        "Dunmore Electrical Ltd"
+        "Vantage Print Ltd"
       ],
       "ref": [
-        "STM-15080",
-        "REM-15087",
-        "INV-15094",
-        "PO-15101",
-        "CN-15108"
+        "INV-17744",
+        "PO-17751",
+        "CN-17758",
+        "STM-17765",
+        "REM-17772"
       ]
     },
     {
@@ -205,19 +205,19 @@
         "2026-05-04"
       ],
       "party": [
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd",
+        "Thornbury Chemicals Ltd",
+        "Ullswater Textiles Ltd",
         "Vantage Print Ltd",
-        "Wexford Agriculture Ltd",
-        "Bramfield Haulage Ltd",
-        "Calderstone Foods Ltd",
-        "Dunmore Electrical Ltd",
-        "Elmsworth Joinery Ltd"
+        "Wexford Agriculture Ltd"
       ],
       "ref": [
-        "REM-15091",
-        "INV-15098",
-        "PO-15105",
-        "CN-15112",
-        "STM-15119"
+        "PO-17755",
+        "CN-17762",
+        "STM-17769",
+        "REM-17776",
+        "INV-17783"
       ]
     }
   ]

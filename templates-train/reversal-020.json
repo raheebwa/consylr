@@ -1,0 +1,292 @@
+{
+  "documents": [
+    {
+      "id": "D-1",
+      "text": "Remittance advice, batch 249."
+    }
+  ],
+  "family": "reversal",
+  "id": "reversal-020",
+  "left": [
+    {
+      "amount": [
+        "480.00",
+        "755.00",
+        "925.50",
+        "1250.00",
+        "1904.40",
+        "3075.25",
+        "4820.90"
+      ],
+      "date": [
+        "2026-02-03",
+        "2026-02-17",
+        "2026-03-02",
+        "2026-03-11",
+        "2026-03-19",
+        "2026-04-02"
+      ],
+      "party": [
+        "Ashgrove Logistics Ltd",
+        "Pennine Metals Ltd",
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd",
+        "Thornbury Chemicals Ltd",
+        "Ullswater Textiles Ltd"
+      ],
+      "ref": [
+        "REM-19213",
+        "INV-19220",
+        "PO-19227",
+        "CN-19234",
+        "STM-19241"
+      ]
+    },
+    {
+      "amount": [
+        "925.50",
+        "1250.00",
+        "1904.40",
+        "3075.25",
+        "4820.90",
+        "6300.00",
+        "9145.75"
+      ],
+      "date": [
+        "2026-02-17",
+        "2026-03-02",
+        "2026-03-11",
+        "2026-03-19",
+        "2026-04-02",
+        "2026-04-14"
+      ],
+      "party": [
+        "Pennine Metals Ltd",
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd",
+        "Thornbury Chemicals Ltd",
+        "Ullswater Textiles Ltd",
+        "Vantage Print Ltd"
+      ],
+      "ref": [
+        "INV-19224",
+        "PO-19231",
+        "CN-19238",
+        "STM-19245",
+        "REM-19252"
+      ]
+    },
+    {
+      "amount": [
+        "1904.40",
+        "3075.25",
+        "4820.90",
+        "6300.00",
+        "9145.75",
+        "12480.00",
+        "17400.00"
+      ],
+      "date": [
+        "2026-03-02",
+        "2026-03-11",
+        "2026-03-19",
+        "2026-04-02",
+        "2026-04-14",
+        "2026-04-27"
+      ],
+      "party": [
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd",
+        "Thornbury Chemicals Ltd",
+        "Ullswater Textiles Ltd",
+        "Vantage Print Ltd",
+        "Wexford Agriculture Ltd"
+      ],
+      "ref": [
+        "PO-19235",
+        "CN-19242",
+        "STM-19249",
+        "REM-19256",
+        "INV-19263"
+      ]
+    },
+    {
+      "amount": [
+        "4820.90",
+        "6300.00",
+        "9145.75",
+        "12480.00",
+        "17400.00",
+        "23650.50",
+        "29840.00"
+      ],
+      "date": [
+        "2026-03-11",
+        "2026-03-19",
+        "2026-04-02",
+        "2026-04-14",
+        "2026-04-27",
+        "2026-05-08"
+      ],
+      "party": [
+        "Ravensworth Utilities Ltd",
+        "Thornbury Chemicals Ltd",
+        "Ullswater Textiles Ltd",
+        "Vantage Print Ltd",
+        "Wexford Agriculture Ltd",
+        "Bramfield Haulage Ltd"
+      ],
+      "ref": [
+        "CN-19246",
+        "STM-19253",
+        "REM-19260",
+        "INV-19267",
+        "PO-19274"
+      ]
+    }
+  ],
+  "policy": [
+    {
+      "id": "P-1",
+      "text": "Invoices settle at face value unless a deduction is stated in this schedule."
+    }
+  ],
+  "right": [
+    {
+      "amount": [
+        "480.00",
+        "755.00",
+        "925.50",
+        "1250.00",
+        "1904.40",
+        "3075.25",
+        "4820.90"
+      ],
+      "date": [
+        "2026-02-09",
+        "2026-02-24",
+        "2026-03-05",
+        "2026-03-13",
+        "2026-03-24",
+        "2026-04-06"
+      ],
+      "party": [
+        "Ashgrove Logistics Ltd",
+        "Pennine Metals Ltd",
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd",
+        "Thornbury Chemicals Ltd",
+        "Ullswater Textiles Ltd"
+      ],
+      "ref": [
+        "REM-19213",
+        "INV-19220",
+        "PO-19227",
+        "CN-19234",
+        "STM-19241"
+      ]
+    },
+    {
+      "amount": [
+        "925.50",
+        "1250.00",
+        "1904.40",
+        "3075.25",
+        "4820.90",
+        "6300.00",
+        "9145.75"
+      ],
+      "date": [
+        "2026-02-24",
+        "2026-03-05",
+        "2026-03-13",
+        "2026-03-24",
+        "2026-04-06",
+        "2026-04-17"
+      ],
+      "party": [
+        "Pennine Metals Ltd",
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd",
+        "Thornbury Chemicals Ltd",
+        "Ullswater Textiles Ltd",
+        "Vantage Print Ltd"
+      ],
+      "ref": [
+        "INV-19224",
+        "PO-19231",
+        "CN-19238",
+        "STM-19245",
+        "REM-19252"
+      ]
+    },
+    {
+      "amount": [
+        "1904.40",
+        "3075.25",
+        "4820.90",
+        "6300.00",
+        "9145.75",
+        "12480.00",
+        "17400.00"
+      ],
+      "date": [
+        "2026-03-05",
+        "2026-03-13",
+        "2026-03-24",
+        "2026-04-06",
+        "2026-04-17",
+        "2026-05-04"
+      ],
+      "party": [
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd",
+        "Thornbury Chemicals Ltd",
+        "Ullswater Textiles Ltd",
+        "Vantage Print Ltd",
+        "Wexford Agriculture Ltd"
+      ],
+      "ref": [
+        "PO-19235",
+        "CN-19242",
+        "STM-19249",
+        "REM-19256",
+        "INV-19263"
+      ]
+    },
+    {
+      "amount": [
+        "4820.90",
+        "6300.00",
+        "9145.75",
+        "12480.00",
+        "17400.00",
+        "23650.50",
+        "29840.00"
+      ],
+      "date": [
+        "2026-03-13",
+        "2026-03-24",
+        "2026-04-06",
+        "2026-04-17",
+        "2026-05-04",
+        "2026-05-12"
+      ],
+      "party": [
+        "Ravensworth Utilities Ltd",
+        "Thornbury Chemicals Ltd",
+        "Ullswater Textiles Ltd",
+        "Vantage Print Ltd",
+        "Wexford Agriculture Ltd",
+        "Bramfield Haulage Ltd"
+      ],
+      "ref": [
+        "CN-19246",
+        "STM-19253",
+        "REM-19260",
+        "INV-19267",
+        "PO-19274"
+      ]
+    }
+  ]
+}

@@ -2,7 +2,7 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 144."
+      "text": "Remittance advice, batch 216."
     }
   ],
   "family": "duplicate",
@@ -27,19 +27,19 @@
         "2026-03-11"
       ],
       "party": [
+        "Pennine Metals Ltd",
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd",
+        "Thornbury Chemicals Ltd",
         "Ullswater Textiles Ltd",
-        "Vantage Print Ltd",
-        "Wexford Agriculture Ltd",
-        "Bramfield Haulage Ltd",
-        "Calderstone Foods Ltd",
-        "Dunmore Electrical Ltd"
+        "Vantage Print Ltd"
       ],
       "ref": [
-        "REM-15328",
-        "INV-15335",
-        "PO-15342",
-        "CN-15349",
-        "STM-15356"
+        "PO-17992",
+        "CN-17999",
+        "STM-18006",
+        "REM-18013",
+        "INV-18020"
       ]
     },
     {
@@ -61,19 +61,19 @@
         "2026-03-19"
       ],
       "party": [
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd",
+        "Thornbury Chemicals Ltd",
+        "Ullswater Textiles Ltd",
         "Vantage Print Ltd",
-        "Wexford Agriculture Ltd",
-        "Bramfield Haulage Ltd",
-        "Calderstone Foods Ltd",
-        "Dunmore Electrical Ltd",
-        "Elmsworth Joinery Ltd"
+        "Wexford Agriculture Ltd"
       ],
       "ref": [
-        "INV-15339",
-        "PO-15346",
-        "CN-15353",
-        "STM-15360",
-        "REM-15367"
+        "CN-18003",
+        "STM-18010",
+        "REM-18017",
+        "INV-18024",
+        "PO-18031"
       ]
     },
     {
@@ -95,19 +95,19 @@
         "2026-04-02"
       ],
       "party": [
+        "Ravensworth Utilities Ltd",
+        "Thornbury Chemicals Ltd",
+        "Ullswater Textiles Ltd",
+        "Vantage Print Ltd",
         "Wexford Agriculture Ltd",
-        "Bramfield Haulage Ltd",
-        "Calderstone Foods Ltd",
-        "Dunmore Electrical Ltd",
-        "Elmsworth Joinery Ltd",
-        "Fenwick Instruments Ltd"
+        "Bramfield Haulage Ltd"
       ],
       "ref": [
-        "PO-15350",
-        "CN-15357",
-        "STM-15364",
-        "REM-15371",
-        "INV-15378"
+        "STM-18014",
+        "REM-18021",
+        "INV-18028",
+        "PO-18035",
+        "CN-18042"
       ]
     }
   ],
@@ -137,19 +137,19 @@
         "2026-03-13"
       ],
       "party": [
+        "Pennine Metals Ltd",
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd",
+        "Thornbury Chemicals Ltd",
         "Ullswater Textiles Ltd",
-        "Vantage Print Ltd",
-        "Wexford Agriculture Ltd",
-        "Bramfield Haulage Ltd",
-        "Calderstone Foods Ltd",
-        "Dunmore Electrical Ltd"
+        "Vantage Print Ltd"
       ],
       "ref": [
-        "REM-15328",
-        "INV-15335",
-        "PO-15342",
-        "CN-15349",
-        "STM-15356"
+        "PO-17992",
+        "CN-17999",
+        "STM-18006",
+        "REM-18013",
+        "INV-18020"
       ]
     },
     {
@@ -171,19 +171,19 @@
         "2026-03-24"
       ],
       "party": [
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd",
+        "Thornbury Chemicals Ltd",
+        "Ullswater Textiles Ltd",
         "Vantage Print Ltd",
-        "Wexford Agriculture Ltd",
-        "Bramfield Haulage Ltd",
-        "Calderstone Foods Ltd",
-        "Dunmore Electrical Ltd",
-        "Elmsworth Joinery Ltd"
+        "Wexford Agriculture Ltd"
       ],
       "ref": [
-        "INV-15339",
-        "PO-15346",
-        "CN-15353",
-        "STM-15360",
-        "REM-15367"
+        "CN-18003",
+        "STM-18010",
+        "REM-18017",
+        "INV-18024",
+        "PO-18031"
       ]
     },
     {
@@ -205,19 +205,19 @@
         "2026-04-06"
       ],
       "party": [
+        "Ravensworth Utilities Ltd",
+        "Thornbury Chemicals Ltd",
+        "Ullswater Textiles Ltd",
+        "Vantage Print Ltd",
         "Wexford Agriculture Ltd",
-        "Bramfield Haulage Ltd",
-        "Calderstone Foods Ltd",
-        "Dunmore Electrical Ltd",
-        "Elmsworth Joinery Ltd",
-        "Fenwick Instruments Ltd"
+        "Bramfield Haulage Ltd"
       ],
       "ref": [
-        "PO-15350",
-        "CN-15357",
-        "STM-15364",
-        "REM-15371",
-        "INV-15378"
+        "STM-18014",
+        "REM-18021",
+        "INV-18028",
+        "PO-18035",
+        "CN-18042"
       ]
     }
   ]

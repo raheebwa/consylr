@@ -3,7 +3,7 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 026."
+      "text": "Remittance advice, batch 028."
     }
   ],
   "family": "fee_at_source",
@@ -11,104 +11,104 @@
   "left": [
     {
       "amount": [
-        "3075.25",
-        "4820.90",
-        "6300.00",
-        "9145.75",
-        "12480.00",
-        "17400.00",
-        "23650.50"
+        "12.60",
+        "42.05",
+        "63.15",
+        "88.75",
+        "142.30",
+        "480.00",
+        "755.00"
       ],
       "date": [
-        "2026-03-02",
-        "2026-03-11",
-        "2026-03-19",
-        "2026-04-02",
-        "2026-04-14",
-        "2026-04-27"
-      ],
-      "party": [
-        "Elmsworth Joinery Ltd",
-        "Fenwick Instruments Ltd",
-        "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd"
-      ],
-      "ref": [
-        "PO-10962",
-        "CN-10969",
-        "STM-10976",
-        "REM-10983",
-        "INV-10990"
-      ]
-    },
-    {
-      "amount": [
-        "6300.00",
-        "9145.75",
-        "12480.00",
-        "17400.00",
-        "23650.50",
-        "29840.00",
-        "36215.80"
-      ],
-      "date": [
-        "2026-03-11",
-        "2026-03-19",
-        "2026-04-02",
-        "2026-04-14",
-        "2026-04-27",
-        "2026-05-08"
-      ],
-      "party": [
-        "Fenwick Instruments Ltd",
-        "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd"
-      ],
-      "ref": [
-        "CN-10973",
-        "STM-10980",
-        "REM-10987",
-        "INV-10994",
-        "PO-11001"
-      ]
-    },
-    {
-      "amount": [
-        "12480.00",
-        "17400.00",
-        "23650.50",
-        "29840.00",
-        "36215.80",
-        "42150.00",
-        "12.60"
-      ],
-      "date": [
-        "2026-03-19",
-        "2026-04-02",
         "2026-04-14",
         "2026-04-27",
         "2026-05-08",
-        "2026-05-21"
+        "2026-05-21",
+        "2026-06-03",
+        "2026-06-16"
       ],
       "party": [
-        "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
         "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd"
+        "Copperfield Supply Ltd",
+        "Marlowe Consulting Ltd",
+        "Ashgrove Logistics Ltd",
+        "Pennine Metals Ltd",
+        "Quayside Packaging Ltd"
       ],
       "ref": [
-        "STM-10984",
-        "REM-10991",
-        "INV-10998",
-        "PO-11005",
-        "CN-11012"
+        "STM-11036",
+        "REM-11043",
+        "INV-11050",
+        "PO-11057",
+        "CN-11064"
+      ]
+    },
+    {
+      "amount": [
+        "63.15",
+        "88.75",
+        "142.30",
+        "480.00",
+        "755.00",
+        "925.50",
+        "1250.00"
+      ],
+      "date": [
+        "2026-04-27",
+        "2026-05-08",
+        "2026-05-21",
+        "2026-06-03",
+        "2026-06-16",
+        "2026-06-29"
+      ],
+      "party": [
+        "Copperfield Supply Ltd",
+        "Marlowe Consulting Ltd",
+        "Ashgrove Logistics Ltd",
+        "Pennine Metals Ltd",
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd"
+      ],
+      "ref": [
+        "REM-11047",
+        "INV-11054",
+        "PO-11061",
+        "CN-11068",
+        "STM-11075"
+      ]
+    },
+    {
+      "amount": [
+        "142.30",
+        "480.00",
+        "755.00",
+        "925.50",
+        "1250.00",
+        "1904.40",
+        "3075.25"
+      ],
+      "date": [
+        "2026-05-08",
+        "2026-05-21",
+        "2026-06-03",
+        "2026-06-16",
+        "2026-06-29",
+        "2026-07-13"
+      ],
+      "party": [
+        "Marlowe Consulting Ltd",
+        "Ashgrove Logistics Ltd",
+        "Pennine Metals Ltd",
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd",
+        "Thornbury Chemicals Ltd"
+      ],
+      "ref": [
+        "INV-11058",
+        "PO-11065",
+        "CN-11072",
+        "STM-11079",
+        "REM-11086"
       ]
     }
   ],
@@ -125,104 +125,104 @@
   "right": [
     {
       "amount": [
-        "3075.25",
-        "4820.90",
-        "6300.00",
-        "9145.75",
-        "12480.00",
-        "17400.00",
-        "23650.50"
+        "12.60",
+        "42.05",
+        "63.15",
+        "88.75",
+        "142.30",
+        "480.00",
+        "755.00"
       ],
       "date": [
-        "2026-03-05",
-        "2026-03-13",
-        "2026-03-24",
-        "2026-04-06",
-        "2026-04-17",
-        "2026-05-04"
-      ],
-      "party": [
-        "Elmsworth Joinery Ltd",
-        "Fenwick Instruments Ltd",
-        "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd"
-      ],
-      "ref": [
-        "PO-10962",
-        "CN-10969",
-        "STM-10976",
-        "REM-10983",
-        "INV-10990"
-      ]
-    },
-    {
-      "amount": [
-        "6300.00",
-        "9145.75",
-        "12480.00",
-        "17400.00",
-        "23650.50",
-        "29840.00",
-        "36215.80"
-      ],
-      "date": [
-        "2026-03-13",
-        "2026-03-24",
-        "2026-04-06",
-        "2026-04-17",
-        "2026-05-04",
-        "2026-05-12"
-      ],
-      "party": [
-        "Fenwick Instruments Ltd",
-        "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd"
-      ],
-      "ref": [
-        "CN-10973",
-        "STM-10980",
-        "REM-10987",
-        "INV-10994",
-        "PO-11001"
-      ]
-    },
-    {
-      "amount": [
-        "12480.00",
-        "17400.00",
-        "23650.50",
-        "29840.00",
-        "36215.80",
-        "42150.00",
-        "12.60"
-      ],
-      "date": [
-        "2026-03-24",
-        "2026-04-06",
         "2026-04-17",
         "2026-05-04",
         "2026-05-12",
-        "2026-05-26"
+        "2026-05-26",
+        "2026-06-09",
+        "2026-06-22"
       ],
       "party": [
-        "Northwind Ltd",
-        "Southgate Ltd",
-        "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
         "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd"
+        "Copperfield Supply Ltd",
+        "Marlowe Consulting Ltd",
+        "Ashgrove Logistics Ltd",
+        "Pennine Metals Ltd",
+        "Quayside Packaging Ltd"
       ],
       "ref": [
-        "STM-10984",
-        "REM-10991",
-        "INV-10998",
-        "PO-11005",
-        "CN-11012"
+        "STM-11036",
+        "REM-11043",
+        "INV-11050",
+        "PO-11057",
+        "CN-11064"
+      ]
+    },
+    {
+      "amount": [
+        "63.15",
+        "88.75",
+        "142.30",
+        "480.00",
+        "755.00",
+        "925.50",
+        "1250.00"
+      ],
+      "date": [
+        "2026-05-04",
+        "2026-05-12",
+        "2026-05-26",
+        "2026-06-09",
+        "2026-06-22",
+        "2026-07-02"
+      ],
+      "party": [
+        "Copperfield Supply Ltd",
+        "Marlowe Consulting Ltd",
+        "Ashgrove Logistics Ltd",
+        "Pennine Metals Ltd",
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd"
+      ],
+      "ref": [
+        "REM-11047",
+        "INV-11054",
+        "PO-11061",
+        "CN-11068",
+        "STM-11075"
+      ]
+    },
+    {
+      "amount": [
+        "142.30",
+        "480.00",
+        "755.00",
+        "925.50",
+        "1250.00",
+        "1904.40",
+        "3075.25"
+      ],
+      "date": [
+        "2026-05-12",
+        "2026-05-26",
+        "2026-06-09",
+        "2026-06-22",
+        "2026-07-02",
+        "2026-07-20"
+      ],
+      "party": [
+        "Marlowe Consulting Ltd",
+        "Ashgrove Logistics Ltd",
+        "Pennine Metals Ltd",
+        "Quayside Packaging Ltd",
+        "Ravensworth Utilities Ltd",
+        "Thornbury Chemicals Ltd"
+      ],
+      "ref": [
+        "INV-11058",
+        "PO-11065",
+        "CN-11072",
+        "STM-11079",
+        "REM-11086"
       ]
     }
   ]

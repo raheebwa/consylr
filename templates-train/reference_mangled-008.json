@@ -2,7 +2,7 @@
   "documents": [
     {
       "id": "D-1",
-      "text": "Remittance advice, batch 074."
+      "text": "Remittance advice, batch 112."
     }
   ],
   "family": "reference_mangled",
@@ -10,104 +10,104 @@
   "left": [
     {
       "amount": [
-        "3075.25",
-        "4820.90",
-        "6300.00",
-        "9145.75",
-        "12480.00",
-        "17400.00",
-        "23650.50"
+        "12.60",
+        "42.05",
+        "63.15",
+        "88.75",
+        "142.30",
+        "480.00",
+        "755.00"
       ],
       "date": [
+        "2026-01-08",
+        "2026-01-21",
+        "2026-02-03",
+        "2026-02-17",
+        "2026-03-02",
+        "2026-03-11"
+      ],
+      "party": [
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd"
+      ],
+      "ref": [
+        "CN-14144",
+        "STM-14151",
+        "REM-14158",
+        "INV-14165",
+        "PO-14172"
+      ]
+    },
+    {
+      "amount": [
+        "63.15",
+        "88.75",
+        "142.30",
+        "480.00",
+        "755.00",
+        "925.50",
+        "1250.00"
+      ],
+      "date": [
+        "2026-01-21",
+        "2026-02-03",
+        "2026-02-17",
+        "2026-03-02",
+        "2026-03-11",
+        "2026-03-19"
+      ],
+      "party": [
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd",
+        "Eastvale Trading Ltd"
+      ],
+      "ref": [
+        "STM-14155",
+        "REM-14162",
+        "INV-14169",
+        "PO-14176",
+        "CN-14183"
+      ]
+    },
+    {
+      "amount": [
+        "142.30",
+        "480.00",
+        "755.00",
+        "925.50",
+        "1250.00",
+        "1904.40",
+        "3075.25"
+      ],
+      "date": [
+        "2026-02-03",
+        "2026-02-17",
         "2026-03-02",
         "2026-03-11",
         "2026-03-19",
-        "2026-04-02",
-        "2026-04-14",
-        "2026-04-27"
+        "2026-04-02"
       ],
       "party": [
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd",
         "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd"
+        "Westbrook Services Ltd"
       ],
       "ref": [
-        "REM-12738",
-        "INV-12745",
-        "PO-12752",
-        "CN-12759",
-        "STM-12766"
-      ]
-    },
-    {
-      "amount": [
-        "6300.00",
-        "9145.75",
-        "12480.00",
-        "17400.00",
-        "23650.50",
-        "29840.00",
-        "36215.80"
-      ],
-      "date": [
-        "2026-03-11",
-        "2026-03-19",
-        "2026-04-02",
-        "2026-04-14",
-        "2026-04-27",
-        "2026-05-08"
-      ],
-      "party": [
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd"
-      ],
-      "ref": [
-        "INV-12749",
-        "PO-12756",
-        "CN-12763",
-        "STM-12770",
-        "REM-12777"
-      ]
-    },
-    {
-      "amount": [
-        "12480.00",
-        "17400.00",
-        "23650.50",
-        "29840.00",
-        "36215.80",
-        "42150.00",
-        "12.60"
-      ],
-      "date": [
-        "2026-03-19",
-        "2026-04-02",
-        "2026-04-14",
-        "2026-04-27",
-        "2026-05-08",
-        "2026-05-21"
-      ],
-      "party": [
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd",
-        "Quayside Packaging Ltd"
-      ],
-      "ref": [
-        "PO-12760",
-        "CN-12767",
-        "STM-12774",
-        "REM-12781",
-        "INV-12788"
+        "REM-14166",
+        "INV-14173",
+        "PO-14180",
+        "CN-14187",
+        "STM-14194"
       ]
     }
   ],
@@ -120,104 +120,104 @@
   "right": [
     {
       "amount": [
-        "3075.25",
-        "4820.90",
-        "6300.00",
-        "9145.75",
-        "12480.00",
-        "17400.00",
-        "23650.50"
+        "12.60",
+        "42.05",
+        "63.15",
+        "88.75",
+        "142.30",
+        "480.00",
+        "755.00"
       ],
       "date": [
+        "2026-01-13",
+        "2026-01-27",
+        "2026-02-09",
+        "2026-02-24",
+        "2026-03-05",
+        "2026-03-13"
+      ],
+      "party": [
+        "Calderstone Foods Ltd",
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd"
+      ],
+      "ref": [
+        "CN-14144",
+        "STM-14151",
+        "REM-14158",
+        "INV-14165",
+        "PO-14172"
+      ]
+    },
+    {
+      "amount": [
+        "63.15",
+        "88.75",
+        "142.30",
+        "480.00",
+        "755.00",
+        "925.50",
+        "1250.00"
+      ],
+      "date": [
+        "2026-01-27",
+        "2026-02-09",
+        "2026-02-24",
+        "2026-03-05",
+        "2026-03-13",
+        "2026-03-24"
+      ],
+      "party": [
+        "Dunmore Electrical Ltd",
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd",
+        "Eastvale Trading Ltd"
+      ],
+      "ref": [
+        "STM-14155",
+        "REM-14162",
+        "INV-14169",
+        "PO-14176",
+        "CN-14183"
+      ]
+    },
+    {
+      "amount": [
+        "142.30",
+        "480.00",
+        "755.00",
+        "925.50",
+        "1250.00",
+        "1904.40",
+        "3075.25"
+      ],
+      "date": [
+        "2026-02-09",
+        "2026-02-24",
         "2026-03-05",
         "2026-03-13",
         "2026-03-24",
-        "2026-04-06",
-        "2026-04-17",
-        "2026-05-04"
+        "2026-04-06"
       ],
       "party": [
+        "Elmsworth Joinery Ltd",
+        "Fenwick Instruments Ltd",
+        "Northwind Ltd",
+        "Southgate Ltd",
         "Eastvale Trading Ltd",
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd"
+        "Westbrook Services Ltd"
       ],
       "ref": [
-        "REM-12738",
-        "INV-12745",
-        "PO-12752",
-        "CN-12759",
-        "STM-12766"
-      ]
-    },
-    {
-      "amount": [
-        "6300.00",
-        "9145.75",
-        "12480.00",
-        "17400.00",
-        "23650.50",
-        "29840.00",
-        "36215.80"
-      ],
-      "date": [
-        "2026-03-13",
-        "2026-03-24",
-        "2026-04-06",
-        "2026-04-17",
-        "2026-05-04",
-        "2026-05-12"
-      ],
-      "party": [
-        "Westbrook Services Ltd",
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd"
-      ],
-      "ref": [
-        "INV-12749",
-        "PO-12756",
-        "CN-12763",
-        "STM-12770",
-        "REM-12777"
-      ]
-    },
-    {
-      "amount": [
-        "12480.00",
-        "17400.00",
-        "23650.50",
-        "29840.00",
-        "36215.80",
-        "42150.00",
-        "12.60"
-      ],
-      "date": [
-        "2026-03-24",
-        "2026-04-06",
-        "2026-04-17",
-        "2026-05-04",
-        "2026-05-12",
-        "2026-05-26"
-      ],
-      "party": [
-        "Harbourline Freight Ltd",
-        "Copperfield Supply Ltd",
-        "Marlowe Consulting Ltd",
-        "Ashgrove Logistics Ltd",
-        "Pennine Metals Ltd",
-        "Quayside Packaging Ltd"
-      ],
-      "ref": [
-        "PO-12760",
-        "CN-12767",
-        "STM-12774",
-        "REM-12781",
-        "INV-12788"
+        "REM-14166",
+        "INV-14173",
+        "PO-14180",
+        "CN-14187",
+        "STM-14194"
       ]
     }
   ]

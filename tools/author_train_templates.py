@@ -166,14 +166,36 @@ POOL = {"party": 6, "amount": 7, "date": 6, "ref": 5}
 #: whole point — a model trained on a mix that is four-fifths clean learns that
 #: most things reconcile.
 PER_FAMILY = {
-    "clean_match": 24,
-    "batched_vs_itemised": 24,
-    "missing_record": 20,
-    "cause_not_established": 50,
-    "ambiguous_pair": 85,
-    "decoy": 85,
+    # The eleven settled families, 280 templates between them: at 30 cases each
+    # that is 8,400 of 12,000, the 70% RFC-0002 §The supported band asks for.
+    "clean_match": 26,
+    "batched_vs_itemised": 25,
+    "duplicate": 25,
+    "missing_record": 26,
+    "name_variant": 25,
+    "partial_payment": 25,
+    "reference_mangled": 25,
+    "reversal": 25,
+    "fee_at_source": 26,
+    "withholding": 26,
+    "timing_cutoff": 26,
+    # The rest. `cause_not_established` at 44 templates is 11% of the mix, inside
+    # RFC-0002's 10-15% and off the floor rather than on it.
+    "cause_not_established": 44,
+    "ambiguous_pair": 26,
+    "decoy": 10,
 }
-DEFAULT_PER_FAMILY = 14
+DEFAULT_PER_FAMILY = 25
+
+#: Withheld twins, per RFC-0003 §Withheld causes. Each is the settled template of
+#: the same index with its cause line removed, so the pair differs in exactly one
+#: policy line and a model cannot tell them apart from the ledger.
+#:
+#: All three cause-bearing families, deliberately. Withholding in one family only
+#: would teach that *that* family is uncertain — the same shortcut with one more
+#: rule in it. 40 templates is 1,200 cases, 10% of the mix, pre-registered here
+#: before the corpus is built rather than measured out of it afterwards.
+WITHHELD_PER_FAMILY = {"fee_at_source": 14, "withholding": 13, "timing_cutoff": 13}
 
 
 def _window(source: list[str], start: int, size: int) -> list[str]:
@@ -237,7 +259,7 @@ def main() -> None:
     for stale in OUT.glob("*.json"):
         stale.unlink()
 
-    written = 0
+    written = withheld = 0
     for family in FAMILIES:
         for index in range(count_for(family)):
             body = template(family, index)
@@ -245,7 +267,21 @@ def main() -> None:
             path.write_text(json.dumps(body, indent=2, sort_keys=True) + "\n", encoding="utf-8")
             written += 1
 
-    print(f"{written} pattern templates in {OUT}")
+        # The twin is the settled body with one field added, written from the same
+        # call rather than re-derived — a second construction could drift, and a
+        # pair that differs anywhere but the flag stops being contrastive.
+        for index in range(WITHHELD_PER_FAMILY.get(family, 0)):
+            body = {
+                **template(family, index),
+                "id": f"{family}-withheld-{index:03d}",
+                "withhold_cause": True,
+            }
+            path = OUT / f"{body['id']}.json"
+            path.write_text(json.dumps(body, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+            written += 1
+            withheld += 1
+
+    print(f"{written} pattern templates in {OUT}, {withheld} of them withheld twins")
 
 
 if __name__ == "__main__":
