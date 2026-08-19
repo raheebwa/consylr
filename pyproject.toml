@@ -35,4 +35,11 @@ line-length = 100
 
 [tool.mypy]
 strict = true
-files = ["consylr", "tests"]
+files = ["consylr", "tests", "tools"]
+
+# The training backend ships no stubs, and it is imported in one place behind a
+# digest check. Four defects reached a branch in a single unchecked tool file,
+# which is a worse trade than an untyped import.
+[[tool.mypy.overrides]]
+module = ["mlx_lm.*"]
+ignore_missing_imports = true
