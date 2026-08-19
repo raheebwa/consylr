@@ -12,7 +12,7 @@ that a mode can never be reported under another mode's name.
 import pytest
 
 from consylr import prompt
-from tools.evaluate_gguf import MODES, SUBPROCESS_MODES, command, llama_kwargs, said
+from tools.evaluate_gguf import MODES, SUBPROCESS_MODES, command, llama_kwargs, said, stratified
 
 
 def test_the_window_is_the_harness_s_and_never_the_model_s() -> None:
@@ -94,3 +94,27 @@ def test_an_answer_without_the_marker_survives_intact() -> None:
     answer is evidence — trimming something that is not there must not trim
     anything that is."""
     assert said('{"matches":[{"l":["A-1"]') == '{"matches":[{"l":["A-1"]'
+
+
+def test_a_subset_covers_every_family_before_it_doubles_up() -> None:
+    """A 50-of-204 subset drawn by file order would over-sample whichever
+    families sort early and miss others entirely, and a divergence confined to
+    an absent family would read as agreement."""
+    cases = [(f"c{i:03d}", f"fam{i % 14}") for i in range(204)]
+    picked = stratified(cases, 50)
+    families = {f for _, f in picked}
+    assert len(picked) == 50
+    assert families == {f"fam{i}" for i in range(14)}
+    counts = [sum(1 for _, f in picked if f == fam) for fam in sorted(families)]
+    assert max(counts) - min(counts) <= 1
+
+
+def test_the_subset_is_the_same_subset_every_time() -> None:
+    """A subset that moves between runs cannot be compared with itself."""
+    cases = [(f"c{i:03d}", f"fam{i % 14}") for i in range(204)]
+    assert stratified(cases, 50) == stratified(cases, 50)
+
+
+def test_asking_for_more_than_there_is_returns_everything() -> None:
+    cases = [(f"c{i:03d}", "fam") for i in range(5)]
+    assert len(stratified(cases, 50)) == 5
