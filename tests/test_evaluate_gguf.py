@@ -118,3 +118,15 @@ def test_the_subset_is_the_same_subset_every_time() -> None:
 def test_asking_for_more_than_there_is_returns_everything() -> None:
     cases = [(f"c{i:03d}", "fam") for i in range(5)]
     assert len(stratified(cases, 50)) == 5
+
+
+def test_the_offload_default_survives_the_override_existing() -> None:
+    """A diagnostic sometimes needs the GPU — comparing two quantisations of the
+    same weights is about the quantisation, and waiting an hour per arm on the
+    CPU buys nothing. The override must not become the default: an offloaded
+    reading is 2.4 GB lighter and is not the audit's system."""
+    assert llama_kwargs("m.gguf")["n_gpu_layers"] == 0
+    assert llama_kwargs("m.gguf", gpu_layers=99)["n_gpu_layers"] == 99
+    for mode in SUBPROCESS_MODES:
+        argv = command(mode, model="m.gguf", prompt_file="p.txt", gpu_layers=99)
+        assert argv[argv.index("-ngl") + 1] == "99"
