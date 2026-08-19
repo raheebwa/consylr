@@ -239,6 +239,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"REFUSED: unknown mode {mode!r}; known: {', '.join(MODES)}")
         return 2
     limit = int(flags.get("--limit", "0"))
+    subset = int(flags.get("--stratified", "0"))
     bindir = flags.get("--bin", "")
     rest = [a for a in args[2:] if not a.startswith("--")]
 
@@ -249,7 +250,19 @@ def main(argv: list[str] | None = None) -> int:
     print(f"exam {exam.name}: digest {digest}")
 
     cases = sorted(p for p in exam.iterdir() if (p / "packet.json").exists())
-    if limit:
+    if subset:
+        # Chosen across families rather than by file order, so a divergence
+        # confined to one family cannot hide behind a subset that never asked
+        # about it. The rule travels in the result file.
+        family_of = {
+            c.name: json.loads((c / "meta.json").read_text(encoding="utf-8"))["family"]
+            for c in cases
+        }
+        keep = {
+            name for name, _ in stratified([(c.name, family_of[c.name]) for c in cases], subset)
+        }
+        cases = [c for c in cases if c.name in keep]
+    elif limit:
         cases = cases[:limit]
     print(f"{len(cases)} packets, {Path(model).name}, mode {mode}")
 
@@ -314,6 +327,7 @@ def main(argv: list[str] | None = None) -> int:
                 mode=MODES[mode].label,
                 runtime="llama.cpp",
                 window=WINDOW,
+                subset_rule=SUBSET_RULE if subset else "",
                 gpu_layers=GPU_LAYERS,
                 seconds_per_case=round(elapsed / max(len(answers), 1), 2),
                 null_correspondence_f1=null.correspondence_f1,
