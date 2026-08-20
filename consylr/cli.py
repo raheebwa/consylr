@@ -36,6 +36,7 @@ from pathlib import Path
 from typing import Any
 
 from consylr import prompt
+from consylr.arithmetic import disagreements
 from consylr.budget import Tokeniser, check
 from consylr.offline import no_network
 from consylr.schema import validate
@@ -125,6 +126,14 @@ def run(
     # tidied answer would not. Nothing is printed when nothing is wrong — a tool
     # that reassures on every run trains its reader to stop reading.
     for violation in validate(answer, packet):
+        out(f"{violation.code}: {violation.detail}")
+
+    # Generation is never the authority for a number. The model supplies a
+    # characterisation; the packet's own amounts decide whether it can be true,
+    # recomputed in exact decimal. Reported, never corrected -- a model that
+    # calls a difference a fee where nothing was deducted has told the operator
+    # something, and tidying it away destroys the signal.
+    for violation in disagreements(answer, packet):
         out(f"{violation.code}: {violation.detail}")
 
     return answer
