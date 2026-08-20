@@ -7,11 +7,19 @@ falsified, so the property lives here as something a test can plant a violation
 against — and something the CLI can report, so an operator who has never read
 the test can still see what is being claimed.
 
-**Egress is refused at `connect` and at name resolution, not at construction.**
-Creating a socket object reaches nothing; libraries do it speculatively and
-never dial. Resolving a name, by contrast, already leaves the machine and
-already leaks what is being run, so a guard that stopped only `connect` would
-let the lookup through and call the result offline.
+**The boundary is socket creation, not socket use.** An earlier version refused
+`connect`, `connect_ex`, `create_connection` and two resolvers — and a datagram
+socket walked straight past all five: `sendto` to a literal address leaves the
+host with no connect and no lookup to intercept. Enumerating egress methods
+covers what the author thought of rather than what egress is, and the next
+protocol nobody has read about will do the same thing again. **A socket that
+cannot exist cannot leak.** So `AF_INET` and `AF_INET6` are refused at
+construction, which collapses TCP, UDP, QUIC and everything after them into one
+rule. `AF_UNIX` is allowed: the claim is no egress, not no sockets.
+
+Name resolution keeps its own patches as a second fence, because some resolvers
+reach libc without ever constructing a Python socket object — and a lookup
+already leaves the machine and already leaks what is being run.
 
 **Nothing here distinguishes our code from a dependency's**, because the case
 that matters is the one we did not write. The patches sit on `socket` itself,
@@ -43,11 +51,22 @@ class NetworkAttempted(RuntimeError):
 @contextmanager
 def no_network() -> Iterator[None]:
     """Refuse every outbound call for the duration of the block."""
-    saved_connect = socket.socket.connect
-    saved_connect_ex = socket.socket.connect_ex
+    saved_init = socket.socket.__init__
     saved_create = socket.create_connection
-    saved_getaddrinfo = socket.getaddrinfo
-    saved_gethostbyname = socket.gethostbyname
+    saved_resolvers = {
+        name: getattr(socket, name)
+        for name in (
+            "getaddrinfo",
+            "gethostbyname",
+            "gethostbyname_ex",
+            "gethostbyaddr",
+            "getnameinfo",
+            "getfqdn",
+        )
+    }
+    #: Everything that is not a local socket. Named as an allow-list so a family
+    #: nobody has heard of is refused by default rather than admitted by default.
+    local = {getattr(socket, name) for name in ("AF_UNIX",) if hasattr(socket, name)}
 
     def refuse(what: str) -> Any:
         def refused(*args: Any, **kwargs: Any) -> Any:
@@ -60,19 +79,25 @@ def no_network() -> Iterator[None]:
 
         return refused
 
-    socket.socket.connect = refuse("connect")  # type: ignore[method-assign]
-    socket.socket.connect_ex = refuse("connect_ex")  # type: ignore[method-assign]
+    def refuse_socket(self: Any, family: Any = socket.AF_INET, *args: Any, **kwargs: Any) -> None:
+        if family not in local:
+            raise NetworkAttempted(
+                f"inference attempted to create a {family!r} socket; this build is "
+                "offline by construction"
+            )
+        saved_init(self, family, *args, **kwargs)
+
+    socket.socket.__init__ = refuse_socket  # type: ignore[method-assign]
     socket.create_connection = refuse("create_connection")
-    socket.getaddrinfo = refuse("getaddrinfo")
-    socket.gethostbyname = refuse("gethostbyname")
+    for name in saved_resolvers:
+        setattr(socket, name, refuse(name))
     try:
         yield
     finally:
         # Restored in `finally` so a failing body cannot leave the process with
         # a permanently broken socket module — every later test in the session
         # would then pass for the wrong reason.
-        socket.socket.connect = saved_connect  # type: ignore[method-assign]
-        socket.socket.connect_ex = saved_connect_ex  # type: ignore[method-assign]
+        socket.socket.__init__ = saved_init  # type: ignore[method-assign]
         socket.create_connection = saved_create
-        socket.getaddrinfo = saved_getaddrinfo
-        socket.gethostbyname = saved_gethostbyname
+        for name, original in saved_resolvers.items():
+            setattr(socket, name, original)
