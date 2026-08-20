@@ -34,6 +34,7 @@ inference and never inside it.
 from __future__ import annotations
 
 import socket
+import threading
 from collections.abc import Iterator
 from contextlib import contextmanager
 from typing import Any
@@ -48,9 +49,48 @@ class NetworkAttempted(RuntimeError):
     """
 
 
+#: The patches are process-global, so only the outermost guard may install or
+#: restore them. Two unsynchronised guards saved and restored the same symbols
+#: independently: one interleaving left the refusals installed for the rest of
+#: the interpreter, and the mirror one disarmed a guard while generation was
+#: still running -- and the run reported itself offline anyway.
+_DEPTH_LOCK = threading.RLock()
+_depth = 0
+_saved: dict[str, Any] = {}
+
+
 @contextmanager
 def no_network() -> Iterator[None]:
-    """Refuse every outbound call for the duration of the block."""
+    """Refuse every outbound call for the duration of the block.
+
+    Re-entrant and safe across threads: nesting or overlapping guards share one
+    installation, and the module is restored only when the last one exits.
+    """
+    global _depth
+    with _DEPTH_LOCK:
+        _depth += 1
+        outermost = _depth == 1
+    try:
+        if outermost:
+            with _DEPTH_LOCK:
+                _install()
+        yield
+    finally:
+        with _DEPTH_LOCK:
+            _depth -= 1
+            if _depth == 0:
+                _restore()
+
+
+def _restore() -> None:
+    socket.socket.__init__ = _saved.pop("__init__")  # type: ignore[method-assign]
+    socket.create_connection = _saved.pop("create_connection")
+    for name, original in _saved.items():
+        setattr(socket, name, original)
+    _saved.clear()
+
+
+def _install() -> None:
     saved_init = socket.socket.__init__
     saved_create = socket.create_connection
     saved_resolvers = {
@@ -91,13 +131,6 @@ def no_network() -> Iterator[None]:
     socket.create_connection = refuse("create_connection")
     for name in saved_resolvers:
         setattr(socket, name, refuse(name))
-    try:
-        yield
-    finally:
-        # Restored in `finally` so a failing body cannot leave the process with
-        # a permanently broken socket module — every later test in the session
-        # would then pass for the wrong reason.
-        socket.socket.__init__ = saved_init  # type: ignore[method-assign]
-        socket.create_connection = saved_create
-        for name, original in saved_resolvers.items():
-            setattr(socket, name, original)
+    _saved["__init__"] = saved_init
+    _saved["create_connection"] = saved_create
+    _saved.update(saved_resolvers)
