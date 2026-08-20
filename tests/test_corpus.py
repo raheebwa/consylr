@@ -19,7 +19,7 @@ from typing import Any
 
 import pytest
 
-from consylr.corpus import check, content_digest, write
+from consylr.corpus import check, content_digest, template_digest, write
 from consylr.templates import Template
 from tests.support import PerCharacter, a_template, built, template_body
 
@@ -283,3 +283,47 @@ def test_a_training_corpus_disjoint_from_the_exam_passes(tmp_path: Path) -> None
     templates = [a_template(id=f"t-{i:03d}", amount=f"{200 + i}.00") for i in range(3)]
     rows = [built(t, case_index=0, role="train") for t in templates]
     assert check(rows, templates=templates, held_out=[exam.packet]) == []
+
+
+def test_the_template_digest_covers_the_directory(tmp_path: Path) -> None:
+    """`docs/sealed-set.md` records a template digest as "sha256 over the sorted
+    per-file digests of `templates/`". Nothing computed it, so the document
+    described enforcement that did not exist — the nastier variant of the
+    written-down-but-never-gated defect, because the checklist only covers what
+    someone remembered to put on it."""
+    (tmp_path / "a.json").write_text('{"id": "a"}', encoding="utf-8")
+    (tmp_path / "b.json").write_text('{"id": "b"}', encoding="utf-8")
+    first = template_digest(tmp_path)
+    assert len(first) == 64
+    assert template_digest(tmp_path) == first
+
+
+def test_it_is_order_independent_but_content_sensitive(tmp_path: Path) -> None:
+    """Renaming a file must not change the digest of the same set of templates;
+    editing one must."""
+    (tmp_path / "a.json").write_text('{"id": "a"}', encoding="utf-8")
+    (tmp_path / "b.json").write_text('{"id": "b"}', encoding="utf-8")
+    before = template_digest(tmp_path)
+
+    (tmp_path / "a.json").rename(tmp_path / "z.json")
+    assert template_digest(tmp_path) == before, "a rename is not a change of content"
+
+    (tmp_path / "z.json").write_text('{"id": "a", "edited": true}', encoding="utf-8")
+    assert template_digest(tmp_path) != before, "an edit must move the digest"
+
+
+def test_an_added_template_moves_the_digest(tmp_path: Path) -> None:
+    """The failure the per-template fingerprints cannot see: a case references
+    the templates it used, so a template added and never referenced leaves every
+    fingerprint matching while the directory has changed."""
+    (tmp_path / "a.json").write_text('{"id": "a"}', encoding="utf-8")
+    before = template_digest(tmp_path)
+    (tmp_path / "b.json").write_text('{"id": "b"}', encoding="utf-8")
+    assert template_digest(tmp_path) != before
+
+
+def test_a_directory_with_no_templates_is_refused(tmp_path: Path) -> None:
+    """A digest over nothing is a well-formed sixty-four characters that asserts
+    the absence of what it was asked to describe."""
+    with pytest.raises(ValueError):
+        template_digest(tmp_path)
