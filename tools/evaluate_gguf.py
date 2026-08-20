@@ -219,7 +219,18 @@ def _in_process(model: str, rendered: list[str], gpu_layers: int = GPU_LAYERS) -
     )
     out = []
     for n, text in enumerate(rendered, start=1):
-        completion = llm.create_completion(prompt=text, max_tokens=MAX_TOKENS, temperature=0.0)
+        # Read from the same dict the tests assert against. Re-specifying these
+        # as literals meant the declaration and the run could drift apart in
+        # silence: the tests kept passing, the record kept describing the
+        # declared configuration, and llama-cpp-python's create_completion
+        # defaults max_tokens to 16 — which would truncate every answer while
+        # the dict still said 320, and the divergence would be blamed on the
+        # interface this tool exists to compare.
+        completion = llm.create_completion(
+            prompt=text,
+            max_tokens=kwargs["max_tokens"],
+            temperature=kwargs["temperature"],
+        )
         out.append(completion["choices"][0]["text"])
         if n % 25 == 0:
             print(f"  {n}/{len(rendered)}", flush=True)
