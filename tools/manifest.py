@@ -1,7 +1,8 @@
 # SPDX-License-Identifier: MIT
 """What a trained artefact came from, in a form nobody has to remember.
 
-    python -m tools.manifest <run dir> [--corpus name=<dir> ...] [--note k=v ...]
+    python -m tools.manifest <run dir> [--corpus name=<dir> ...] \
+        [--templates name=<dir> ...] [--note k=v ...]
 
 Written beside the weights, and written *before* anything is derived from them,
 so a converted or quantised artefact inherits its provenance from a file rather
@@ -29,7 +30,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from consylr.corpus import content_digest
+from consylr.corpus import content_digest, template_digest
 
 WEIGHTS = "adapters.safetensors"
 CONFIG = "adapter_config.json"
@@ -75,6 +76,7 @@ def build(
     run: Path,
     *,
     corpora: dict[str, Path],
+    templates: dict[str, Path] | None = None,
     generator: str = "",
     notes: dict[str, str] | None = None,
 ) -> dict[str, Any]:
@@ -99,6 +101,13 @@ def build(
         "base_model": config.get("model", ""),
         "data": config.get("data", ""),
         "corpora": recorded,
+        # The set a corpus was drawn from, not only the corpus. A case records
+        # the templates it used, so a template no case referenced leaves every
+        # per-case fingerprint matching while the directory has changed.
+        "templates": {
+            label: {"name": where.name, "digest": template_digest(where)}
+            for label, where in sorted((templates or {}).items())
+        },
         # Stated by the caller, because the tool cannot discover it: the commit
         # that built the corpus is earlier than this one and may not be reachable
         # from the branch a manifest is written on. Absent when unstated.
@@ -129,9 +138,14 @@ def main() -> int:
         return 2
     run = Path(sys.argv[1])
     corpora: dict[str, Path] = {}
+    templates: dict[str, Path] = {}
     notes: dict[str, str] = {}
     generator = ""
     for arg in sys.argv[2:]:
+        if arg.startswith("--templates="):
+            label, _, where = arg[len("--templates=") :].partition("=")
+            templates[label] = Path(where)
+            continue
         if arg.startswith("--corpus="):
             label, _, where = arg.split("=", 1)[1].partition(":")
             corpora[label] = Path(where)
@@ -141,7 +155,7 @@ def main() -> int:
             key, _, value = arg.split("=", 1)[1].partition(":")
             notes[key] = value
 
-    body = build(run, corpora=corpora, generator=generator, notes=notes)
+    body = build(run, corpora=corpora, templates=templates, generator=generator, notes=notes)
     out = run / "manifest.json"
     out.write_text(json.dumps(body, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(body, indent=2, sort_keys=True))
