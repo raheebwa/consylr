@@ -87,3 +87,50 @@ def test_it_carries_the_parent_manifest_forward(tmp_path: Path) -> None:
         parent_manifest=parent_manifest,
     )
     assert m["inherits"]["corpora"]["train"]["name"] == "t"
+
+
+def test_an_empty_calibration_flag_is_not_a_claim_of_none(tmp_path: Path) -> None:
+    """`--calibration="$CALIB"` with CALIB unset used to record the affirmative
+    "this had no calibration" — the exact statement the module says must never
+    be made on nobody's behalf. A wrapper with an unset variable is the ordinary
+    way it happens, and the file is unfalsifiable afterwards."""
+    from tools.gguf_manifest import main
+
+    artefact = a_file(tmp_path / "q.gguf", "x")
+    a_file(tmp_path / "p.gguf", "y")
+    rc = main([str(artefact), f"--parent={tmp_path / 'p.gguf'}", "--recipe=Q6_K", "--calibration="])
+    assert rc == 2
+
+
+def test_an_empty_recipe_is_refused_although_the_flag_is_present(tmp_path: Path) -> None:
+    """`'--recipe' in flags` was true for `--recipe=`, so the required-flag guard
+    passed and the recipe recorded as the empty string."""
+    from tools.gguf_manifest import main
+
+    artefact = a_file(tmp_path / "q.gguf", "x")
+    a_file(tmp_path / "p.gguf", "y")
+    assert main([str(artefact), f"--parent={tmp_path / 'p.gguf'}", "--recipe="]) == 2
+
+
+def test_a_recipe_split_by_the_shell_is_refused(tmp_path: Path) -> None:
+    """`--recipe=Q6_K --imatrix` unquoted drops `--imatrix` (no '='), recording
+    an uncalibrated recipe for an imatrix-quantised file. Unfalsifiable later,
+    and it is the one field the artefact itself can never reveal the loss of."""
+    from tools.gguf_manifest import main
+
+    artefact = a_file(tmp_path / "q.gguf", "x")
+    a_file(tmp_path / "p.gguf", "y")
+    rc = main([str(artefact), f"--parent={tmp_path / 'p.gguf'}", "--recipe=Q6_K", "--imatrix"])
+    assert rc == 2
+
+
+def test_a_dirty_tree_is_recorded_rather_than_hidden(tmp_path: Path) -> None:
+    """manifest.py's rule, which this tool forked and lost: a clean-looking
+    record of a dirty tree claims a reproducibility that did not exist."""
+    m = build(
+        a_file(tmp_path / "q.gguf", "x"),
+        parent=a_file(tmp_path / "p.gguf", "y"),
+        calibration=None,
+        recipe="Q6_K",
+    )
+    assert "tree_dirty" in m["recorded_at"]
