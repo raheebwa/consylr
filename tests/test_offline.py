@@ -119,3 +119,36 @@ def test_it_puts_everything_back_even_when_the_body_raises() -> None:
     with pytest.raises(ValueError), no_network():
         raise ValueError("something else went wrong")
     assert socket.getaddrinfo is before
+
+
+def test_overlapping_guards_do_not_disarm_each_other() -> None:
+    """Two guards in different threads saved and restored the same five process
+    globals with no coordination. One interleaving left the refusing functions
+    installed for the rest of the interpreter; the mirror one disarmed the guard
+    while generation was still running and the run still called itself offline.
+    The finally-block's comment claimed neither could happen."""
+    import threading
+
+    first_up, second_up, first_done = (threading.Event() for _ in range(3))
+
+    def first() -> None:
+        # Enters BEFORE the main thread, leaves BEFORE it. Its saved originals
+        # are the real functions; the main guard's are this guard's refusals.
+        with no_network():
+            first_up.set()
+            second_up.wait(5)
+        first_done.set()
+
+    thread = threading.Thread(target=first)
+    thread.start()
+    first_up.wait(5)
+    with no_network():
+        second_up.set()
+        first_done.wait(5)
+        # The other guard has come down. Ours is still open, so egress must
+        # still be refused -- this is where the unsynchronised version disarmed.
+        with pytest.raises(NetworkAttempted):
+            socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    thread.join(5)
+    # And once every guard has exited, the module is whole again.
+    socket.socket(socket.AF_INET, socket.SOCK_STREAM).close()
