@@ -16,6 +16,34 @@ project, and the two are not the same document.
 
 ## [Unreleased]
 
+### Added
+
+- `consylr.cli` and the `consylr` console script — the project's own inference
+  surface. Renders through the frozen prompt and **refuses a template whose
+  digest is not the one the model was built against**; refuses an over-budget
+  packet rather than letting the harness left-truncate it and answer confidently
+  about records it never saw; reports what the packet held before the model
+  produces anything; runs generation, and the model load, inside the offline
+  guard.
+- `consylr.offline` — the offline guarantee as something a test can falsify.
+  `AF_INET` and `AF_INET6` are refused **at socket construction**, which covers
+  TCP, UDP and anything after them; `AF_UNIX` is allowed. Name resolution is
+  refused separately, since some resolvers reach libc without a Python socket.
+  Re-entrant and safe across threads.
+- `tools/evaluate_gguf.py` — runs a sealed set against a GGUF in three
+  interfaces (the profiler's own `create_completion`, raw completion, and chat
+  mode), with the window pinned to the harness's and the layers pinned to the
+  CPU.
+- `tools/gguf_manifest.py` — provenance for a quantised artefact, which inherits
+  from a training run rather than owning it.
+
+### Fixed
+
+- `consylr.evidence` is gone. `consylr.schema` already resolved every identifier
+  in every field, and the second implementation disagreed with it in three
+  places.
+
+
 Nothing released yet. The first version heading appears when there is something worth
 installing.
 
