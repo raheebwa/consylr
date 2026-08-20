@@ -25,7 +25,6 @@ def test_local_work_is_untouched() -> None:
     egress carries on."""
     with no_network():
         assert sum(range(10)) == 45
-        assert socket.socket is not None
 
 
 def test_a_planted_outbound_connection_is_refused() -> None:
@@ -47,22 +46,72 @@ def test_a_name_lookup_is_itself_a_network_call() -> None:
         socket.getaddrinfo("example.invalid", 80)
 
 
-def test_a_raw_socket_connect_is_refused() -> None:
+def test_an_internet_socket_cannot_be_created_at_all() -> None:
+    """The boundary is creation, not use. Enumerating egress methods covers what
+    the author thought of rather than what egress is — `sendto` on a datagram
+    socket leaves the host with no connect and no lookup to intercept, and the
+    next protocol nobody has considered will do the same. A socket that cannot
+    exist cannot leak through an API neither of us has read."""
+    for family in (socket.AF_INET, socket.AF_INET6):
+        with no_network(), pytest.raises(NetworkAttempted):
+            socket.socket(family, socket.SOCK_STREAM)
+
+
+def test_connectionless_egress_is_refused() -> None:
+    """One violation per API family, not per function name. A datagram to a
+    literal address needs neither connect nor getaddrinfo; before the boundary
+    moved to creation, this left the machine and the run still called itself
+    offline."""
     with no_network(), pytest.raises(NetworkAttempted):
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        try:
-            s.connect(("127.0.0.1", 9))
-        finally:
-            s.close()
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.sendto(b"x", ("8.8.8.8", 53))
+
+
+def test_a_local_socket_is_still_allowed() -> None:
+    """The claim is no egress, not no sockets. Refusing AF_UNIX would break
+    local machinery for a property it cannot affect."""
+    with no_network():
+        socket.socket(socket.AF_UNIX, socket.SOCK_STREAM).close()
+
+
+def test_the_other_resolvers_are_refused_too() -> None:
+    """A second fence behind the boundary: some resolvers reach libc without
+    ever constructing a Python socket object."""
+    with no_network():
+        for call in (
+            lambda: socket.gethostbyname_ex("example.invalid"),
+            lambda: socket.getfqdn("example.invalid"),
+            lambda: socket.gethostbyaddr("127.0.0.1"),
+        ):
+            with pytest.raises(NetworkAttempted):
+                call()
+
+
+#: Every name the guard replaces. Spelled out so a symbol added to the guard and
+#: forgotten in the restore is a failing test rather than a socket module left
+#: broken for the rest of the interpreter.
+PATCHED = (
+    "getaddrinfo",
+    "gethostbyname",
+    "gethostbyname_ex",
+    "gethostbyaddr",
+    "getnameinfo",
+    "getfqdn",
+    "create_connection",
+)
 
 
 def test_the_guard_puts_everything_back() -> None:
     """A guard that leaks past its own block would make every later test in the
-    session pass for the wrong reason."""
-    before = (socket.socket.connect, socket.getaddrinfo, socket.create_connection)
+    session pass for the wrong reason. Checked over every patched symbol, not a
+    sample of them: the ones a sample omits are exactly the ones that get
+    forgotten."""
+    before = {name: getattr(socket, name) for name in PATCHED}
+    before_init = socket.socket.__init__
     with no_network():
         pass
-    assert (socket.socket.connect, socket.getaddrinfo, socket.create_connection) == before
+    assert {name: getattr(socket, name) for name in PATCHED} == before
+    assert socket.socket.__init__ is before_init
 
 
 def test_it_puts_everything_back_even_when_the_body_raises() -> None:
