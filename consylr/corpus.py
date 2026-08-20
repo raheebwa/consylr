@@ -186,6 +186,31 @@ def content_digest(directory: Path) -> str:
     return hashlib.sha256(" ".join(packets).encode()).hexdigest()
 
 
+def template_digest(directory: Path) -> str:
+    """One digest over every template in a directory, order-independent.
+
+    `docs/sealed-set.md` recorded this for sealed-v4 before anything computed
+    it, so the document described enforcement that did not exist. That is the
+    nastier variant of a rule written down and never gated: the constraints
+    table only covers what someone remembered to put on it, so nothing could
+    catch the omission either.
+
+    It answers what per-template fingerprints cannot. A case records the
+    templates it used, so every fingerprint can match while the directory has
+    changed underneath — a template added, or one that no case happened to
+    reference, is invisible to a per-case check and visible here.
+
+    Over file contents rather than names, so a rename is not a change and an
+    edit is.
+    """
+    digests = sorted(hashlib.sha256(p.read_bytes()).hexdigest() for p in directory.glob("*.json"))
+    if not digests:
+        # A digest over nothing is a well-formed sixty-four characters that
+        # asserts the absence of the thing it was asked to describe.
+        raise ValueError(f"{directory} holds no templates; there is nothing to digest")
+    return hashlib.sha256(" ".join(digests).encode()).hexdigest()
+
+
 def write(
     directory: Path,
     cases: Iterable[Case],
