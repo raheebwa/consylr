@@ -130,14 +130,17 @@ def test_a_fabricated_reference_is_reported_to_the_operator(tmp_path: Path, caps
     run(a_packet(tmp_path), generate=lambda _: invented, tokeniser=Tok())
     said = capsys.readouterr().out
     assert "P-9" in said
-    assert "unresolved_reference" in said
+    # The schema's vocabulary, because the schema is the only implementation of
+    # this rule now. A second one in this package disagreed with it in three
+    # places and was deleted rather than repaired.
+    assert "unresolved_id" in said
 
 
 def test_a_clean_answer_says_nothing_about_references(tmp_path: Path, capsys: Any) -> None:
     """A tool that prints a reassurance on every run trains its operator to
     stop reading."""
     run(a_packet(tmp_path), generate=lambda _: ANSWER, tokeniser=Tok())
-    assert "unresolved_reference" not in capsys.readouterr().out
+    assert "unresolved_id" not in capsys.readouterr().out
 
 
 def test_a_template_that_is_not_the_frozen_one_is_refused(tmp_path: Path) -> None:
