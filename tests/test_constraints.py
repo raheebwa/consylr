@@ -46,6 +46,17 @@ class Constraint:
 
 
 ENFORCED = [
+    # --- SECURITY.md, the offline guarantee ------------------------------
+    # The table below calls itself exhaustive, and left this out: a property
+    # wired into production, guaranteed in SECURITY.md and asserted by tests
+    # was absent from the generated constraints document, which therefore
+    # under-reported the enforcement surface while claiming to list all of it.
+    Constraint(
+        "SECURITY.md",
+        "no network call is reachable at inference",
+        "consylr.offline.no_network",
+        "NetworkAttempted",
+    ),
     # --- RFC-0001, the output contract -----------------------------------
     Constraint(
         "RFC-0001",

@@ -14,6 +14,7 @@ packets, another with half its packets outside the specified record range.
 
 | Source | Constraint | Enforced by | Reported as |
 |---|---|---|---|
+| SECURITY.md | no network call is reachable at inference | `consylr.offline.no_network` | NetworkAttempted |
 | RFC-0001 | `open[].need` at most 120 characters | `consylr.schema.NEED_MAX` | need_too_long |
 | RFC-0001 | output fields are a closed set | `consylr.schema.FIELDS` | unknown_field |
 | RFC-0001 | certainty is one of three words, never a number | `consylr.schema.CERTAINTIES` | bad_certainty |
