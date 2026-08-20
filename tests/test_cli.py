@@ -116,3 +116,24 @@ def test_a_packet_that_is_not_a_packet_is_refused(tmp_path: Path) -> None:
 def test_the_answer_comes_back(tmp_path: Path) -> None:
     out = run(a_packet(tmp_path), generate=lambda _: ANSWER, tokeniser=Tok())
     assert out == json.loads(ANSWER)
+
+
+def test_a_fabricated_reference_is_reported_to_the_operator(tmp_path: Path, capsys: Any) -> None:
+    """Reported, not swallowed and not silently corrected. The disagreement is
+    the useful signal — an operator who is told the model cited `P-9` knows
+    something an operator handed a tidied answer does not."""
+    invented = (
+        '{"matches":[{"l":["A-001"],"r":["B-001"],"c":"supported","why":["P-9"]}],'
+        '"residue":{"l":[],"r":[]}}'
+    )
+    run(a_packet(tmp_path), generate=lambda _: invented, tokeniser=Tok())
+    said = capsys.readouterr().out
+    assert "P-9" in said
+    assert "unresolved_reference" in said
+
+
+def test_a_clean_answer_says_nothing_about_references(tmp_path: Path, capsys: Any) -> None:
+    """A tool that prints a reassurance on every run trains its operator to
+    stop reading."""
+    run(a_packet(tmp_path), generate=lambda _: ANSWER, tokeniser=Tok())
+    assert "unresolved_reference" not in capsys.readouterr().out
