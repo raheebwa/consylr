@@ -56,6 +56,13 @@ WINDOW = prompt.BUDGET.context
 GPU_LAYERS = 0
 SEED = 42
 
+#: A ceiling on one packet, not on the run. Chat mode deliberately leaves
+#: llama.cpp's interactive loop enabled, so the child reads its next turn from
+#: the terminal this process inherited — `capture_output` redirects stdout and
+#: stderr only — and never returns. Generous enough that a slow CPU rung is
+#: never mistaken for a hang: the slowest measured case was ~60 s.
+RUN_TIMEOUT_S = 900
+
 
 @dataclass(frozen=True)
 class Mode:
@@ -145,6 +152,27 @@ SUBSET_RULE = (
 )
 
 
+def result_name(exam: str, model: str, mode: str, subset: int, gpu_layers: int) -> str:
+    """The result file's name, carrying everything that makes it a different run.
+
+    Keyed on exam, model and mode alone, a `--stratified` or `--gpu-layers`
+    diagnostic wrote over the full CPU audit result and every raw answer
+    retained in it. `evaluate.py` fixed exactly this once already — "a filename
+    that cannot distinguish two artefacts is a filename that overwrites one of
+    them" — and the fix did not travel because this tool was forked rather than
+    parameterised.
+
+    An audit-shaped run keeps the plain name, so the ladder's existing results
+    stay findable by the tools that read them.
+    """
+    marks = ""
+    if subset:
+        marks += f"-n{subset}"
+    if gpu_layers != GPU_LAYERS:
+        marks += f"-ngl{gpu_layers}"
+    return f"eval-{exam}-{Path(model).stem}-{mode}{marks}.json"
+
+
 def stratified(cases: Sequence[tuple[str, str]], n: int) -> list[tuple[str, str]]:
     """`n` cases spread evenly over the families present.
 
@@ -224,6 +252,9 @@ def _subprocess(
                 capture_output=True,
                 text=True,
                 check=False,
+                timeout=RUN_TIMEOUT_S,
+                # Interactive modes otherwise read the operator's terminal.
+                stdin=subprocess.DEVNULL,
             )
             if proc.returncode != 0:
                 # The failure is the result in chat mode. Recording it as an
@@ -281,6 +312,12 @@ def main(argv: list[str] | None = None) -> int:
         cases = [c for c in cases if c.name in keep]
     elif limit:
         cases = cases[:limit]
+    if not cases:
+        # A mistyped path digests the empty set without complaint and would
+        # report 0.0% on every metric — which reads as total model failure
+        # rather than a wrong argument — then write that over the real result.
+        print(f"REFUSED: {exam} holds no cases; nothing to evaluate")
+        return 1
     print(f"{len(cases)} packets, {Path(model).name}, mode {mode}")
 
     packets, expected, families, rendered = [], [], [], []
@@ -333,7 +370,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"correct abstention    {report.correct_abstention:.1%}  (target >= 90%)")
     print(f"false abstention      {report.false_abstention:.1%}  (target < 5%)")
 
-    out = exam.parent / f"eval-{exam.name}-{Path(model).stem}-{mode}.json"
+    out = exam.parent / result_name(exam.name, model, mode, subset, gpu_layers)
     out.write_text(
         json.dumps(
             record(
