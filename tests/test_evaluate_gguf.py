@@ -183,3 +183,18 @@ def test_an_exam_with_no_cases_is_refused() -> None:
 
     with tempfile.TemporaryDirectory() as empty:
         assert main([empty, "m.gguf", "--mode=profiler"]) == 1
+
+
+def test_every_declared_generation_setting_has_a_reader() -> None:
+    """llama_kwargs is documented and tested as the single declaration of what
+    the in-process backend generates with, but two of its six keys were
+    re-specified as literals at the call site with no reader anywhere. Change
+    one for a diagnostic and the tests keep passing, the record keeps describing
+    the declared configuration, and the run uses the old one."""
+    import inspect
+
+    from tools import evaluate_gguf
+
+    body = inspect.getsource(evaluate_gguf._in_process)
+    for key in llama_kwargs("m.gguf"):
+        assert f'kwargs["{key}"]' in body, f"{key} is declared but never read"
