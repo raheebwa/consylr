@@ -30,6 +30,9 @@ packages = ["consylr"]
 testpaths = ["tests"]
 addopts = "-q"
 
+[project.scripts]
+consylr = "consylr.cli:main"
+
 [tool.ruff]
 line-length = 100
 
