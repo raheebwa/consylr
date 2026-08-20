@@ -20,6 +20,7 @@ from pathlib import Path
 
 import pytest
 
+from consylr.corpus import template_digest
 from tools.manifest import build
 
 
@@ -109,3 +110,30 @@ def test_the_generator_commit_is_stated_not_inferred_from_head(tmp_path: Path) -
 def test_an_unstated_generator_commit_is_absent_not_guessed(tmp_path: Path) -> None:
     m = build(a_run(tmp_path), corpora={})
     assert m["generator"] == {}, "a commit nobody stated is not a commit"
+
+
+def test_a_template_directory_is_recorded_by_its_digest(tmp_path: Path) -> None:
+    """Per-template fingerprints in each case cannot see a template that no case
+    referenced, so a manifest recording only the corpus leaves the set the
+    corpus was drawn from unattested. `docs/sealed-set.md` claimed this digest
+    before anything computed it."""
+    run = a_run(tmp_path)
+    templates = tmp_path / "templates"
+    templates.mkdir()
+    (templates / "a.json").write_text('{"id": "a"}', encoding="utf-8")
+
+    body = build(run, corpora={}, templates={"train": templates}, generator="abc1234")
+    assert body["templates"]["train"]["digest"] == template_digest(templates)
+    assert body["templates"]["train"]["name"] == templates.name
+
+
+def test_an_absent_template_directory_is_refused(tmp_path: Path) -> None:
+    """Refused rather than recorded as an absent field with a plausible name —
+    the same rule the corpora already hold."""
+    with pytest.raises((FileNotFoundError, ValueError)):
+        build(
+            a_run(tmp_path),
+            corpora={},
+            templates={"train": tmp_path / "not-here"},
+            generator="abc1234",
+        )

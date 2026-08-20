@@ -57,6 +57,12 @@ ENFORCED = [
         "consylr.offline.no_network",
         "NetworkAttempted",
     ),
+    Constraint(
+        "docs/sealed-set.md",
+        "a corpus records the template set it was drawn from",
+        "consylr.corpus.template_digest",
+        "no_templates",
+    ),
     # --- RFC-0001, the output contract -----------------------------------
     Constraint(
         "RFC-0001",
