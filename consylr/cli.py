@@ -37,7 +37,6 @@ from typing import Any
 
 from consylr import prompt
 from consylr.budget import Tokeniser, check
-from consylr.evidence import unresolved
 from consylr.offline import no_network
 from consylr.schema import validate
 
@@ -112,19 +111,22 @@ def run(
     if not isinstance(answer, dict):
         raise CliRefused(f"the model produced a {type(answer).__name__}, not one JSON object")
 
-    # Shape is the schema's authority, not this module's and not the reference
-    # checker's. Every defect it exists to catch used to reach the operator in
-    # silence while the scorer counted the same answer invalid.
+    # `consylr.schema` is the single authority on what an answer may say — shape
+    # and reference resolution alike. This module had a second implementation of
+    # the reference rules that disagreed with it in three places: a `why` given
+    # as a bare string bypassed the check entirely while being reported as
+    # citing nothing, a colon in any field truncated an identifier to a
+    # resolvable prefix, and an uncited `supported` *exception* was never
+    # reported at all. Two implementations of one rule is one implementation and
+    # one liability.
+    #
+    # Reported, never silently corrected and never discarded: a model that cited
+    # evidence the packet did not contain has told the operator something a
+    # tidied answer would not. Nothing is printed when nothing is wrong — a tool
+    # that reassures on every run trains its reader to stop reading.
     for violation in validate(answer, packet):
         out(f"{violation.code}: {violation.detail}")
 
-    # Reported, never silently corrected and never discarded. A model that
-    # cited evidence the packet did not contain has told the operator something
-    # a tidied answer would not, and the disagreement is the useful signal.
-    # Nothing is printed when there is nothing wrong: a tool that reassures on
-    # every run trains its operator to stop reading.
-    for violation in unresolved(answer, packet):
-        out(f"{violation.code}: {violation.detail}")
     return answer
 
 
