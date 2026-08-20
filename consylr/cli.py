@@ -34,6 +34,7 @@ from typing import Any
 
 from consylr import prompt
 from consylr.budget import Tokeniser, check
+from consylr.evidence import unresolved
 from consylr.offline import no_network
 
 #: What the operator sees before the model has produced anything. Three seconds
@@ -91,6 +92,15 @@ def run(
         said = generate(rendered)
 
     try:
-        return json.loads(said)
+        answer = json.loads(said)
     except json.JSONDecodeError as e:
         raise CliRefused(f"the model did not produce one JSON object: {e}") from e
+
+    # Reported, never silently corrected and never discarded. A model that
+    # cited evidence the packet did not contain has told the operator something
+    # a tidied answer would not, and the disagreement is the useful signal.
+    # Nothing is printed when there is nothing wrong: a tool that reassures on
+    # every run trains its operator to stop reading.
+    for violation in unresolved(answer, packet):
+        out(f"{violation.code}: {violation.detail}")
+    return answer
