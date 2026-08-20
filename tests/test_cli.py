@@ -211,3 +211,19 @@ def test_there_is_something_to_invoke(tmp_path: Path) -> None:
     from consylr.cli import main
 
     assert main([]) == 2
+
+
+def test_a_cause_the_arithmetic_contradicts_is_reported(tmp_path: Path, capsys: Any) -> None:
+    """`docs/decisions.md`: generation is never the authority for a number. The
+    model labels a difference; the packet's own amounts decide whether that
+    label can be true, and the disagreement reaches the operator."""
+    said = (
+        '{"matches":[{"l":["A-001"],"r":["B-001"],"c":"supported","why":["A-001","B-001"]}],'
+        '"exceptions":[{"on":["B-001"],"kind":"fee_at_source","c":"supported","why":["P-1"]}],'
+        '"residue":{"l":[],"r":[]},"do":[{"act":"accept","on":["A-001","B-001"]}]}'
+    )
+    # Both records carry 10.00, so nothing was deducted and the cause cannot hold.
+    run(a_packet(tmp_path), generate=lambda _: said, tokeniser=Tok())
+    out = capsys.readouterr().out
+    assert "arithmetic_disagreement" in out
+    assert "fee_at_source" in out
