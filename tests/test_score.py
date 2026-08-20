@@ -282,3 +282,48 @@ def test_the_canonical_order_is_derived_from_content_alone() -> None:
     assert ordered({"do": [{"act": "hold"}, {"act": "accept"}]}) == {
         "do": [{"act": "accept"}, {"act": "hold"}]
     }
+
+
+def test_a_withheld_twin_declines_correctly_whatever_its_family() -> None:
+    """The scorer classified abstention by family, so a twin whose cause was
+    withheld from a `fee_at_source` packet counted its correct decline as a
+    FALSE abstention. `consylr.quota` was fixed to read `unestablished` from the
+    case; this is the same defect in the other instrument, and the two now agree
+    by construction rather than by coincidence.
+
+    It reached nothing reported — sealed-v4 carries no withheld twins — but the
+    published test-prompt pair is exactly such a twin, and our own scorer marked
+    the model's correct answer wrong."""
+    declining = (
+        '{"matches":[],"exceptions":[{"on":["B-1"],"kind":"cause_not_established",'
+        '"c":"unsupported","why":[]}],"open":[{"on":["B-1"],"need":"the document"}],'
+        '"residue":{"l":[],"r":[]}}'
+    )
+    withheld = Answer(
+        packet={"records": [{"id": "B-1"}]},
+        expected=json.loads(declining),
+        produced=declining,
+        family="fee_at_source",
+        unestablished=True,
+    )
+    report = score([withheld])
+    assert report.correct_abstention == 1.0
+    assert report.false_abstention == 0.0
+
+
+def test_a_settled_case_of_the_same_family_still_counts_a_false_decline() -> None:
+    """The guard's mirror: `unestablished=False` must not become a licence to
+    decline. Kept beside it so neither can be loosened alone."""
+    declining = (
+        '{"matches":[],"exceptions":[{"on":["B-1"],"kind":"cause_not_established",'
+        '"c":"unsupported","why":[]}],"open":[{"on":["B-1"],"need":"the document"}],'
+        '"residue":{"l":[],"r":[]}}'
+    )
+    settled = Answer(
+        packet={"records": [{"id": "B-1"}]},
+        expected={"matches": [], "residue": {"l": [], "r": []}},
+        produced=declining,
+        family="fee_at_source",
+        unestablished=False,
+    )
+    assert score([settled]).false_abstention == 1.0
