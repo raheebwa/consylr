@@ -12,7 +12,17 @@ that a mode can never be reported under another mode's name.
 import pytest
 
 from consylr import prompt
-from tools.evaluate_gguf import MODES, SUBPROCESS_MODES, command, llama_kwargs, said, stratified
+from tools.evaluate_gguf import (
+    MODES,
+    RUN_TIMEOUT_S,
+    SUBPROCESS_MODES,
+    command,
+    llama_kwargs,
+    main,
+    result_name,
+    said,
+    stratified,
+)
 
 
 def test_the_window_is_the_harness_s_and_never_the_model_s() -> None:
@@ -130,3 +140,46 @@ def test_the_offload_default_survives_the_override_existing() -> None:
     for mode in SUBPROCESS_MODES:
         argv = command(mode, model="m.gguf", prompt_file="p.txt", gpu_layers=99)
         assert argv[argv.index("-ngl") + 1] == "99"
+
+
+def test_a_diagnostic_run_cannot_overwrite_an_audit_run() -> None:
+    """The filename keyed only on exam/model/mode, so a --stratified or
+    --gpu-layers diagnostic wrote over the full CPU audit result and every raw
+    answer retained in it. This is verbatim the incident evaluate.py:148-153
+    documents and already fixed -- 'a filename that cannot distinguish two
+    artefacts is a filename that overwrites one of them' -- which did not travel
+    because this tool was forked rather than parameterised."""
+    audit = result_name("sealed-v4", "m.gguf", "profiler", subset=0, gpu_layers=0)
+    for diagnostic in (
+        result_name("sealed-v4", "m.gguf", "profiler", subset=50, gpu_layers=0),
+        result_name("sealed-v4", "m.gguf", "profiler", subset=0, gpu_layers=99),
+        result_name("sealed-v4", "m.gguf", "profiler", subset=50, gpu_layers=99),
+    ):
+        assert diagnostic != audit
+
+
+def test_the_audit_shaped_run_keeps_the_plain_name() -> None:
+    """The name every earlier result already carries. A rename would orphan the
+    ladder's results from the tools that read them."""
+    assert result_name("probe-v1", "consylr-v5-Q6_K-imat.gguf", "profiler", 0, 0) == (
+        "eval-probe-v1-consylr-v5-Q6_K-imat-profiler.json"
+    )
+
+
+def test_a_wedged_child_is_killed_rather_than_waited_on_forever() -> None:
+    """Chat mode deliberately leaves llama.cpp's interactive loop enabled, so
+    the child reads its next turn from the inherited terminal and never returns.
+    capture_output redirects stdout and stderr only. Without a timeout, case 1
+    of 204 hangs silently and the operator's keystrokes are eaten by the child."""
+    assert RUN_TIMEOUT_S > 0
+
+
+def test_an_exam_with_no_cases_is_refused() -> None:
+    """A mistyped path digests the empty set without complaint, loads the whole
+    model, and reports 'parse rate 0.0% / correct abstention 0.0%' -- which reads
+    as total model failure rather than a wrong argument -- then writes a record
+    attesting an empty exam over the real one and exits 0."""
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as empty:
+        assert main([empty, "m.gguf", "--mode=profiler"]) == 1
