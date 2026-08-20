@@ -103,7 +103,13 @@ def main() -> int:
         if scaffold:
             produced = SCAFFOLD.strip() + produced
         answers.append(
-            Answer(packet=packet, expected=expected, produced=produced, family=meta["family"])
+            Answer(
+                packet=packet,
+                expected=expected,
+                produced=produced,
+                family=meta["family"],
+                unestablished=meta.get("unestablished"),
+            )
         )
         if n % 25 == 0:
             rate = (time.time() - started) / n

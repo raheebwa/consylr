@@ -44,6 +44,13 @@ class Answer:
     expected: Mapping[str, Any]
     produced: str
     family: str
+    #: Whether this case's cause was withheld, read from the case rather than
+    #: inferred from its family. `None` means the case did not say, and the
+    #: family rule below stands — which is every case built before withheld
+    #: twins existed. `consylr.quota` reads the same field for the same reason:
+    #: a twin declines correctly under a settled family, and classifying by
+    #: family scored its right answer as a false abstention.
+    unestablished: bool | None = None
 
 
 @dataclass
@@ -194,7 +201,10 @@ def _tally(answer: Answer, into: Sequence[Tally]) -> None:
         tally.resolved += sum(1 for c in citations if c.split(":")[0] in known)
 
     abstained = _abstains(produced)
-    if answer.family in ABSTAINING:
+    should_decline = (
+        answer.unestablished if answer.unestablished is not None else answer.family in ABSTAINING
+    )
+    if should_decline:
         for tally in into:
             tally.abstain_asked += 1
             tally.abstain_right += int(abstained)

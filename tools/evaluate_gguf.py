@@ -332,6 +332,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"{len(cases)} packets, {Path(model).name}, mode {mode}")
 
     packets, expected, families, rendered = [], [], [], []
+    unestablished: list[bool | None] = []
     for case in cases:
         meta = json.loads((case / "meta.json").read_text(encoding="utf-8"))
         if meta.get("prompt_digest") != prompt.DIGEST:
@@ -341,6 +342,7 @@ def main(argv: list[str] | None = None) -> int:
         packets.append(packet)
         expected.append(json.loads((case / "expected.json").read_text(encoding="utf-8")))
         families.append(meta["family"])
+        unestablished.append(meta.get("unestablished"))
         rendered.append(prompt.render(packet))
 
     started = time.time()
@@ -352,8 +354,8 @@ def main(argv: list[str] | None = None) -> int:
     elapsed = time.time() - started
 
     answers = [
-        Answer(packet=p, expected=e, produced=s, family=f)
-        for p, e, s, f in zip(packets, expected, produced, families, strict=True)
+        Answer(packet=p, expected=e, produced=s, family=f, unestablished=u)
+        for p, e, s, f, u in zip(packets, expected, produced, families, unestablished, strict=True)
     ]
     report = score(answers)
     null = score(
