@@ -117,6 +117,66 @@ Both lists, with the reasoning behind each and where it was argued, are in
 lag it. Work in progress is tracked in
 [issues](https://github.com/raheebwa/consylr/issues), grouped under epics.
 
+## The twin probe, and its answers
+
+The twin probe is the instrument behind the abstention claim, and the one number
+from this project most likely to travel without its context. So the answers are
+committed, not just the scores.
+
+Each of the 75 pairs is two packets whose records, amounts, dates and documents are
+byte-identical and whose policy differs by one line. A **flip** is both halves right:
+the settled half answered, the withheld half declined for a cause the packet does not
+establish. The two ways of failing are counted apart, because a model that declines
+everything gets every withheld half right and is useless.
+
+`evidence-probe/` holds the raw generations — every one of the 150 answers, verbatim,
+for eight builds of the same weights:
+
+| result file | build | flip rate | asserted on withheld |
+|---|---|---|---|
+| `eval-probe-v1-fused-v5.json` | MLX parent, before conversion | 84.0% | 12 |
+| `eval-probe-v1-consylr-v5-f16-profiler.json` | f16 GGUF, unquantised | 84.0% | 12 |
+| `eval-probe-v1-consylr-v5-Q6_K-imat-profiler.json` | **Q6_K + imatrix — shipped** | **77.3%** | 17 |
+| `eval-probe-v1-consylr-v5-Q6_K-plain-profiler.json` | Q6_K, no imatrix | 58.7% | 31 |
+| `eval-probe-v1-consylr-v5-Q5_K_M-imat-profiler.json` | Q5_K_M + imatrix | 82.7% | 13 |
+| `eval-probe-v1-consylr-v5-Q5_K_M-profiler.json` | Q5_K_M, no imatrix | 57.3% | 32 |
+| `eval-probe-v1-consylr-v5-Q4_K_M-imat-profiler.json` | Q4_K_M + imatrix | 20.0% | 60 |
+| `eval-probe-v1-consylr-v5-Q4_K_M-profiler.json` | Q4_K_M, no imatrix | 1.3% | 74 |
+
+**Declined on settled is 0 in all eight.** Nothing here is a model that learned to
+decline. And the conversion out of the training framework costs nothing — the f16 GGUF
+matches its MLX parent pair for pair — so the whole 84.0 → 1.3 collapse belongs to
+quantisation, which is what the imatrix work exists to answer.
+
+### Reproducing it end to end
+
+Three ingredients, all in this repository:
+
+1. **The prompts.** Rebuild the corpus from `templates-probe/` — the build is seeded
+   and prints a content digest, so an independent rebuild is checkable rather than
+   trusted:
+
+       CONSYLR_TOKENISER=/path/to/tokenizer.json \
+       python -m tools.build_probe_corpus <exam dir> <train corpus dir> <out dir>
+
+2. **The answers.** The files above.
+
+3. **The scorer.** Point it at both:
+
+       python -m tools.probe_report <probe corpus dir> \
+           evidence-probe/eval-probe-v1-consylr-v5-Q6_K-imat-profiler.json
+
+   which prints `flip rate 77.3% (58 both halves right)`, `asserted on withheld 17`,
+   `declined on settled 0`, `unparsed halves 0`, and the per-family split.
+
+Every result file carries `exam_digest` and `prompt_digest`. All eight share one value
+of each, so the arms are comparable by construction: the same packets, the same prompt,
+one variable changed.
+
+One field is not verbatim. `eval-probe-v1-fused-v5.json` recorded its `model` as a local
+filesystem path; it is normalised here to `fused-v5`. No other field in any file was
+touched, and no answer in any file was touched.
+
 ## The immediate vehicle
 
 
