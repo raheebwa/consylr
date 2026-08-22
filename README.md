@@ -130,7 +130,13 @@ establish. The two ways of failing are counted apart, because a model that decli
 everything gets every withheld half right and is useless.
 
 `evidence-probe/` holds the raw generations — every one of the 150 answers, verbatim,
-for eight builds of the same weights:
+for ten runs. They fall into two artefact classes, and the tables are not
+interchangeable.
+
+### The shipped class: the quantisation ablation
+
+Eight builds of the same fused weights. This is the ablation the report's
+quantisation argument rests on, and the shipped artefact is one row of it.
 
 | result file | build | flip rate | asserted on withheld |
 |---|---|---|---|
@@ -143,10 +149,29 @@ for eight builds of the same weights:
 | `eval-probe-v1-consylr-v5-Q4_K_M-imat-profiler.json` | Q4_K_M + imatrix | 20.0% | 60 |
 | `eval-probe-v1-consylr-v5-Q4_K_M-profiler.json` | Q4_K_M, no imatrix | 1.3% | 74 |
 
-**Declined on settled is 0 in all eight.** Nothing here is a model that learned to
-decline. And the conversion out of the training framework costs nothing — the f16 GGUF
-matches its MLX parent pair for pair — so the whole 84.0 → 1.3 collapse belongs to
-quantisation, which is what the imatrix work exists to answer.
+The conversion out of the training framework costs nothing — the f16 GGUF matches its
+MLX parent pair for pair, 63 flips each — so the whole 84.0 → 1.3 collapse belongs to
+quantisation, which is what the importance-matrix work exists to answer.
+
+### The shortlist class: unfused adapter probes
+
+Two runs against the base model with a LoRA adapter attached, before any fusing or
+conversion. These are the instrument the training ladder was judged on — they say which
+checkpoint to keep, not how the shipped artefact behaves. **They are not comparable to
+the table above**, and no claim about the shipped model should be read off them.
+
+| result file | checkpoint | flip rate | asserted on withheld |
+|---|---|---|---|
+| `eval-probe-v1-Qwen3-4B-Instruct-2507-4bit-adapters-v5-0008000.json` | rung 8,000 — **rejected** | 0.0% | 75 |
+| `eval-probe-v1-Qwen3-4B-Instruct-2507-4bit-adapters-v5.json` | final adapter — kept | 78.7% | 16 |
+
+Rung 8,000 asserts a cause on all 75 withheld halves: 0.0% in every family, no
+exception. That is the behaviour the ladder exists to catch, and it is why the
+checkpoint two thirds of the way through training was thrown away rather than shipped.
+The evidence for a rejection is worth as much as the evidence for a choice.
+
+**Declined on settled is 0, and unparsed halves is 0, in all ten runs.** Nothing here is
+a model that learned to decline its way to a score.
 
 ### Reproducing it end to end
 
@@ -169,13 +194,20 @@ Three ingredients, all in this repository:
    which prints `flip rate 77.3% (58 both halves right)`, `asserted on withheld 17`,
    `declined on settled 0`, `unparsed halves 0`, and the per-family split.
 
-Every result file carries `exam_digest` and `prompt_digest`. All eight share one value
-of each, so the arms are comparable by construction: the same packets, the same prompt,
-one variable changed.
+Every result file carries `exam_digest` and `prompt_digest`. All ten share one value of
+each — `1d7ef9d5…` and `fad3f869…` — so within a class the arms are comparable by
+construction: the same packets, the same prompt, one variable changed.
 
-One field is not verbatim. `eval-probe-v1-fused-v5.json` recorded its `model` as a local
-filesystem path; it is normalised here to `fused-v5`. No other field in any file was
-touched, and no answer in any file was touched.
+That digest pair is also why these files are here at all, when this project's own rule is
+that run output is regenerated rather than committed. Regenerable output is not evidence;
+it is a promise that evidence could be produced. These are pinned: an independent rebuild
+of the corpus can be checked against `exam_digest` before the answers are scored, so what
+is committed is verifiable rather than merely available.
+
+Three fields are not verbatim. `eval-probe-v1-fused-v5.json` recorded its `model`, and the
+two adapter runs recorded their `adapter`, as absolute paths on the machine that produced
+them; each is normalised here to the path relative to the corpus root. No other field in
+any file was touched, and no answer in any file was touched.
 
 ## The immediate vehicle
 
