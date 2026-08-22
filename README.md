@@ -209,6 +209,56 @@ two adapter runs recorded their `adapter`, as absolute paths on the machine that
 them; each is normalised here to the path relative to the corpus root. No other field in
 any file was touched, and no answer in any file was touched.
 
+## The benchmark number, at full sample
+
+The twin probe above measures one specific behaviour. The general-capability number
+is `arc_easy`, and `evidence-arc/` holds it at the full test split rather than a
+sample — 2,376 items, not the 50 the tooling defaults to.
+
+| | |
+|---|---|
+| benchmark | `arc_easy`, metric `acc_norm` |
+| samples | 2,376 — the entire test split |
+| **acc_norm** | **0.8123** |
+| CI95 | 0.7966 – 0.8280 (binomial SE 0.0080) |
+| wall clock | 9,544 s |
+
+Measured on the shipped artefact in its quantised form, `consylr-v5-Q6_K-imat.gguf`,
+whose sha256 was verified against the frozen pin both before the run and after it. Not
+the unquantised parent, not an adapter — the file the download script fetches. This is
+the same quantity a laptop-LLM accuracy stage measures when it is pointed at the raw
+GGUF, which is why it is worth stating at full sample instead of at a default.
+
+The result file is named for the measurement it was originally run as — a ceiling check
+on the shipped 4B — and the `label` field inside carries the same name.
+
+Harness, pinned:
+
+| | |
+|---|---|
+| `lm_eval` | 0.4.12 |
+| `llama-cpp-python` | 0.3.35 |
+| Python | 3.13.11 |
+| seed | 42 |
+| context window | 2,048 tokens |
+
+The call, against the official profiler's own accuracy stage:
+
+    from adtc_profiler import accuracy
+    accuracy.run_benchmark(Path("consylr-v5-Q6_K-imat.gguf"),
+                           task="arc_easy", limit=2376, seed=42)
+
+Evaluated in-process against the quantised weights: context and continuation are
+tokenised, evaluated once, and the continuation log-probabilities read from the logits.
+The alternative backends are unusable here — one dequantises the GGUF to FP32 and needs
+roughly 12 GB for a model whose quantised file fits in an eighth of that, and the other
+returns echoed log-probabilities shifted by one position, which makes every ranking
+near-random.
+
+One field is not verbatim: `model_path` recorded an absolute path on the machine that
+produced the result, normalised here to the artefact's bare filename. Nothing else in
+the file was touched.
+
 ## The immediate vehicle
 
 

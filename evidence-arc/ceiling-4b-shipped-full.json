@@ -1,0 +1,17 @@
+{
+  "benchmark": "arc_easy",
+  "dataset_version": "lm-eval-harness",
+  "language": "en",
+  "samples": 2376,
+  "score": 0.8123,
+  "metric": "acc_norm",
+  "label": "4b-shipped-full",
+  "model_path": "consylr-v5-Q6_K-imat.gguf",
+  "requested_limit": 2376,
+  "wall_s": 9544.3,
+  "binomial_se": 0.008,
+  "ci95": [
+    0.7966,
+    0.828
+  ]
+}
