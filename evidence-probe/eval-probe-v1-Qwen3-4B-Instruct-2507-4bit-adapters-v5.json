@@ -1,0 +1,637 @@
+{
+  "exam": "probe-v1",
+  "model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+  "mode": "profiler",
+  "packets": 150,
+  "parse_rate": 1.0,
+  "schema_valid": 0.94,
+  "exact_match": 0.16,
+  "correspondence_f1": 0.8955555555555555,
+  "citation_resolution": 1.0,
+  "correct_abstention": 0.0,
+  "false_abstention": 0.3933333333333333,
+  "per_family": {
+    "fee_at_source": {
+      "exact": 0.2,
+      "f1": 0.92,
+      "n": 50
+    },
+    "timing_cutoff": {
+      "exact": 0.08,
+      "f1": 0.8733333333333333,
+      "n": 50
+    },
+    "withholding": {
+      "exact": 0.2,
+      "f1": 0.8933333333333333,
+      "n": 50
+    }
+  },
+  "cases": [
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"fee_at_source\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"fee_at_source\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"fee_at_source\",\"on\":[\"B-001\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"fee_at_source\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"fee_at_source\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"fee_at_source\",\"on\":[\"B-001\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"fee_at_source\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"fee_at_source\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"fee_at_source\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"fee_at_source\",\"on\":[\"B-001\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"fee_at_source\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"fee_at_source\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"fee_at_source\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"fee_at_source\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"fee_at_source\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"fee_at_source\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"fee_at_source\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"fee_at_source\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"fee_at_source\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"fee_at_source\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"fee_at_source\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"fee_at_source\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"fee_at_source\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"fee_at_source\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"fee_at_source\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"ambiguous\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-003\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-003\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-001\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-001\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-001\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-003\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-003\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-001\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-001\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-001\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-003\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-003\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"ambiguous\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-001\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-001\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-001\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"ambiguous\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"ambiguous\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-003\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-003\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"reference_mangled\",\"on\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-003\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-003\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-003\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-003\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "fee_at_source",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-003\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-003\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"timing_cutoff\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"timing_cutoff\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"timing_cutoff\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"timing_cutoff\",\"on\":[\"B-001\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"timing_cutoff\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"timing_cutoff\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"timing_cutoff\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"timing_cutoff\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"timing_cutoff\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"timing_cutoff\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"timing_cutoff\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"timing_cutoff\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"timing_cutoff\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"timing_cutoff\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"timing_cutoff\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"timing_cutoff\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"timing_cutoff\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"timing_cutoff\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"timing_cutoff\",\"on\":[\"B-001\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"timing_cutoff\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"timing_cutoff\",\"on\":[\"B-001\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"timing_cutoff\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"timing_cutoff\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"timing_cutoff\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"timing_cutoff\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"ambiguous\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]}],\"open\":[{\"need\":\"the policy line or document explaining the difference\",\"on\":[\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]}],\"open\":[{\"need\":\"the policy line or document explaining the difference\",\"on\":[\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-001\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-001\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"ambiguous\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-001\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-001\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-001\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"ambiguous\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]}],\"open\":[{\"need\":\"the policy line or document explaining the difference\",\"on\":[\"B-001\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]}],\"open\":[{\"need\":\"the policy line or document explaining the difference\",\"on\":[\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-001\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-001\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-001\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-001\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-001\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]}],\"open\":[{\"need\":\"the policy line or document explaining the difference\",\"on\":[\"B-001\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]}],\"open\":[{\"need\":\"the policy line or document explaining the difference\",\"on\":[\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-003\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-003\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"ambiguous\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-003\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-003\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-003\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-003\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"ambiguous\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-001\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-001\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-001\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"ambiguous\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-001\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-001\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-001\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"ambiguous\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]}],\"open\":[{\"need\":\"the policy line or document explaining the difference\",\"on\":[\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "timing_cutoff",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"withholding\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"withholding\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"withholding\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"withholding\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"withholding\",\"on\":[\"B-001\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"withholding\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"withholding\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"withholding\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"withholding\",\"on\":[\"B-001\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"withholding\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"withholding\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"withholding\",\"on\":[\"B-001\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"withholding\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"withholding\",\"on\":[\"B-001\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"withholding\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"withholding\",\"on\":[\"B-001\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"withholding\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"withholding\",\"on\":[\"B-002\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"withholding\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"withholding\",\"on\":[\"B-001\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"withholding\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"withholding\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"withholding\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"withholding\",\"on\":[\"B-001\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"supported\",\"kind\":\"withholding\",\"on\":[\"B-003\"],\"why\":[\"P-2\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"P-2\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-003\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-003\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"ambiguous\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"ambiguous\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-003\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-003\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-001\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-001\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-001\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-003\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-003\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"ambiguous\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-001\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-001\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-001\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\",\"B-003\"]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-001\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-001\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-001\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-003\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-003\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-002\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-002\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]}],\"open\":[{\"need\":\"the policy line or document explaining the difference\",\"on\":[\"B-002\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-003\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-003\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-001\"],\"why\":[\"A-003\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-002\"],\"why\":[\"A-002\",\"B-002\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-001\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-001\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-001\"],\"why\":[\"A-001\",\"B-001\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-003\"],\"why\":[\"A-002\",\"B-003\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-001\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-003\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-003\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-003\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-003\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"ambiguous\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-003\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-003\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]}],\"open\":[{\"need\":\"the policy line or document explaining the difference\",\"on\":[\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-001\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-002\",\"B-003\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-001\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-001\"],\"r\":[\"B-002\"],\"why\":[\"A-001\",\"B-002\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-003\"],\"why\":[\"A-003\",\"B-003\"]},{\"c\":\"ambiguous\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]}],\"open\":[{\"need\":\"the document explaining the shortfall\",\"on\":[\"B-001\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    },
+    {
+      "family": "withholding",
+      "produced": "{\"do\":[{\"act\":\"request\",\"on\":[\"B-003\"]},{\"act\":\"accept\",\"on\":[\"A-001\",\"A-002\",\"A-003\",\"B-001\",\"B-002\"]}],\"exceptions\":[{\"c\":\"unsupported\",\"kind\":\"cause_not_established\",\"on\":[\"B-003\"],\"why\":[]}],\"matches\":[{\"c\":\"supported\",\"l\":[\"A-002\"],\"r\":[\"B-001\"],\"why\":[\"A-002\",\"B-001\"]},{\"c\":\"supported\",\"l\":[\"A-003\"],\"r\":[\"B-002\"],\"why\":[\"A-003\",\"B-002\"]},{\"c\":\"ambiguous\",\"l\":[\"A-001\"],\"r\":[\"B-003\"],\"why\":[\"A-001\",\"B-003\"]}],\"open\":[{\"need\":\"the policy line or document explaining the difference\",\"on\":[\"B-003\"]}],\"residue\":{\"l\":[],\"r\":[]}}"
+    }
+  ],
+  "adapter": "adapters-v5",
+  "null_correspondence_f1": 0.3511111111111111,
+  "null_exact_match": 0.0,
+  "exam_digest": "1d7ef9d5c1f93d1a8a4e3e7dd59d13c426d85e5148b7f9512bdb3de5cc8f3dca",
+  "prompt_digest": "fad3f8691f8e606df62e21ffb4694457ed0fb46f58dcf2334498725898e71369"
+}
