@@ -124,10 +124,17 @@ from this project most likely to travel without its context. So the answers are
 committed, not just the scores.
 
 Each of the 75 pairs is two packets whose records, amounts, dates and documents are
-byte-identical and whose policy differs by one line. A **flip** is both halves right:
-the settled half answered, the withheld half declined for a cause the packet does not
-establish. The two ways of failing are counted apart, because a model that declines
-everything gets every withheld half right and is useless.
+byte-identical and whose policy differs by one line. The metric is an
+**abstention-direction flip**: the settled half answered, the withheld half declined
+for a cause the packet does not establish. The two ways of failing are counted apart,
+because a model that declines everything gets every withheld half right and is useless.
+
+**It scores direction, not full correctness.** It does not check which record the
+declined cause was attached to, whether the output was schema-valid, or whether the
+correspondences were right. Scored strictly on all three, the shipped artefact reaches
+**37 of 75** rather than 58 — 11 of the 58 name the wrong record, 7 have a
+schema-invalid half, and only 3 pairs are exact on both complete outputs. Both figures
+are recomputable from the files below with `tools/probe_report.py` and the corpus.
 
 `evidence-probe/` holds the raw generations — every one of the 150 answers, verbatim,
 for ten runs. They fall into two artefact classes, and the tables are not
@@ -191,7 +198,8 @@ Three ingredients, all in this repository:
        python -m tools.probe_report <probe corpus dir> \
            evidence-probe/eval-probe-v1-consylr-v5-Q6_K-imat-profiler.json
 
-   which prints `flip rate 77.3% (58 both halves right)`, `asserted on withheld 17`,
+   which prints `flip rate 77.3% (58 both halves right)` — the scorer's own wording for
+   the direction metric described above — plus `asserted on withheld 17`,
    `declined on settled 0`, `unparsed halves 0`, and the per-family split.
 
 Every result file carries `exam_digest` and `prompt_digest`. All ten share one value of
